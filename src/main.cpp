@@ -5,6 +5,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <chrono>
+#include <iomanip>
 
 /**
  * @brief Main function demonstrating the conflict-free scheduling system
@@ -141,27 +143,47 @@ int main(int argc, char* argv[]) {
         
         // 1. Graph Coloring
         std::cout << "\n1. Graph Coloring Algorithm:" << std::endl;
+        auto start = std::chrono::high_resolution_clock::now();
         auto graphSchedule = scheduler.graphColoringSchedule(activities);
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         std::cout << "   Scheduled: " << graphSchedule.size() << "/" << activities.size() 
                   << " activities (Weight: " << static_cast<int>(scheduler.calculateTotalWeight(graphSchedule)) << ")" << std::endl;
+        std::cout << "   Execution time: " << std::fixed << std::setprecision(2) 
+                  << duration.count() / 1000.0 << " ms" << std::endl;
         
         // 2. Dynamic Programming
         std::cout << "\n2. Dynamic Programming Algorithm:" << std::endl;
+        start = std::chrono::high_resolution_clock::now();
         auto dpSchedule = scheduler.dpSchedule(activities);
+        end = std::chrono::high_resolution_clock::now();
+        duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         std::cout << "   Scheduled: " << dpSchedule.size() << "/" << activities.size() 
                   << " activities (Weight: " << static_cast<int>(scheduler.calculateTotalWeight(dpSchedule)) << ")" << std::endl;
+        std::cout << "   Execution time: " << std::fixed << std::setprecision(2) 
+                  << duration.count() / 1000.0 << " ms" << std::endl;
         
         // 3. Backtracking
         std::cout << "\n3. Backtracking Algorithm:" << std::endl;
+        start = std::chrono::high_resolution_clock::now();
         auto backtrackSchedule = scheduler.backtrackingSchedule(activities);
+        end = std::chrono::high_resolution_clock::now();
+        duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         std::cout << "   Scheduled: " << backtrackSchedule.size() << "/" << activities.size() 
                   << " activities (Weight: " << static_cast<int>(scheduler.calculateTotalWeight(backtrackSchedule)) << ")" << std::endl;
+        std::cout << "   Execution time: " << std::fixed << std::setprecision(2) 
+                  << duration.count() / 1000.0 << " ms" << std::endl;
         
         // 4. Genetic Algorithm
         std::cout << "\n4. Genetic Algorithm:" << std::endl;
+        start = std::chrono::high_resolution_clock::now();
         auto geneticSchedule = scheduler.geneticAlgorithmSchedule(activities);
+        end = std::chrono::high_resolution_clock::now();
+        duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         std::cout << "   Scheduled: " << geneticSchedule.size() << "/" << activities.size() 
                   << " activities (Weight: " << static_cast<int>(scheduler.calculateTotalWeight(geneticSchedule)) << ")" << std::endl;
+        std::cout << "   Execution time: " << std::fixed << std::setprecision(2) 
+                  << duration.count() / 1000.0 << " ms" << std::endl;
         
         // Use the best result for detailed output
         schedule = dpSchedule; // DP usually gives optimal results
@@ -170,6 +192,7 @@ int main(int argc, char* argv[]) {
     } else {
         std::cout << "\nRunning " << algorithm << " algorithm..." << std::endl;
         
+        auto start = std::chrono::high_resolution_clock::now();
         if (algorithm == "graph-coloring") {
             schedule = scheduler.graphColoringSchedule(activities);
         } else if (algorithm == "dynamic-prog" || algorithm == "dp") {
@@ -183,6 +206,10 @@ int main(int argc, char* argv[]) {
             std::cerr << "Valid options: graph-coloring, dynamic-prog, backtracking, genetic" << std::endl;
             return 1;
         }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << "Execution time: " << std::fixed << std::setprecision(2) 
+                  << duration.count() / 1000.0 << " ms" << std::endl;
     }
     
     // Display results

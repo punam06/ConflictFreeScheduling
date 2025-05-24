@@ -13,17 +13,33 @@ std::vector<Activity> GraphColoringScheduler::coloringSchedule(std::vector<Activ
     
     // Create scheduled activities with assigned time slots
     std::vector<Activity> scheduledActivities;
+    
+    // Group activities by color (time slot)
+    std::unordered_map<int, std::vector<Activity>> colorGroups;
     for (const auto& activity : activities) {
-        Activity scheduled = activity;
         int color = colorAssignment[activity.id];
-        
-        // Skip activities that couldn't be colored (color = -1)
         if (color >= 0) {
-            // Assign new time slot based on color, preserving duration
+            colorGroups[color].push_back(activity);
+        }
+    }
+    
+    // Schedule each color group sequentially
+    int currentTime = 0;
+    for (auto& [color, group] : colorGroups) {
+        // Sort activities in group by original start time to maintain some order
+        std::sort(group.begin(), group.end(), 
+                  [](const Activity& a, const Activity& b) {
+                      return a.start < b.start;
+                  });
+        
+        // Schedule activities in this color group non-conflictingly
+        for (auto& activity : group) {
+            Activity scheduled = activity;
             int duration = activity.end - activity.start;
-            scheduled.start = color * (duration + 1); // Ensure enough gap between slots
-            scheduled.end = scheduled.start + duration;
+            scheduled.start = currentTime;
+            scheduled.end = currentTime + duration;
             scheduledActivities.push_back(scheduled);
+            currentTime = scheduled.end + 1; // Add gap to prevent edge conflicts
         }
     }
     

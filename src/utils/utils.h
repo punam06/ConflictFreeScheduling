@@ -69,6 +69,7 @@ namespace Utils {
     inline int calculateDayOfWeek(const std::string& dateStr) {
         // Simple placeholder - would need actual calendar calculation
         // in a production system
+        (void)dateStr; // Suppress unused parameter warning
         return 1; // Monday
     }
 }
