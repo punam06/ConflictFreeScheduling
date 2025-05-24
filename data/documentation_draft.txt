@@ -1,0 +1,265 @@
+# Documentation Draft Content
+# Please paste the content from "documentation draft.pdf" here
+# This file will be used to extract project requirements and specifications
+
+# Expected content might include:
+# - Project objectives and scope
+# - Algorithm requirements
+# - Database specifications
+# - System architecture details
+# - Performance requirements
+# - Academic requirements and constraints
+
+# Paste the documentation draft content below this line:
+# ================================================
+Documentation:
+University Routine Generator Project
+Bangladesh University of Professionals - CSE
+Department
+Project Overview
+A conflict-free class routine generator using advanced algorithms to optimize
+scheduling for 4 batches (8 sections) with limited classroom resources.
+1. Project Plan & Draft
+1.1 Problem Analysis
+• Constraints:
+o 4 batches × 2 sections = 8 sections total
+o 6-7 available classrooms
+o Time slots: 8:30 AM - 3:30 PM
+o Lunch break: 1:30-2:00 PM
+o Class breaks: 15 minutes (optimize to 10-5 minutes)
+o Theory classes: 3 credit hours, 2 sessions/week, 1 hour each
+o Lab classes: 1.5 credit (3 hours weekly) or 0.75 credit (3 hours bi-weekly)
+1.2 Core Components
+1. Input Management System
+2. Graph-based Conflict Detection
+3. Graph Coloring Algorithm
+4. Backtracking for Optimization
+5. Database Integration (SQL)
+6. PDF Generation
+1.3 Data Structures Used
+• Adjacency List for conflict graphs
+• Hash Maps for quick lookup
+• Priority Queues for scheduling optimization
+• Trees for backtracking solutions
+2. Algorithm Design
+2.1 Graph Coloring Algorithm
+Input: Courses, Time slots, Rooms
+Output: Conflict-free schedule
+1. Create conflict graph where:
+- Nodes = Course sessions
+- Edges = Conflicts (same teacher, same batch, room conflicts)
+2. Apply Graph Coloring:
+- Colors represent time slots
+- Adjacent nodes cannot have same color
+3. Optimize using Welsh-Powell algorithm
+2.2 Backtracking Algorithm
+BacktrackSchedule(courseIndex, assignment):
+if courseIndex == totalCourses:
+return true // Solution found
+for each timeSlot in availableSlots:
+if isValidAssignment(courseIndex, timeSlot):
+assignment[courseIndex] = timeSlot
+if BacktrackSchedule(courseIndex + 1, assignment):
+return true
+assignment[courseIndex] = null // backtrack
+return false
+3. System Architecture
+3.1 File Structure
+RoutineGenerator/
+│
+├── src/
+│ ├── main.cpp
+│ ├── classes/
+│ │ ├── Course.h/cpp
+│ │ ├── Teacher.h/cpp
+│ │ ├── Classroom.h/cpp
+│ │ ├── TimeSlot.h/cpp
+│ │ └── Schedule.h/cpp
+│ ├── algorithms/
+│ │ ├── GraphColoring.h/cpp
+│ │ ├── Backtracking.h/cpp
+│ │ └── ConflictDetector.h/cpp
+│ ├── database/
+│ │ ├── Database.h/cpp
+│ │ └── SQLQueries.sql
+│ └── utils/
+│ ├── InputHandler.h/cpp
+│ ├── PDFGenerator.h/cpp
+│ └── Validator.h/cpp
+│
+├── data/
+│ ├── courses.txt
+│ ├── teachers.txt
+│ ├── classrooms.txt
+│ └── constraints.txt
+│
+├── output/
+│ └── generated_routines/
+│
+├── docs/
+│ ├── README.md
+│ ├── API_Documentation.md
+│ └── Algorithm_Analysis.md
+│
+└── tests/
+├── unit_tests/
+└── integration_tests/
+4. Database Design (ERP Integration)
+4.1 Entity Relationship Diagram
+COURSES
+├── course_id (PK)
+├── course_code
+├── credit_hours
+├── class_type (theory/lab)
+├── sessions_per_week
+└── batch_id (FK)
+TEACHERS
+├── teacher_id (PK)
+├── teacher_code (Teacher1, Teacher2, etc.)
+├── availability_start
+├── availability_end
+└── external_faculty (boolean)
+CLASSROOMS
+├── room_id (PK)
+├── room_code
+├── capacity
+├── room_type (theory/lab)
+└── building
+SCHEDULE
+├── schedule_id (PK)
+├── course_id (FK)
+├── teacher_id (FK)
+├── room_id (FK)
+├── day_of_week
+├── start_time
+├── end_time
+└── section
+4.2 SQL Schema
+CREATE DATABASE RoutineGenerator;
+CREATE TABLE batches (
+batch_id INT PRIMARY KEY,
+batch_name VARCHAR(20),
+year_level INT
+);
+CREATE TABLE courses (
+course_id INT PRIMARY KEY AUTO_INCREMENT,
+course_code VARCHAR(10) NOT NULL,
+credit_hours DECIMAL(3,2),
+class_type ENUM('theory', 'lab'),
+sessions_per_week INT,
+batch_id INT,
+FOREIGN KEY (batch_id) REFERENCES batches(batch_id)
+);
+CREATE TABLE teachers (
+teacher_id INT PRIMARY KEY AUTO_INCREMENT,
+teacher_code VARCHAR(20) UNIQUE,
+availability_start TIME,
+availability_end TIME,
+external_faculty BOOLEAN DEFAULT FALSE
+);
+CREATE TABLE classrooms (
+room_id INT PRIMARY KEY AUTO_INCREMENT,
+room_code VARCHAR(20) UNIQUE,
+capacity INT,
+room_type ENUM('theory', 'lab', 'both'),
+building VARCHAR(50)
+);
+CREATE TABLE time_slots (
+slot_id INT PRIMARY KEY AUTO_INCREMENT,
+start_time TIME,
+end_time TIME,
+day_of_week ENUM('SUN', 'MON', 'TUE', 'WED', 'THU')
+);
+CREATE TABLE schedule (
+schedule_id INT PRIMARY KEY AUTO_INCREMENT,
+course_id INT,
+teacher_id INT,
+room_id INT,
+slot_id INT,
+section ENUM('A', 'B'),
+FOREIGN KEY (course_id) REFERENCES courses(course_id),
+FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id),
+FOREIGN KEY (room_id) REFERENCES classrooms(room_id),
+FOREIGN KEY (slot_id) REFERENCES time_slots(slot_id)
+);
+5. Core Algorithms Implementation
+5.1 Graph Coloring (Welsh-Powell)
+1. Sort vertices by degree (descending)
+2. Assign colors greedily
+3. Optimize for minimum colors used
+5.2 Conflict Detection
+• Teacher conflicts: Same teacher, same time
+• Room conflicts: Same room, same time
+• Batch conflicts: Same batch, same time
+• External faculty constraints: Limited availability
+5.3 Optimization Techniques
+• Heuristic 1: Schedule high-degree courses first
+• Heuristic 2: Prioritize external faculty constraints
+• Heuristic 3: Minimize gap times between classes
+• Heuristic 4: Batch similar courses together
+6. Input/Output Format
+6.1 Input Format
+# Courses Input
+Course_Code,Credit_Hours,Class_Type,Sessions_Per_Week,Batch,Section
+CSE2101,3.0,theory,2,BCSE24,A
+CSE2102,1.5,lab,1,BCSE24,A
+# Teachers Input
+Teacher_Code,Availability_Start,Availability_End,External
+Teacher1,08:30,15:30,false
+Teacher2,12:00,17:00,true
+# Classrooms Input
+Room_Code,Capacity,Type,Building
+CR302,40,theory,FBS
+LAB504,30,lab,FBS
+6.2 Output Format
+• PDF routine with time slots and assignments
+• Conflict analysis report
+• Optimization statistics
+• Alternative schedules if conflicts exist
+7. Performance Analysis
+7.1 Time Complexity
+• Graph Construction: O(n²) where n = number of courses
+• Graph Coloring: O(n² log n)
+• Backtracking: O(k^n) worst case, where k = time slots
+• Overall: O(n² log n) average case with heuristics
+7.2 Space Complexity
+• Graph Storage: O(n²)
+• Schedule Storage: O(n)
+• Overall: O(n²)
+8. Implementation Steps
+1. 2. 4. 5. 6. Phase 1: Setup project structure and basic classes
+Phase 2: Implement graph algorithms
+3. Phase 3: Database integration
+Phase 4: Conflict resolution and optimization
+Phase 5: PDF generation and testing
+Phase 6: GitHub deployment and documentation
+9. Testing Strategy
+9.1 Unit Tests
+• Individual algorithm testing
+• Data structure validation
+• Input/output verification
+9.2 Integration Tests
+• End-to-end routine generation
+• Database connectivity
+• PDF generation
+9.3 Performance Tests
+• Large dataset handling
+• Memory usage optimization
+• Execution time benchmarks
+10. Future Enhancements
+1. Web Interface: React/Angular frontend
+2. Real-time Updates: Dynamic schedule modifications
+3. Mobile App: Student/faculty access
+4. AI Integration: Machine learning for better optimization
+5. Multi-semester Planning: Long-term schedule optimization
+11. GitHub Repository Structure
+Repository: https://github.com/username/BUP-Routine-Generator
+├── README.md (Project overview and setup instructions)
+├── CONTRIBUTING.md (Contribution guidelines)
+├── LICENSE (MIT/Apache license)
+├── .gitignore (C++, database, IDE files)
+├── CMakeLists.txt (Build configuration)
+├── Dockerfile (Containerization)
+└── All source files as per structure above
+This comprehensive plan provides a robust foundation for developing the conflict-free
+routine generator with optimized algorithms and database integration.

@@ -1,0 +1,792 @@
+# CSE Department Class Routine Data
+# Please paste the content from "Jan-Jun_2025_BCSE_Class_Routine_23.3.25[1] copy.pdf" here
+# This file will be used to extract actual course scheduling information
+
+# Format expected:
+# - Course codes and names
+# - Time slots and schedules
+# - Room assignments
+# - Faculty assignments
+# - Semester information
+
+# Paste the routine content below this line:
+# ================================================
+
+-- =====================================================
+-- BUP Routine Generator - Complete SQL ERP Implementation
+-- Bangladesh University of Professionals - CSE Department
+-- =====================================================
+
+-- Drop existing database if exists
+DROP DATABASE IF EXISTS bup_routine_generator;
+CREATE DATABASE bup_routine_generator;
+USE bup_routine_generator;
+
+-- =====================================================
+-- CORE ENTITY TABLES
+-- =====================================================
+
+-- Batches Table
+CREATE TABLE batches (
+    batch_id INT PRIMARY KEY AUTO_INCREMENT,
+    batch_code VARCHAR(20) UNIQUE NOT NULL,
+    batch_name VARCHAR(50) NOT NULL,
+    year_level INT NOT NULL,
+    semester INT NOT NULL,
+    total_sections INT DEFAULT 2,
+    status ENUM('ACTIVE', 'INACTIVE', 'GRADUATED') DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_batch_code (batch_code),
+    INDEX idx_year_semester (year_level, semester)
+);
+
+-- Teachers Table
+CREATE TABLE teachers (
+    teacher_id INT PRIMARY KEY AUTO_INCREMENT,
+    teacher_code VARCHAR(20) UNIQUE NOT NULL,
+    full_name VARCHAR(100),
+    designation VARCHAR(50),
+    department VARCHAR(50),
+    email VARCHAR(100),
+    phone VARCHAR(20),
+    availability_start TIME NOT NULL DEFAULT '08:30:00',
+    availability_end TIME NOT NULL DEFAULT '17:30:00',
+    external_faculty BOOLEAN DEFAULT FALSE,
+    max_hours_per_day INT DEFAULT 6,
+    max_hours_per_week INT DEFAULT 30,
+    preferred_time_slot ENUM('MORNING', 'AFTERNOON', 'EVENING', 'ANY') DEFAULT 'ANY',
+    status ENUM('ACTIVE', 'INACTIVE', 'ON_LEAVE') DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_teacher_code (teacher_code),
+    INDEX idx_external (external_faculty),
+    INDEX idx_availability (availability_start, availability_end)
+);
+
+-- Classrooms Table
+CREATE TABLE classrooms (
+    room_id INT PRIMARY KEY AUTO_INCREMENT,
+    room_code VARCHAR(20) UNIQUE NOT NULL,
+    capacity INT NOT NULL,
+    room_type ENUM('THEORY', 'LAB', 'BOTH') NOT NULL,
+    building VARCHAR(50),
+    floor_number INT,
+    facilities TEXT,
+    status ENUM('AVAILABLE', 'MAINTENANCE', 'UNAVAILABLE') DEFAULT 'AVAILABLE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_room_code (room_code),
+    INDEX idx_room_type (room_type),
+    INDEX idx_building (building)
+);
+
+-- Courses Table
+CREATE TABLE courses (
+    course_id INT PRIMARY KEY AUTO_INCREMENT,
+    course_code VARCHAR(15) UNIQUE NOT NULL,
+    course_title VARCHAR(100),
+    credit_hours DECIMAL(3,2) NOT NULL,
+    class_type ENUM('THEORY', 'LAB') NOT NULL,
+    -- Updated: 3.0 credit theory classes are 1.5 hours, 2 sessions per week
+    session_duration INT NOT NULL, -- Duration in minutes (90 for theory, 180 for lab)
+    sessions_per_week INT NOT NULL,
+    batch_id INT NOT NULL,
+    teacher_id INT NOT NULL,
+    prerequisite_course_id INT NULL,
+    description TEXT,
+    status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (batch_id) REFERENCES batches(batch_id) ON DELETE CASCADE,
+    FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id) ON DELETE RESTRICT,
+    FOREIGN KEY (prerequisite_course_id) REFERENCES courses(course_id) ON DELETE SET NULL,
+    INDEX idx_course_code (course_code),
+    INDEX idx_batch_course (batch_id, course_code),
+    INDEX idx_teacher_course (teacher_id),
+    INDEX idx_credit_type (credit_hours, class_type)
+);
+
+-- Course Sections Table (A and B sections)
+CREATE TABLE course_sections (
+    section_id INT PRIMARY KEY AUTO_INCREMENT,
+    course_id INT NOT NULL,
+    section_name ENUM('A', 'B') NOT NULL,
+    max_students INT DEFAULT 40,
+    enrolled_students INT DEFAULT 0,
+    status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_course_section (course_id, section_name),
+    INDEX idx_course_section (course_id, section_name)
+);
+
+-- Time Slots Table
+CREATE TABLE time_slots (
+    slot_id INT PRIMARY KEY AUTO_INCREMENT,
+    slot_name VARCHAR(20) UNIQUE NOT NULL,
+    day_of_week ENUM('SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT') NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    duration_minutes INT GENERATED ALWAYS AS (TIME_TO_SEC(TIMEDIFF(end_time, start_time))/60) STORED,
+    slot_type ENUM('REGULAR', 'LUNCH', 'BREAK') DEFAULT 'REGULAR',
+    is_available BOOLEAN DEFAULT TRUE,
+    priority INT DEFAULT 1, -- Higher priority slots are preferred
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_day_time (day_of_week, start_time),
+    INDEX idx_slot_name (slot_name),
+    INDEX idx_priority (priority DESC)
+);
+
+-- =====================================================
+-- SCHEDULE AND ASSIGNMENT TABLES
+-- =====================================================
+
+-- Main Schedule Table
+CREATE TABLE schedule (
+    schedule_id INT PRIMARY KEY AUTO_INCREMENT,
+    course_id INT NOT NULL,
+    section_id INT NOT NULL,
+    teacher_id INT NOT NULL,
+    room_id INT NOT NULL,
+    slot_id INT NOT NULL,
+    session_number INT NOT NULL DEFAULT 1, -- For multiple sessions per week
+    academic_year VARCHAR(10) NOT NULL,
+    semester ENUM('SPRING', 'SUMMER', 'FALL') NOT NULL,
+    status ENUM('SCHEDULED', 'CONFIRMED', 'CANCELLED', 'COMPLETED') DEFAULT 'SCHEDULED',
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(course_id) ON DELETE CASCADE,
+    FOREIGN KEY (section_id) REFERENCES course_sections(section_id) ON DELETE CASCADE,
+    FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id) ON DELETE RESTRICT,
+    FOREIGN KEY (room_id) REFERENCES classrooms(room_id) ON DELETE RESTRICT,
+    FOREIGN KEY (slot_id) REFERENCES time_slots(slot_id) ON DELETE RESTRICT,
+    UNIQUE KEY unique_schedule (course_id, section_id, session_number, academic_year, semester),
+    INDEX idx_teacher_schedule (teacher_id, slot_id),
+    INDEX idx_room_schedule (room_id, slot_id),
+    INDEX idx_time_schedule (slot_id),
+    INDEX idx_academic_period (academic_year, semester)
+);
+
+-- =====================================================
+-- CONSTRAINT AND CONFLICT MANAGEMENT TABLES
+-- =====================================================
+
+-- Teacher Constraints Table
+CREATE TABLE teacher_constraints (
+    constraint_id INT PRIMARY KEY AUTO_INCREMENT,
+    teacher_id INT NOT NULL,
+    day_of_week ENUM('SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'),
+    unavailable_start_time TIME,
+    unavailable_end_time TIME,
+    constraint_type ENUM('UNAVAILABLE', 'PREFERRED', 'RESTRICTED') NOT NULL,
+    reason VARCHAR(255),
+    priority INT DEFAULT 1,
+    is_permanent BOOLEAN DEFAULT FALSE,
+    valid_from DATE DEFAULT CURRENT_DATE,
+    valid_to DATE DEFAULT '2099-12-31',
+    FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id) ON DELETE CASCADE,
+    INDEX idx_teacher_constraint (teacher_id, day_of_week),
+    INDEX idx_constraint_validity (valid_from, valid_to)
+);
+
+-- Room Constraints Table
+CREATE TABLE room_constraints (
+    constraint_id INT PRIMARY KEY AUTO_INCREMENT,
+    room_id INT NOT NULL,
+    day_of_week ENUM('SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'),
+    unavailable_start_time TIME,
+    unavailable_end_time TIME,
+    constraint_type ENUM('MAINTENANCE', 'RESERVED', 'UNAVAILABLE') NOT NULL,
+    reason VARCHAR(255),
+    valid_from DATE DEFAULT CURRENT_DATE,
+    valid_to DATE DEFAULT '2099-12-31',
+    FOREIGN KEY (room_id) REFERENCES classrooms(room_id) ON DELETE CASCADE,
+    INDEX idx_room_constraint (room_id, day_of_week),
+    INDEX idx_constraint_validity (valid_from, valid_to)
+);
+
+-- Conflict Detection Table
+CREATE TABLE schedule_conflicts (
+    conflict_id INT PRIMARY KEY AUTO_INCREMENT,
+    conflict_type ENUM('TEACHER_OVERLAP', 'ROOM_OVERLAP', 'BATCH_OVERLAP', 'TIME_CONSTRAINT') NOT NULL,
+    schedule_id_1 INT NOT NULL,
+    schedule_id_2 INT,
+    conflict_description TEXT,
+    severity ENUM('LOW', 'MEDIUM', 'HIGH', 'CRITICAL') DEFAULT 'MEDIUM',
+    is_resolved BOOLEAN DEFAULT FALSE,
+    resolution_notes TEXT,
+    detected_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP NULL,
+    FOREIGN KEY (schedule_id_1) REFERENCES schedule(schedule_id) ON DELETE CASCADE,
+    FOREIGN KEY (schedule_id_2) REFERENCES schedule(schedule_id) ON DELETE CASCADE,
+    INDEX idx_conflict_type (conflict_type),
+    INDEX idx_unresolved (is_resolved, severity),
+    INDEX idx_detection_time (detected_at)
+);
+
+-- =====================================================
+-- SYSTEM CONFIGURATION TABLES
+-- =====================================================
+
+-- System Settings Table
+CREATE TABLE system_settings (
+    setting_id INT PRIMARY KEY AUTO_INCREMENT,
+    setting_key VARCHAR(50) UNIQUE NOT NULL,
+    setting_value TEXT NOT NULL,
+    setting_type ENUM('STRING', 'INTEGER', 'BOOLEAN', 'TIME', 'JSON') DEFAULT 'STRING',
+    description TEXT,
+    is_editable BOOLEAN DEFAULT TRUE,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_setting_key (setting_key)
+);
+
+-- Routine Generation Log Table
+CREATE TABLE routine_generation_log (
+    log_id INT PRIMARY KEY AUTO_INCREMENT,
+    generation_id VARCHAR(36) UNIQUE NOT NULL,
+    academic_year VARCHAR(10) NOT NULL,
+    semester ENUM('SPRING', 'SUMMER', 'FALL') NOT NULL,
+    algorithm_used ENUM('GRAPH_COLORING', 'BACKTRACKING', 'HYBRID') NOT NULL,
+    execution_time_ms INT,
+    total_courses INT,
+    total_conflicts INT,
+    conflicts_resolved INT,
+    optimization_score DECIMAL(5,2),
+    status ENUM('RUNNING', 'COMPLETED', 'FAILED', 'CANCELLED') DEFAULT 'RUNNING',
+    error_message TEXT,
+    generated_by VARCHAR(50),
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP NULL,
+    INDEX idx_generation_status (status),
+    INDEX idx_academic_period (academic_year, semester),
+    INDEX idx_generation_time (started_at)
+);
+
+-- =====================================================
+-- INSERT SAMPLE DATA
+-- =====================================================
+
+-- Insert System Settings
+INSERT INTO system_settings (setting_key, setting_value, setting_type, description) VALUES
+('LUNCH_BREAK_START', '13:30:00', 'TIME', 'Lunch break start time'),
+('LUNCH_BREAK_END', '14:00:00', 'TIME', 'Lunch break end time'),
+('MIN_BREAK_BETWEEN_CLASSES', '15', 'INTEGER', 'Minimum break between classes in minutes'),
+('MAX_CLASSES_PER_DAY_PER_BATCH', '5', 'INTEGER', 'Maximum classes per day per batch'),
+('THEORY_CLASS_DURATION', '90', 'INTEGER', 'Theory class duration in minutes (1.5 hours)'),
+('LAB_CLASS_DURATION', '180', 'INTEGER', 'Lab class duration in minutes (3 hours)'),
+('UNIVERSITY_START_TIME', '08:30:00', 'TIME', 'University day start time'),
+('UNIVERSITY_END_TIME', '17:30:00', 'TIME', 'University day end time'),
+('EXTERNAL_FACULTY_MAX_HOURS', '4', 'INTEGER', 'Maximum hours per day for external faculty'),
+('OPTIMIZE_GAPS', 'true', 'BOOLEAN', 'Whether to minimize gaps between classes');
+
+-- Insert Batches
+INSERT INTO batches (batch_code, batch_name, year_level, semester, total_sections) VALUES
+('BCSE25', 'Bachelor of CSE 2025', 1, 1, 2),
+('BCSE24', 'Bachelor of CSE 2024', 2, 1, 2),
+('BCSE23', 'Bachelor of CSE 2023', 2, 2, 2),
+('BCSE22', 'Bachelor of CSE 2022', 3, 2, 2);
+
+-- Insert Teachers
+INSERT INTO teachers (teacher_code, full_name, designation, department, email, phone, availability_start, availability_end, external_faculty, max_hours_per_day) VALUES
+('Teacher1', 'Lec Rumana Yasmin', 'Lecturer', 'CSE, BUP', 'rumana.yasmin@bup.edu.bd', '01769021847', '08:30:00', '17:30:00', FALSE, 6),
+('Teacher2', 'Lec Sobhana Jahan', 'Lecturer', 'CSE, BUP', 'sobhana@bup.edu.bd', '01769021843', '08:30:00', '17:30:00', FALSE, 6),
+('Teacher3', 'Lec Iyolita Islam', 'Lecturer', 'CSE, BUP', 'iyolitaislam@bup.edu.bd', '01769021844', '08:30:00', '17:30:00', FALSE, 6),
+('Teacher4', 'Lec Sayma Alam Suha', 'Lecturer', 'CSE, BUP', 'suha@bup.edu.bd', '01769021846', '08:30:00', '17:30:00', FALSE, 6),
+('Teacher5', 'Prof. Shahed Rana', 'Professor', 'Chemistry, JU', 'srana_chem@juniv.edu', '01720500701', '12:00:00', '17:30:00', TRUE, 4),
+('Teacher6', 'Prof. Mahmudur Rahman', 'Professor', 'EEE, DUET', 'm.rahman@duet.ac.bd', '01308496660', '10:00:00', '16:00:00', TRUE, 4),
+('Teacher7', 'Prof Mahfuz Alam', 'Professor', 'EEE, DUET', 'mahfuz@duet.ac.bd', '01738223433', '09:00:00', '15:00:00', TRUE, 4),
+('Teacher8', 'Col Eare Morshed', 'Colonel', 'Mathematics, MIST', 'morshed@sh.mist.ac.bd', '01769024124', '08:30:00', '14:00:00', TRUE, 4),
+('Teacher9', 'Prof. Ziaul Ahsan', 'Professor', 'Physics', 'ziaul8808828@gmail.com', '01769760880', '14:00:00', '18:00:00', TRUE, 4),
+('Teacher10', 'Assoc. Prof Md.Abdus Sattar', 'Associate Professor', 'CSE, MIST', 'masattar@cse.mist.ac.bd', '01713036113', '10:00:00', '16:00:00', TRUE, 4);
+
+-- Insert Classrooms
+INSERT INTO classrooms (room_code, capacity, room_type, building, floor_number) VALUES
+('CR302', 50, 'THEORY', 'FBS Tower', 3),
+('CR303', 45, 'THEORY', 'FBS Tower', 3),
+('CR304', 40, 'THEORY', 'FBS Tower', 3),
+('CR504', 30, 'LAB', 'FBS Tower', 5),
+('LAB1003', 25, 'LAB', 'Gen Belal Tower', 10),
+('LAB1004', 30, 'LAB', 'Gen Belal Tower', 10),
+('EEELAB', 20, 'LAB', 'MIST', 1);
+
+-- Insert Time Slots (15 minute break between classes)
+INSERT INTO time_slots (slot_name, day_of_week, start_time, end_time, priority) VALUES
+-- Sunday
+('SUN_SLOT1', 'SUN', '08:30:00', '10:00:00', 5),
+('SUN_SLOT2', 'SUN', '10:15:00', '11:45:00', 4),
+('SUN_SLOT3', 'SUN', '12:00:00', '13:30:00', 3),
+('SUN_SLOT4', 'SUN', '14:00:00', '15:30:00', 2),
+('SUN_SLOT5', 'SUN', '15:45:00', '17:15:00', 1),
+-- Monday  
+('MON_SLOT1', 'MON', '08:30:00', '10:00:00', 5),
+('MON_SLOT2', 'MON', '10:15:00', '11:45:00', 4),
+('MON_SLOT3', 'MON', '12:00:00', '13:30:00', 3),
+('MON_SLOT4', 'MON', '14:00:00', '15:30:00', 2),
+('MON_SLOT5', 'MON', '15:45:00', '17:15:00', 1),
+-- Tuesday
+('TUE_SLOT1', 'TUE', '08:30:00', '10:00:00', 5),
+('TUE_SLOT2', 'TUE', '10:15:00', '11:45:00', 4),
+('TUE_SLOT3', 'TUE', '12:00:00', '13:30:00', 3),
+('TUE_SLOT4', 'TUE', '14:00:00', '15:30:00', 2),
+('TUE_SLOT5', 'TUE', '15:45:00', '17:15:00', 1),
+-- Wednesday
+('WED_SLOT1', 'WED', '08:30:00', '10:00:00', 5),
+('WED_SLOT2', 'WED', '10:15:00', '11:45:00', 4),
+('WED_SLOT3', 'WED', '12:00:00', '13:30:00', 3),
+('WED_SLOT4', 'WED', '14:00:00', '15:30:00', 2),
+('WED_SLOT5', 'WED', '15:45:00', '17:15:00', 1),
+-- Thursday
+('THU_SLOT1', 'THU', '08:30:00', '10:00:00', 5),
+('THU_SLOT2', 'THU', '10:15:00', '11:45:00', 4),
+('THU_SLOT3', 'THU', '12:00:00', '13:30:00', 3),
+('THU_SLOT4', 'THU', '14:00:00', '15:30:00', 2),
+('THU_SLOT5', 'THU', '15:45:00', '17:15:00', 1);
+
+-- Insert Courses (Updated with correct durations)
+-- BCSE25 (1st Year 1st Semester)
+INSERT INTO courses (course_code, course_title, credit_hours, class_type, session_duration, sessions_per_week, batch_id, teacher_id) VALUES
+('ENG1102', 'Communicative English-I', 1.50, 'THEORY', 90, 2, 1, 1),
+('CHEM1103', 'Fundamentals of Chemistry', 3.00, 'THEORY', 90, 2, 1, 5),
+('ICE1105', 'Electrical Circuits Analysis', 3.00, 'THEORY', 90, 2, 1, 6),
+('ICE1106', 'Electrical Circuits Analysis Laboratory', 0.75, 'LAB', 180, 1, 1, 6),
+('GED1119', 'Bangladesh Studies', 3.00, 'THEORY', 90, 2, 1, 8),
+('MATH1109', 'Differential and Integral Calculus', 3.00, 'THEORY', 90, 2, 1, 8),
+('PHY1115', 'Physics', 3.00, 'THEORY', 90, 2, 1, 9),
+('PHY1116', 'Physics Laboratory', 0.75, 'LAB', 180, 1, 1, 3),
+('MATH1113', 'Discrete Math', 3.00, 'THEORY', 90, 2, 1, 9);
+
+-- BCSE24 (2nd Year 1st Semester)  
+INSERT INTO courses (course_code, course_title, credit_hours, class_type, session_duration, sessions_per_week, batch_id, teacher_id) VALUES
+('CSE2101', 'Data Structures and Algorithms-I', 3.00, 'THEORY', 90, 2, 2, 1),
+('CSE2102', 'Data Structures and Algorithms-I Laboratory', 1.50, 'LAB', 180, 1, 2, 1),
+('CSE2103', 'Object Oriented Programming Language', 3.00, 'THEORY', 90, 2, 2, 2),
+('CSE2104', 'Object Oriented Programming Language Laboratory-I', 1.50, 'LAB', 180, 1, 2, 2),
+('ICE2107', 'Electrical Drives and Instrumentation', 3.00, 'THEORY', 90, 2, 2, 7),
+('ICE2108', 'Electrical Drives and Instrumentation Laboratory', 0.75, 'LAB', 180, 1, 2, 4),
+('ENG2110', 'Presentation Skill Development', 1.50, 'THEORY', 90, 2, 2, 3),
+('MATH2111', 'Differential Equations, Laplace Transform and Fourier Transform', 3.00, 'THEORY', 90, 2, 2, 10);
+
+-- BCSE23 (2nd Year 2nd Semester)
+INSERT INTO courses (course_code, course_title, credit_hours, class_type, session_duration, sessions_per_week, batch_id, teacher_id) VALUES
+('CSE2202', 'Engineering Drawing and CAD Laboratory', 1.50, 'LAB', 180, 1, 3, 3),
+('CSE2203', 'Computer Architecture', 3.00, 'THEORY', 90, 2, 3, 3),
+('CSE2205', 'Data Structures and Algorithms-II', 3.00, 'THEORY', 90, 2, 3, 4),
+('CSE2206', 'Data Structures and Algorithms-II Laboratory', 1.50, 'LAB', 180, 1, 3, 4),
+('CSE2208', 'Object Oriented Programming Laboratory-II', 0.75, 'LAB', 180, 1, 3, 4),
+('ICE2209', 'Digital Electronics and Pulse Technique', 3.00, 'THEORY', 90, 2, 3, 5),
+('ICE2210', 'Digital Electronics and Pulse Technique Laboratory', 0.75, 'LAB', 180, 1, 3, 5),
+('MATH2211', 'Statistics', 3.00, 'THEORY', 90, 2, 3, 8);
+
+-- BCSE22 (3rd Year 2nd Semester)
+INSERT INTO courses (course_code, course_title, credit_hours, class_type, session_duration, sessions_per_week, batch_id, teacher_id) VALUES
+('CSE3201', 'Computer Network', 3.00, 'THEORY', 90, 2, 4, 1),
+('CSE3202', 'Computer Network Laboratory', 1.50, 'LAB', 180, 1, 4, 1),
+('CSE3203', 'Digital System Design', 3.00, 'THEORY', 90, 2, 4, 10),
+('CSE3204', 'Digital System Design Laboratory', 0.75, 'LAB', 180, 1, 4, 10),
+('CSE3205', 'Software Engineering', 3.00, 'THEORY', 90, 2, 4, 2),
+('CSE3206', 'Software Engineering Laboratory', 0.75, 'LAB', 180, 1, 4, 2),
+('CSE3208', 'Software Development Project – I', 1.50, 'LAB', 180, 1, 4, 3);
+
+-- Insert Course Sections (A and B for each course)
+INSERT INTO course_sections (course_id, section_name, max_students) 
+SELECT course_id, 'A', 40 FROM courses
+UNION ALL
+SELECT course_id, 'B', 40 FROM courses;
+
+-- =====================================================
+-- VIEWS FOR EASY DATA ACCESS
+-- =====================================================
+
+-- Complete Course View
+CREATE VIEW view_complete_courses AS
+SELECT 
+    c.course_id,
+    c.course_code,
+    c.course_title,
+    c.credit_hours,
+    c.class_type,
+    c.session_duration,
+    c.sessions_per_week,
+    c.session_duration * c.sessions_per_week AS total_weekly_minutes,
+    b.batch_code,
+    b.batch_name,
+    b.year_level,
+    b.semester,
+    t.teacher_code,
+    t.full_name AS teacher_name,
+    t.external_faculty,
+    cs.section_name,
+    cs.max_students,
+    cs.enrolled_students
+FROM courses c
+JOIN batches b ON c.batch_id = b.batch_id
+JOIN teachers t ON c.teacher_id = t.teacher_id
+JOIN course_sections cs ON c.course_id = cs.course_id
+WHERE c.status = 'ACTIVE' AND cs.status = 'ACTIVE';
+
+-- Complete Schedule View
+CREATE VIEW view_complete_schedule AS
+SELECT 
+    s.schedule_id,
+    c.course_code,
+    c.course_title,
+    c.credit_hours,
+    c.class_type,
+    cs.section_name,
+    b.batch_code,
+    b.year_level,
+    t.teacher_code,
+    t.full_name AS teacher_name,
+    t.external_faculty,
+    r.room_code,
+    r.room_type,
+    r.building,
+    ts.day_of_week,
+    ts.start_time,
+    ts.end_time,
+    ts.duration_minutes,
+    s.session_number,
+    s.academic_year,
+    s.semester,
+    s.status
+FROM schedule s
+JOIN courses c ON s.course_id = c.course_id
+JOIN course_sections cs ON s.section_id = cs.section_id
+JOIN batches b ON c.batch_id = b.batch_id
+JOIN teachers t ON s.teacher_id = t.teacher_id
+JOIN classrooms r ON s.room_id = r.room_id
+JOIN time_slots ts ON s.slot_id = ts.slot_id
+ORDER BY ts.day_of_week, ts.start_time, b.batch_code, cs.section_name;
+
+-- Teacher Workload View
+CREATE VIEW view_teacher_workload AS
+SELECT 
+    t.teacher_code,
+    t.full_name,
+    t.external_faculty,
+    COUNT(DISTINCT s.schedule_id) AS total_classes,
+    COUNT(DISTINCT c.course_id) AS total_courses,
+    SUM(c.session_duration * c.sessions_per_week) / 60.0 AS total_weekly_hours,
+    GROUP_CONCAT(DISTINCT b.batch_code ORDER BY b.batch_code) AS teaching_batches
+FROM teachers t
+LEFT JOIN schedule s ON t.teacher_id = s.teacher_id
+LEFT JOIN courses c ON s.course_id = c.course_id
+LEFT JOIN batches b ON c.batch_id = b.batch_id
+WHERE s.status = 'SCHEDULED' OR s.status = 'CONFIRMED'
+GROUP BY t.teacher_id, t.teacher_code, t.full_name, t.external_faculty
+ORDER BY total_weekly_hours DESC;
+
+-- Room Utilization View
+CREATE VIEW view_room_utilization AS
+SELECT 
+    r.room_code,
+    r.room_type,
+    r.building,
+    r.capacity,
+    COUNT(DISTINCT s.schedule_id) AS total_bookings,
+    COUNT(DISTINCT CONCAT(ts.day_of_week, '-', ts.slot_name)) AS occupied_slots,
+    ROUND((COUNT(DISTINCT CONCAT(ts.day_of_week, '-', ts.slot_name)) / 25.0) * 100, 2) AS utilization_percentage
+FROM classrooms r
+LEFT JOIN schedule s ON r.room_id = s.room_id
+LEFT JOIN time_slots ts ON s.slot_id = ts.slot_id
+WHERE s.status IN ('SCHEDULED', 'CONFIRMED')
+GROUP BY r.room_id, r.room_code, r.room_type, r.building, r.capacity
+ORDER BY utilization_percentage DESC;
+
+-- =====================================================
+-- STORED PROCEDURES FOR CONFLICT DETECTION
+-- =====================================================
+
+DELIMITER //
+
+-- Procedure to detect teacher conflicts
+CREATE PROCEDURE DetectTeacherConflicts()
+BEGIN
+    INSERT INTO schedule_conflicts (conflict_type, schedule_id_1, schedule_id_2, conflict_description, severity)
+    SELECT 
+        'TEACHER_OVERLAP',
+        s1.schedule_id,
+        s2.schedule_id,
+        CONCAT('Teacher ', t.name, ' has overlapping schedules: ', 
+               cs1.course_code, ' (', ts1.day_of_week, ' ', ts1.start_time, '-', ts1.end_time, ') and ',
+               cs2.course_code, ' (', ts2.day_of_week, ' ', ts2.start_time, '-', ts2.end_time, ')'),
+        'HIGH'
+    FROM schedule s1
+    JOIN schedule s2 ON s1.teacher_id = s2.teacher_id 
+        AND s1.schedule_id < s2.schedule_id
+        AND s1.status IN ('SCHEDULED', 'CONFIRMED')
+        AND s2.status IN ('SCHEDULED', 'CONFIRMED')
+    JOIN time_slots ts1 ON s1.slot_id = ts1.slot_id
+    JOIN time_slots ts2 ON s2.slot_id = ts2.slot_id
+    JOIN teachers t ON s1.teacher_id = t.teacher_id
+    JOIN courses cs1 ON s1.course_id = cs1.course_id
+    JOIN courses cs2 ON s2.course_id = cs2.course_id
+    WHERE ts1.day_of_week = ts2.day_of_week
+        AND NOT (ts1.end_time <= ts2.start_time OR ts2.end_time <= ts1.start_time);
+END //
+
+-- Procedure to detect room conflicts
+CREATE PROCEDURE DetectRoomConflicts()
+BEGIN
+    INSERT INTO schedule_conflicts (conflict_type, schedule_id_1, schedule_id_2, conflict_description, severity)
+    SELECT 
+        'ROOM_OVERLAP',
+        s1.schedule_id,
+        s2.schedule_id,
+        CONCAT('Room ', r.room_code, ' has overlapping schedules: ', 
+               cs1.course_code, ' (', ts1.day_of_week, ' ', ts1.start_time, '-', ts1.end_time, ') and ',
+               cs2.course_code, ' (', ts2.day_of_week, ' ', ts2.start_time, '-', ts2.end_time, ')'),
+        'HIGH'
+    FROM schedule s1
+    JOIN schedule s2 ON s1.room_id = s2.room_id 
+        AND s1.schedule_id < s2.schedule_id
+        AND s1.status IN ('SCHEDULED', 'CONFIRMED')
+        AND s2.status IN ('SCHEDULED', 'CONFIRMED')
+    JOIN time_slots ts1 ON s1.slot_id = ts1.slot_id
+    JOIN time_slots ts2 ON s2.slot_id = ts2.slot_id
+    JOIN classrooms r ON s1.room_id = r.room_id
+    JOIN courses cs1 ON s1.course_id = cs1.course_id
+    JOIN courses cs2 ON s2.course_id = cs2.course_id
+    WHERE ts1.day_of_week = ts2.day_of_week
+        AND NOT (ts1.end_time <= ts2.start_time OR ts2.end_time <= ts1.start_time);
+END //
+
+-- Procedure to detect student batch conflicts
+CREATE PROCEDURE DetectBatchConflicts()
+BEGIN
+    INSERT INTO schedule_conflicts (conflict_type, schedule_id_1, schedule_id_2, conflict_description, severity)
+    SELECT 
+        'BATCH_OVERLAP',
+        s1.schedule_id,
+        s2.schedule_id,
+        CONCAT('Batch ', b.batch_name, ' has overlapping schedules: ', 
+               cs1.course_code, ' (', ts1.day_of_week, ' ', ts1.start_time, '-', ts1.end_time, ') and ',
+               cs2.course_code, ' (', ts2.day_of_week, ' ', ts2.start_time, '-', ts2.end_time, ')'),
+        'HIGH'
+    FROM schedule s1
+    JOIN schedule s2 ON s1.batch_id = s2.batch_id 
+        AND s1.schedule_id < s2.schedule_id
+        AND s1.status IN ('SCHEDULED', 'CONFIRMED')
+        AND s2.status IN ('SCHEDULED', 'CONFIRMED')
+    JOIN time_slots ts1 ON s1.slot_id = ts1.slot_id
+    JOIN time_slots ts2 ON s2.slot_id = ts2.slot_id
+    JOIN batches b ON s1.batch_id = b.batch_id
+    JOIN courses cs1 ON s1.course_id = cs1.course_id
+    JOIN courses cs2 ON s2.course_id = cs2.course_id
+    WHERE ts1.day_of_week = ts2.day_of_week
+        AND NOT (ts1.end_time <= ts2.start_time OR ts2.end_time <= ts1.start_time);
+END //
+
+-- Procedure to run all conflict detection
+CREATE PROCEDURE DetectAllConflicts()
+BEGIN
+    -- Clear existing conflicts
+    DELETE FROM schedule_conflicts WHERE detected_at < DATE_SUB(NOW(), INTERVAL 1 DAY);
+    
+    -- Run all conflict detection procedures
+    CALL DetectTeacherConflicts();
+    CALL DetectRoomConflicts();
+    CALL DetectBatchConflicts();
+    
+    -- Update conflict statistics
+    UPDATE conflict_resolution_log 
+    SET total_conflicts = (SELECT COUNT(*) FROM schedule_conflicts WHERE status = 'ACTIVE'),
+        last_updated = NOW()
+    WHERE log_date = CURDATE();
+END //
+
+DELIMITER ;
+
+-- =====================================================
+-- TRIGGERS FOR AUTOMATIC CONFLICT DETECTION
+-- =====================================================
+
+-- Trigger to detect conflicts when new schedule is inserted
+CREATE TRIGGER tr_schedule_conflict_insert
+    AFTER INSERT ON schedule
+    FOR EACH ROW
+BEGIN
+    CALL DetectAllConflicts();
+END;
+
+-- Trigger to detect conflicts when schedule is updated
+CREATE TRIGGER tr_schedule_conflict_update
+    AFTER UPDATE ON schedule
+    FOR EACH ROW
+BEGIN
+    IF OLD.slot_id != NEW.slot_id OR OLD.room_id != NEW.room_id OR OLD.teacher_id != NEW.teacher_id THEN
+        CALL DetectAllConflicts();
+    END IF;
+END;
+
+-- =====================================================
+-- INDEXES FOR PERFORMANCE OPTIMIZATION
+-- =====================================================
+
+-- Indexes for schedule table
+CREATE INDEX idx_schedule_teacher_slot ON schedule(teacher_id, slot_id);
+CREATE INDEX idx_schedule_room_slot ON schedule(room_id, slot_id);
+CREATE INDEX idx_schedule_batch_slot ON schedule(batch_id, slot_id);
+CREATE INDEX idx_schedule_status ON schedule(status);
+
+-- Indexes for time_slots table
+CREATE INDEX idx_timeslots_day_time ON time_slots(day_of_week, start_time, end_time);
+
+-- Indexes for courses table
+CREATE INDEX idx_courses_dept ON courses(department);
+CREATE INDEX idx_courses_type ON courses(course_type);
+
+-- Indexes for teachers table
+CREATE INDEX idx_teachers_dept ON teachers(department);
+CREATE INDEX idx_teachers_status ON teachers(status);
+
+-- Indexes for classrooms table
+CREATE INDEX idx_classrooms_building ON classrooms(building);
+CREATE INDEX idx_classrooms_type ON classrooms(room_type);
+CREATE INDEX idx_classrooms_capacity ON classrooms(capacity);
+
+-- =====================================================
+-- SAMPLE OPTIMIZATION QUERIES
+-- =====================================================
+
+-- Query to find optimal room assignment based on capacity and location
+SELECT 
+    c.course_code,
+    c.course_name,
+    b.batch_name,
+    b.student_count,
+    r.room_code,
+    r.capacity,
+    r.building,
+    (r.capacity - b.student_count) as spare_capacity,
+    CASE 
+        WHEN c.department = 'CSE' AND r.building = 'Engineering' THEN 10
+        WHEN c.department = 'CSE' AND r.building = 'Science' THEN 5
+        ELSE 0
+    END as location_preference_score
+FROM courses c
+JOIN batches b ON c.course_id = b.course_id
+CROSS JOIN classrooms r
+WHERE r.capacity >= b.student_count
+    AND r.status = 'ACTIVE'
+ORDER BY location_preference_score DESC, spare_capacity ASC;
+
+-- Query to optimize teacher workload distribution
+SELECT 
+    t.teacher_id,
+    t.name,
+    t.department,
+    COUNT(s.schedule_id) as total_classes,
+    SUM(ts.duration_minutes) / 60.0 as total_hours_per_week,
+    AVG(r.capacity) as avg_room_capacity,
+    GROUP_CONCAT(DISTINCT c.course_code) as courses_taught
+FROM teachers t
+LEFT JOIN schedule s ON t.teacher_id = s.teacher_id AND s.status IN ('SCHEDULED', 'CONFIRMED')
+LEFT JOIN time_slots ts ON s.slot_id = ts.slot_id
+LEFT JOIN classrooms r ON s.room_id = r.room_id
+LEFT JOIN courses c ON s.course_id = c.course_id
+GROUP BY t.teacher_id, t.name, t.department
+ORDER BY total_hours_per_week DESC;
+
+-- =====================================================
+-- DATA VALIDATION FUNCTIONS
+-- =====================================================
+
+-- Function to validate schedule feasibility
+DELIMITER //
+CREATE FUNCTION ValidateScheduleFeasibility(
+    p_course_id INT,
+    p_teacher_id INT,
+    p_room_id INT,
+    p_slot_id INT,
+    p_batch_id INT
+) RETURNS BOOLEAN
+READS SQL DATA
+DETERMINISTIC
+BEGIN
+    DECLARE conflict_count INT DEFAULT 0;
+    
+    -- Check teacher availability
+    SELECT COUNT(*) INTO conflict_count
+    FROM schedule s
+    JOIN time_slots ts1 ON s.slot_id = ts1.slot_id
+    JOIN time_slots ts2 ON p_slot_id = ts2.slot_id
+    WHERE s.teacher_id = p_teacher_id
+        AND s.status IN ('SCHEDULED', 'CONFIRMED')
+        AND ts1.day_of_week = ts2.day_of_week
+        AND NOT (ts1.end_time <= ts2.start_time OR ts2.end_time <= ts1.start_time);
+    
+    IF conflict_count > 0 THEN
+        RETURN FALSE;
+    END IF;
+    
+    -- Check room availability
+    SELECT COUNT(*) INTO conflict_count
+    FROM schedule s
+    JOIN time_slots ts1 ON s.slot_id = ts1.slot_id
+    JOIN time_slots ts2 ON p_slot_id = ts2.slot_id
+    WHERE s.room_id = p_room_id
+        AND s.status IN ('SCHEDULED', 'CONFIRMED')
+        AND ts1.day_of_week = ts2.day_of_week
+        AND NOT (ts1.end_time <= ts2.start_time OR ts2.end_time <= ts1.start_time);
+    
+    IF conflict_count > 0 THEN
+        RETURN FALSE;
+    END IF;
+    
+    -- Check batch availability
+    SELECT COUNT(*) INTO conflict_count
+    FROM schedule s
+    JOIN time_slots ts1 ON s.slot_id = ts1.slot_id
+    JOIN time_slots ts2 ON p_slot_id = ts2.slot_id
+    WHERE s.batch_id = p_batch_id
+        AND s.status IN ('SCHEDULED', 'CONFIRMED')
+        AND ts1.day_of_week = ts2.day_of_week
+        AND NOT (ts1.end_time <= ts2.start_time OR ts2.end_time <= ts1.start_time);
+    
+    IF conflict_count > 0 THEN
+        RETURN FALSE;
+    END IF;
+    
+    -- Check room capacity vs batch size
+    SELECT COUNT(*) INTO conflict_count
+    FROM classrooms r
+    JOIN batches b ON p_batch_id = b.batch_id
+    WHERE r.room_id = p_room_id
+        AND r.capacity < b.student_count;
+    
+    IF conflict_count > 0 THEN
+        RETURN FALSE;
+    END IF;
+    
+    RETURN TRUE;
+END //
+DELIMITER ;
+
+-- =====================================================
+-- END OF DATABASE SCHEMA AND PROCEDURES
+-- =====================================================
+
+/*
+This comprehensive database structure provides:
+1. Complete relational schema for BUP CSE department scheduling
+2. Automated conflict detection with stored procedures
+3. Performance optimization with strategic indexes
+4. Data validation functions
+5. Comprehensive views for reporting and analysis
+6. Real-world constraints and business logic
+7. Audit trails and logging capabilities
+8. Flexible configuration for different scheduling algorithms
+
+The database supports:
+- Multi-batch course scheduling
+- External faculty management
+- Room capacity optimization
+- Time slot conflict resolution
+- Department-wise course organization
+- Semester and academic year tracking
+- Equipment and resource management
+- Automated report generation
+*/

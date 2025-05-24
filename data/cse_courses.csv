@@ -1,14 +1,34 @@
-course_id,course_name,instructor,duration,priority,capacity,room_requirement
-CSE101,Introduction to Programming,Dr. Smith,3,1,45,Lab
-CSE102,Discrete Mathematics,Prof. Johnson,3,2,40,Regular
-CSE201,Data Structures,Dr. Wilson,3,1,35,Lab
-CSE202,Computer Organization,Prof. Brown,3,2,30,Regular
-CSE301,Algorithms,Dr. Davis,3,1,35,Regular
-CSE302,Database Systems,Prof. Miller,3,2,30,Lab
-CSE303,Software Engineering,Dr. Garcia,3,1,25,Regular
-CSE401,Computer Networks,Prof. Martinez,3,2,25,Lab
-CSE402,Operating Systems,Dr. Anderson,3,1,30,Regular
-CSE403,Machine Learning,Prof. Taylor,3,3,20,Lab
+course_id,course_code,course_name,credit_hours,course_type,department,semester,prerequisites,instructor,duration,priority,capacity,room_requirement,description
+1,CSE1101,Introduction to Computer Science,3,CORE,CSE,1,,Dr. Rahman,3,1,45,Lab,"Basic concepts of computer science, programming fundamentals"
+2,CSE1102,Programming Fundamentals,3,CORE,CSE,1,,Prof. Ahmed,3,1,45,Lab,"C programming language, algorithms, data structures basics"
+3,CSE1201,Object Oriented Programming,3,CORE,CSE,2,CSE1102,Dr. Khan,3,1,40,Lab,"C++ programming, OOP concepts, inheritance, polymorphism"
+4,CSE1202,Data Structures,3,CORE,CSE,2,CSE1102,Prof. Islam,3,1,35,Lab,"Arrays, linked lists, stacks, queues, trees, graphs"
+5,CSE2101,Discrete Mathematics,3,CORE,CSE,3,,Dr. Hassan,3,2,40,Regular,"Mathematical foundations for computer science"
+6,CSE2102,Computer Organization,3,CORE,CSE,3,,Prof. Ali,3,2,30,Regular,"Computer architecture, assembly language, hardware concepts"
+7,CSE2201,Algorithms,3,CORE,CSE,4,CSE1202,Dr. Karim,3,1,35,Regular,"Algorithm analysis, sorting, searching, graph algorithms"
+8,CSE2202,Database Systems,3,CORE,CSE,4,,Prof. Haque,3,2,30,Lab,"Relational databases, SQL, database design, normalization"
+9,CSE3101,Software Engineering,3,CORE,CSE,5,CSE2201,Dr. Chowdhury,3,1,25,Regular,"Software development lifecycle, design patterns, testing"
+10,CSE3102,Computer Networks,3,CORE,CSE,5,,Prof. Mahmud,3,2,25,Lab,"Network protocols, TCP/IP, network security, distributed systems"
+11,CSE3201,Operating Systems,3,CORE,CSE,6,CSE2102,Dr. Ullah,3,1,30,Regular,"Process management, memory management, file systems"
+12,CSE3202,Compiler Design,3,CORE,CSE,6,CSE2201,Prof. Molla,3,2,25,Regular,"Lexical analysis, parsing, code generation, optimization"
+13,CSE4101,Artificial Intelligence,3,CORE,CSE,7,CSE2201,Dr. Sultana,3,1,20,Lab,"AI fundamentals, search algorithms, machine learning basics"
+14,CSE4102,Machine Learning,3,ELECTIVE,CSE,7,CSE4101,Prof. Begum,3,3,20,Lab,"Supervised learning, neural networks, deep learning"
+15,CSE4201,Cybersecurity,3,ELECTIVE,CSE,8,CSE3102,Dr. Noor,3,2,25,Lab,"Network security, cryptography, ethical hacking"
+16,CSE4202,Web Technologies,3,ELECTIVE,CSE,8,CSE2202,Prof. Reza,3,3,30,Lab,"HTML, CSS, JavaScript, web frameworks, databases"
+17,CSE4301,Project Work I,2,PROJECT,CSE,7,,Dr. Salam,2,1,15,Lab,"Individual project, research methodology"
+18,CSE4302,Project Work II,4,PROJECT,CSE,8,CSE4301,Prof. Khatun,4,1,15,Lab,"Thesis project, implementation, documentation"
+19,ENG1101,English I,3,GENERAL,ENG,1,,Dr. Fatima,3,3,50,Regular,"Basic English communication, grammar, writing skills"
+20,ENG1102,English II,3,GENERAL,ENG,2,ENG1101,Prof. Nasir,3,3,50,Regular,"Advanced English, technical writing, presentation skills"
+21,MATH1101,Calculus I,3,GENERAL,MATH,1,,Dr. Aziz,3,2,45,Regular,"Differential calculus, limits, continuity, derivatives"
+22,MATH1102,Calculus II,3,GENERAL,MATH,2,MATH1101,Prof. Shakib,3,2,45,Regular,"Integral calculus, series, multivariable calculus"
+23,MATH2101,Linear Algebra,3,GENERAL,MATH,3,,Dr. Rashid,3,2,40,Regular,"Matrices, vector spaces, eigenvalues, linear transformations"
+24,MATH2102,Statistics,3,GENERAL,MATH,4,,Prof. Farhan,3,2,40,Regular,"Probability, statistical inference, hypothesis testing"
+25,PHY1101,Physics I,3,GENERAL,PHY,1,,Dr. Kabir,3,3,40,Lab,"Mechanics, thermodynamics, wave motion"
+26,PHY1102,Physics II,3,GENERAL,PHY,2,PHY1101,Prof. Tania,3,3,40,Lab,"Electricity, magnetism, optics, modern physics"
+27,CHEM1103,Chemistry,3,GENERAL,CHEM,1,,Dr. Zaman,3,3,35,Lab,"General chemistry, atomic structure, chemical bonding"
+28,CSE3301,Internship,2,PRACTICAL,CSE,6,,Prof. Sarkar,2,2,20,Regular,"Industry internship, practical experience"
+29,CSE4401,Research Methodology,2,RESEARCH,CSE,7,,Dr. Morshed,2,2,30,Regular,"Research methods, academic writing, literature review"
+30,CSE4501,Special Topics,3,ELECTIVE,CSE,8,,Prof. Hossain,3,3,25,Regular,"Current trends in computer science and technology"
 CSE404,Artificial Intelligence,Dr. Thomas,3,2,25,Regular
 CSE405,Computer Graphics,Prof. Jackson,3,3,20,Lab
 CSE450,Senior Project I,Dr. White,3,1,15,Regular
