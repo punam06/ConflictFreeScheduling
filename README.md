@@ -263,12 +263,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Course: Algorithm Analysis and Design
 - Semester: 2-2
 - Academic Year: 2024-2025
-- Institution: [Your University Name]
+- Institution: [Bangladesh University of Professionals]
 
 ## 📞 Contact
 
-- **Author**: [Your Name]
-- **Email**: [your.email@university.edu]
+- **Author**: [Umme Hani Punam] [Rebeka Sultana Orce]
+- **Email**: [ummehanipunam8@gmail.com]
 - **Project Link**: [https://github.com/yourusername/ConflictFreeScheduling](https://github.com/yourusername/ConflictFreeScheduling)
 
 ---
