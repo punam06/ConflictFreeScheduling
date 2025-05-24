@@ -1,0 +1,7 @@
+Conflict-Free Scheduling Results
+Algorithm: dynamic-prog
+Scheduled Activities: 4
+ID: 1, Time: 9-11, Weight: 50
+ID: 6, Time: 11-13, Weight: 25
+ID: 3, Time: 13-15, Weight: 40
+ID: 5, Time: 16-18, Weight: 30
