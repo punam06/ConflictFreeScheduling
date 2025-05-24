@@ -39,7 +39,7 @@ private:
     static void backtrack(
         const std::vector<Activity>& activities,
         std::vector<Activity>& current,
-        int index,
+        size_t index,
         std::vector<Activity>& best
     );
     
@@ -62,7 +62,7 @@ private:
     static void findAllSchedules(
         const std::vector<Activity>& activities,
         std::vector<Activity>& current,
-        int index,
+        size_t index,
         std::vector<std::vector<Activity>>& allSchedules
     );
 };

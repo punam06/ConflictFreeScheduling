@@ -3,7 +3,9 @@
 #include <cassert>
 #include <string>
 
-// Include algorithm headers
+// Include test files
+#include "test_algorithms/algorithm_tests.cpp"
+#include "test_utils/utility_tests.cpp"
 #include "../src/scheduler.h"
 
 /**
@@ -47,13 +49,13 @@ public:
     
     void testEmptyInput() {
         std::vector<Activity> activities;
-        auto result = scheduler.greedySchedule(activities);
+        auto result = scheduler.dpSchedule(activities);
         runner.runTest("Empty input test", result.empty());
     }
     
     void testSingleActivity() {
         std::vector<Activity> activities = {{1, 1, 3}};
-        auto result = scheduler.greedySchedule(activities);
+        auto result = scheduler.dpSchedule(activities);
         runner.runTest("Single activity test", result.size() == 1);
     }
     
@@ -63,7 +65,7 @@ public:
             {2, 3, 4},
             {3, 5, 6}
         };
-        auto result = scheduler.greedySchedule(activities);
+        auto result = scheduler.graphColoringSchedule(activities);
         runner.runTest("Non-overlapping activities", result.size() == 3);
     }
     
@@ -73,7 +75,7 @@ public:
             {2, 3, 5},
             {3, 0, 6}
         };
-        auto result = scheduler.greedySchedule(activities);
+        auto result = scheduler.geneticAlgorithmSchedule(activities);
         runner.runTest("Overlapping activities", result.size() >= 1);
     }
     
@@ -85,7 +87,7 @@ public:
             {4, 5, 7},
             {5, 8, 9}
         };
-        auto result = scheduler.greedySchedule(activities);
+        auto result = scheduler.dpSchedule(activities);
         runner.runTest("Classic textbook example", result.size() == 3);
     }
     
@@ -108,10 +110,24 @@ int main() {
     std::cout << "Conflict-Free Scheduling Test Suite" << std::endl;
     std::cout << "===================================" << std::endl;
     
+    // Run basic scheduling tests
     TestRunner runner;
     SchedulingTests tests(runner);
-    
     tests.runAllTests();
+    
+    std::cout << "\n";
+    
+    // Run algorithm-specific tests
+    AlgorithmTests algorithmTests(true);
+    algorithmTests.runAllTests();
+    
+    std::cout << "\n";
+    
+    // Run utility tests
+    UtilityTests utilityTests(true);
+    utilityTests.runAllTests();
+    
+    std::cout << "\n";
     runner.summary();
     
     return 0;

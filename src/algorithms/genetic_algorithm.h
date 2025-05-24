@@ -18,14 +18,14 @@ public:
      * @brief Configuration parameters for genetic algorithm
      */
     struct GAConfig {
-        int populationSize;      // Size of population
-        int generations;         // Number of generations
+        size_t populationSize;   // Size of population
+        size_t generations;      // Number of generations
         double crossoverRate;    // Probability of crossover
         double mutationRate;     // Probability of mutation
-        int eliteSize;           // Number of elite individuals to preserve
+        size_t eliteSize;        // Number of elite individuals to preserve
         
         GAConfig() : populationSize(100), generations(500), crossoverRate(0.8), mutationRate(0.1), eliteSize(10) {}
-        GAConfig(int pop, int gen, double cross, double mut, int elite)
+        GAConfig(size_t pop, size_t gen, double cross, double mut, size_t elite)
             : populationSize(pop), generations(gen), crossoverRate(cross), 
               mutationRate(mut), eliteSize(elite) {}
     };
@@ -52,7 +52,7 @@ private:
     /**
      * @brief Initialize random population
      */
-    static std::vector<Individual> initializePopulation(int populationSize, int numActivities, std::mt19937& rng);
+    static std::vector<Individual> initializePopulation(size_t populationSize, size_t numActivities, std::mt19937& rng);
     
     /**
      * @brief Calculate fitness for an individual

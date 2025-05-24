@@ -31,7 +31,7 @@ std::vector<std::vector<Activity>> BacktrackingScheduler::allValidSchedules(std:
 void BacktrackingScheduler::backtrack(
     const std::vector<Activity>& activities,
     std::vector<Activity>& current,
-    int index,
+    size_t index,
     std::vector<Activity>& best) {
     
     // Base case: processed all activities
@@ -45,7 +45,7 @@ void BacktrackingScheduler::backtrack(
     // Pruning: if even adding all remaining activities can't beat current best
     double currentWeight = calculateWeight(current);
     double maxPossibleWeight = currentWeight;
-    for (int i = index; i < activities.size(); i++) {
+    for (size_t i = index; i < activities.size(); i++) {
         maxPossibleWeight += activities[i].weight;
     }
     
@@ -85,7 +85,7 @@ double BacktrackingScheduler::calculateWeight(const std::vector<Activity>& activ
 void BacktrackingScheduler::findAllSchedules(
     const std::vector<Activity>& activities,
     std::vector<Activity>& current,
-    int index,
+    size_t index,
     std::vector<std::vector<Activity>>& allSchedules) {
     
     // Base case: processed all activities

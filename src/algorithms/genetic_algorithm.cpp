@@ -1,3 +1,4 @@
+// filepath: /Users/punam/Desktop/Varsity/2-2/Algo/project/github deployment/ConflictFreeScheduling/src/algorithms/genetic_algorithm.cpp
 #include "genetic_algorithm.h"
 #include <random>
 #include <algorithm>
@@ -18,7 +19,7 @@ std::vector<Activity> GeneticAlgorithmScheduler::evolveSchedule(std::vector<Acti
     }
     
     // Evolution loop
-    for (int generation = 0; generation < config.generations; ++generation) {
+    for (size_t generation = 0; generation < config.generations; ++generation) {
         // Sort by fitness (descending)
         std::sort(population.begin(), population.end(), 
                   [](const Individual& a, const Individual& b) { 
@@ -29,7 +30,7 @@ std::vector<Activity> GeneticAlgorithmScheduler::evolveSchedule(std::vector<Acti
         std::vector<Individual> newPopulation;
         
         // Keep elite individuals
-        for (int i = 0; i < config.eliteSize && i < population.size(); ++i) {
+        for (size_t i = 0; i < config.eliteSize && i < population.size(); ++i) {
             newPopulation.push_back(population[i]);
         }
         
@@ -68,12 +69,12 @@ std::vector<Activity> GeneticAlgorithmScheduler::evolveSchedule(std::vector<Acti
 }
 
 std::vector<GeneticAlgorithmScheduler::Individual> GeneticAlgorithmScheduler::initializePopulation(
-    int populationSize, int numActivities, std::mt19937& rng) {
+    size_t populationSize, size_t numActivities, std::mt19937& rng) {
     
     std::vector<Individual> population;
     std::uniform_real_distribution<double> prob(0.0, 1.0);
     
-    for (int i = 0; i < populationSize; ++i) {
+    for (size_t i = 0; i < populationSize; ++i) {
         Individual individual(numActivities);
         
         // Random initialization with 30% probability for each gene
@@ -108,15 +109,15 @@ double GeneticAlgorithmScheduler::calculateFitness(Individual& individual, const
 std::pair<GeneticAlgorithmScheduler::Individual, GeneticAlgorithmScheduler::Individual> 
 GeneticAlgorithmScheduler::selectParents(const std::vector<Individual>& population, std::mt19937& rng) {
     // Tournament selection
-    std::uniform_int_distribution<int> dist(0, population.size() - 1);
+    std::uniform_int_distribution<size_t> dist(0, population.size() - 1);
     
     auto tournamentSelect = [&]() -> const Individual& {
-        const int tournamentSize = 3;
-        int bestIdx = dist(rng);
+        const size_t tournamentSize = 3;
+        size_t bestIdx = dist(rng);
         double bestFitness = population[bestIdx].fitness;
         
-        for (int i = 1; i < tournamentSize; ++i) {
-            int idx = dist(rng);
+        for (size_t i = 1; i < tournamentSize; ++i) {
+            size_t idx = dist(rng);
             if (population[idx].fitness > bestFitness) {
                 bestFitness = population[idx].fitness;
                 bestIdx = idx;
@@ -138,8 +139,8 @@ GeneticAlgorithmScheduler::crossover(const Individual& parent1, const Individual
     
     if (prob(rng) < crossoverRate) {
         // Single-point crossover
-        std::uniform_int_distribution<int> pointDist(1, parent1.genes.size() - 1);
-        int crossoverPoint = pointDist(rng);
+        std::uniform_int_distribution<size_t> pointDist(1, parent1.genes.size() - 1);
+        size_t crossoverPoint = pointDist(rng);
         
         for (size_t i = crossoverPoint; i < parent1.genes.size(); ++i) {
             child1.genes[i] = parent2.genes[i];

@@ -43,11 +43,11 @@ bool DatabaseManager::initialize() {
 }
 
 bool DatabaseManager::createTables() {
-    return executeSQLFile("../data/schema.sql");
+    return executeSQLFile("data/schema.sql");
 }
 
 bool DatabaseManager::loadSampleData() {
-    return executeSQLFile("../data/minimal_sample.sql");
+    return executeSQLFile("data/minimal_sample.sql");
 }
 
 bool DatabaseManager::executeQuery(const std::string& query) {

@@ -17,11 +17,14 @@ std::vector<Activity> GraphColoringScheduler::coloringSchedule(std::vector<Activ
         Activity scheduled = activity;
         int color = colorAssignment[activity.id];
         
-        // Assign new time slot based on color
-        scheduled.start = color * 2;  // Each color represents a 2-hour slot
-        scheduled.end = scheduled.start + (activity.end - activity.start);
-        
-        scheduledActivities.push_back(scheduled);
+        // Skip activities that couldn't be colored (color = -1)
+        if (color >= 0) {
+            // Assign new time slot based on color, preserving duration
+            int duration = activity.end - activity.start;
+            scheduled.start = color * (duration + 1); // Ensure enough gap between slots
+            scheduled.end = scheduled.start + duration;
+            scheduledActivities.push_back(scheduled);
+        }
     }
     
     return scheduledActivities;
@@ -100,24 +103,37 @@ std::unordered_map<int, int> GraphColoringScheduler::assignColors(
     
     std::unordered_map<int, int> colors;
     
+    // First, sort activities by duration (descending) to handle longer activities first
+    std::vector<std::pair<int, int>> sortedActivities; // {duration, id}
     for (const auto& activity : activities) {
-        // Find the smallest color not used by neighbors
+        sortedActivities.push_back({activity.end - activity.start, activity.id});
+    }
+    std::sort(sortedActivities.begin(), sortedActivities.end(), std::greater<std::pair<int, int>>());
+    
+    // Try to assign colors, marking unassignable activities with -1
+    for (const auto& pair : sortedActivities) {
+        int activityId = pair.second;
         std::set<int> usedColors;
         
-        if (graph.find(activity.id) != graph.end()) {
-            for (int neighbor : graph.at(activity.id)) {
-                if (colors.find(neighbor) != colors.end()) {
+        // Check colors used by neighbors
+        if (graph.find(activityId) != graph.end()) {
+            for (int neighbor : graph.at(activityId)) {
+                if (colors.find(neighbor) != colors.end() && colors[neighbor] >= 0) {
                     usedColors.insert(colors[neighbor]);
                 }
             }
         }
         
-        int color = 0;
-        while (usedColors.count(color)) {
-            color++;
+        // Try to find an available color
+        int color = -1;
+        for (int c = 0; c < static_cast<int>(activities.size()); c++) {
+            if (!usedColors.count(c)) {
+                color = c;
+                break;
+            }
         }
         
-        colors[activity.id] = color;
+        colors[activityId] = color;
     }
     
     return colors;
