@@ -1,0 +1,16 @@
+course_id,course_name,instructor,duration,priority,capacity,room_requirement
+CSE101,Introduction to Programming,Dr. Smith,3,1,45,Lab
+CSE102,Discrete Mathematics,Prof. Johnson,3,2,40,Regular
+CSE201,Data Structures,Dr. Wilson,3,1,35,Lab
+CSE202,Computer Organization,Prof. Brown,3,2,30,Regular
+CSE301,Algorithms,Dr. Davis,3,1,35,Regular
+CSE302,Database Systems,Prof. Miller,3,2,30,Lab
+CSE303,Software Engineering,Dr. Garcia,3,1,25,Regular
+CSE401,Computer Networks,Prof. Martinez,3,2,25,Lab
+CSE402,Operating Systems,Dr. Anderson,3,1,30,Regular
+CSE403,Machine Learning,Prof. Taylor,3,3,20,Lab
+CSE404,Artificial Intelligence,Dr. Thomas,3,2,25,Regular
+CSE405,Computer Graphics,Prof. Jackson,3,3,20,Lab
+CSE450,Senior Project I,Dr. White,3,1,15,Regular
+CSE451,Senior Project II,Prof. Harris,3,1,15,Regular
+CSE499,Special Topics,Dr. Clark,3,3,10,Regular

@@ -1,0 +1,31 @@
+# C++ Conflict-Free Scheduling System Dependencies
+
+# Required Build Tools:
+# - g++ >= 9.0 (or clang++ >= 10.0)
+# - cmake >= 3.16
+# - make
+
+# Optional Development Tools:
+# - clang-format (for code formatting)
+# - cppcheck (for static analysis) 
+# - valgrind (for memory leak detection)
+# - gdb (for debugging)
+# - doxygen (for documentation generation)
+
+# Optional Visualization:
+# - gnuplot (for performance graphs)
+
+# Installation commands for different systems:
+
+# Ubuntu/Debian:
+# sudo apt-get update
+# sudo apt-get install build-essential cmake clang-format cppcheck valgrind gdb doxygen gnuplot
+
+# macOS (with Homebrew):
+# brew install cmake clang-format cppcheck valgrind doxygen gnuplot
+
+# Fedora/RHEL:
+# sudo dnf install gcc-c++ cmake clang-tools-extra cppcheck valgrind gdb doxygen gnuplot
+
+# Arch Linux:
+# sudo pacman -S base-devel cmake clang cppcheck valgrind gdb doxygen gnuplot

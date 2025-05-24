@@ -1,0 +1,11 @@
+room_id,room_name,capacity,type,equipment
+R101,Computer Lab 1,45,Lab,"Computers, Projector, Whiteboard"
+R102,Computer Lab 2,40,Lab,"Computers, Projector, Whiteboard"
+R103,Computer Lab 3,35,Lab,"Computers, Projector, Whiteboard"
+R201,Lecture Hall A,50,Regular,"Projector, Whiteboard, Audio System"
+R202,Lecture Hall B,45,Regular,"Projector, Whiteboard, Audio System"
+R203,Lecture Hall C,40,Regular,"Projector, Whiteboard"
+R301,Seminar Room 1,30,Regular,"Projector, Whiteboard"
+R302,Seminar Room 2,25,Regular,"Projector, Whiteboard"
+R303,Conference Room,20,Regular,"Projector, Round Table"
+R401,Research Lab,15,Lab,"High-end Computers, Servers"
