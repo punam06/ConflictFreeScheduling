@@ -47,6 +47,14 @@ public:
      */
     static bool openInBrowser(const std::string& pdfPath);
 
+    /**
+     * @brief Convert HTML file to PDF using headless Chrome
+     * @param htmlPath Path to the HTML file
+     * @param pdfPath Path for the output PDF file
+     * @return true if successful, false otherwise
+     */
+    static bool convertHTMLtoPDF(const std::string& htmlPath, const std::string& pdfPath);
+
 private:
     /**
      * @brief Convert time integer to readable format

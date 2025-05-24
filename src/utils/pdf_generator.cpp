@@ -18,10 +18,18 @@ bool PDFGenerator::generateSchedulePDF(
     }
     
     std::cout << "Generated HTML schedule: " << htmlPath << std::endl;
-    std::cout << "Opening in browser for PDF conversion..." << std::endl;
     
-    // Open HTML in browser for PDF conversion
-    return openInBrowser(htmlPath);
+    // Try automatic PDF conversion first
+    std::string pdfPath = outputPath + ".pdf";
+    if (convertHTMLtoPDF(htmlPath, pdfPath)) {
+        // Automatic conversion succeeded, open PDF
+        return openInBrowser(pdfPath);
+    } else {
+        // Fallback to browser-based conversion
+        std::cout << "Opening HTML in browser for manual PDF conversion..." << std::endl;
+        std::cout << "💡 In browser: Press Cmd+P → Save as PDF" << std::endl;
+        return openInBrowser(htmlPath);
+    }
 }
 
 bool PDFGenerator::generateScheduleHTML(
@@ -391,4 +399,69 @@ std::string PDFGenerator::generateCSS() {
             }
         }
     )";
+}
+
+bool PDFGenerator::convertHTMLtoPDF(const std::string& htmlPath, const std::string& pdfPath) {
+    // Check if HTML file exists
+    std::ifstream htmlFile(htmlPath);
+    if (!htmlFile.good()) {
+        std::cerr << "Error: HTML file not found: " << htmlPath << std::endl;
+        return false;
+    }
+    htmlFile.close();
+
+    // Try different Chrome/Chromium paths
+    std::vector<std::string> chromePaths = {
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", // macOS
+        "google-chrome",                                                // Linux
+        "chromium",                                                     // Linux alternative
+        "chrome",                                                       // Windows
+        "/usr/bin/google-chrome",                                      // Linux system install
+        "/usr/bin/chromium"                                            // Linux system install
+    };
+
+    for (const auto& chromePath : chromePaths) {
+        // Check if Chrome/Chromium is available
+        std::string checkCmd = "command -v \"" + chromePath + "\" >/dev/null 2>&1";
+        if (system(checkCmd.c_str()) == 0) {
+            // Convert relative path to absolute path
+            char* realHtmlPath = realpath(htmlPath.c_str(), nullptr);
+            if (!realHtmlPath) {
+                std::cerr << "Error: Cannot resolve absolute path for: " << htmlPath << std::endl;
+                continue;
+            }
+
+            // Build Chrome command
+            std::string cmd = "\"" + chromePath + "\" --headless --disable-gpu --print-to-pdf=\"" + 
+                            pdfPath + "\" \"file://" + std::string(realHtmlPath) + "\" 2>/dev/null";
+
+            std::cout << "Converting HTML to PDF using: " << chromePath << std::endl;
+            
+            int result = system(cmd.c_str());
+            free(realHtmlPath);
+
+            if (result == 0) {
+                // Check if PDF was actually created
+                std::ifstream pdfFile(pdfPath);
+                if (pdfFile.good()) {
+                    pdfFile.close();
+                    std::cout << "✅ PDF generated successfully: " << pdfPath << std::endl;
+                    
+                    // Get file size
+                    std::ifstream::pos_type size = std::ifstream(pdfPath, std::ios::ate | std::ios::binary).tellg();
+                    std::cout << "📊 File size: " << (size / 1024) << " KB" << std::endl;
+                    
+                    return true;
+                } else {
+                    std::cerr << "❌ PDF file was not created" << std::endl;
+                }
+            } else {
+                std::cerr << "❌ Chrome command failed with exit code: " << result << std::endl;
+            }
+        }
+    }
+
+    std::cerr << "❌ Chrome/Chromium not found!" << std::endl;
+    std::cerr << "💡 Alternative: Open " << htmlPath << " in browser and print to PDF (Cmd+P)" << std::endl;
+    return false;
 }

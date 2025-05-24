@@ -101,6 +101,13 @@ Given a set of academic activities (courses, labs, exams) with specific time con
   - Conflict detection displays
   - Database statistics dashboard
 
+- **Professional PDF Output**
+  - Automatic HTML-to-PDF conversion using Chrome
+  - University-branded schedule layouts
+  - Timeline visualization with color coding
+  - Cross-platform browser opening for PDF generation
+  - Professional quality suitable for institutional use
+
 ## 🗄️ Database Features
 
 - **SQLite Integration**: Lightweight, serverless database perfect for development and small deployments
@@ -199,16 +206,32 @@ int main() {
 
 ```bash
 # Build first
-cd build && make
+make clean && make
 
-# Run with input file
-./scheduler --input ../data/tasks.txt --algorithm greedy
+# Generate schedule with automatic PDF download
+./bin/scheduler --input data/sample_courses.txt --algorithm dynamic-prog --pdf --no-database
 
-# Run with custom parameters
-./scheduler --algorithm dp --output results.txt --visualize
+# Compare multiple algorithms  
+./bin/scheduler --run-all --input data/sample_courses.txt --no-database
+
+# Generate PDF with custom input
+./bin/scheduler --input my_courses.txt --algorithm genetic --pdf --no-database
 
 # Show help
-./scheduler --help
+./bin/scheduler --help
+```
+
+### 📥 **PDF Download Process**
+1. **Run command** with `--pdf` flag
+2. **HTML generated** automatically (e.g., `dynamic-prog.html`)
+3. **PDF created** automatically (e.g., `dynamic-prog.pdf`) 
+4. **File opens** in browser/PDF viewer
+5. **Download complete** - PDF ready for sharing!
+
+**Quick Example:**
+```bash
+./bin/scheduler --input data/sample_courses.txt --algorithm backtracking --pdf --no-database
+# ✅ Output: backtracking.pdf (229 KB, professional quality)
 ```
 
 ## 📊 Examples
@@ -268,7 +291,8 @@ We welcome contributions! Please see our [Contributing Guidelines](./docs/CONTRI
 ## 📚 Documentation
 
 - **[📖 Complete User Guide](USER_GUIDE.md)** - Comprehensive documentation with examples
-- **[🚀 Quick Reference](QUICK_REFERENCE.md)** - Essential commands and usage patterns
+- **[🚀 Quick Reference](QUICK_REFERENCE.md)** - Essential commands and usage patterns  
+- **[📥 PDF Download Guide](PDF_DOWNLOAD_GUIDE.md)** - Complete PDF generation and download instructions
 - **[📄 Input to PDF Summary](SIMPLE_INPUT_TO_PDF_SUMMARY.md)** - New features overview
 
 ### Technical Documentation
