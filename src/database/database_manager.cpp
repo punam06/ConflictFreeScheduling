@@ -43,11 +43,11 @@ bool DatabaseManager::initialize() {
 }
 
 bool DatabaseManager::createTables() {
-    return executeSQLFile("data/schema.sql");
+    return executeSQLFile("../data/schema.sql");
 }
 
 bool DatabaseManager::loadSampleData() {
-    return executeSQLFile("data/sample_data.sql");
+    return executeSQLFile("../data/minimal_sample.sql");
 }
 
 bool DatabaseManager::executeQuery(const std::string& query) {
@@ -91,20 +91,25 @@ sqlite3_stmt* DatabaseManager::prepareStatement(const std::string& query) {
 
 bool DatabaseManager::insertCourse(const Activity& course) {
     const std::string query = R"(
-        INSERT INTO courses (course_code, course_name, instructor, duration, priority, capacity, room_requirement)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO courses (course_code, course_title, credit_hours, class_type, session_duration, sessions_per_week, batch_id, teacher_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     )";
     
     sqlite3_stmt* stmt = prepareStatement(query);
     if (!stmt) return false;
     
-    sqlite3_bind_text(stmt, 1, course.name.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, course.name.c_str(), -1, SQLITE_STATIC); // Using name for both code and name
-    sqlite3_bind_text(stmt, 3, "TBD", -1, SQLITE_STATIC); // Default instructor
-    sqlite3_bind_int(stmt, 4, course.duration);
-    sqlite3_bind_int(stmt, 5, course.priority);
-    sqlite3_bind_int(stmt, 6, 30); // Default capacity
-    sqlite3_bind_text(stmt, 7, "Regular", -1, SQLITE_STATIC); // Default room requirement
+    std::string course_code = "CSE" + std::to_string(1100 + course.id);
+    std::string course_title = "Course " + std::to_string(course.id);
+    int duration = course.end - course.start;
+    
+    sqlite3_bind_text(stmt, 1, course_code.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, course_title.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_double(stmt, 3, 3.0); // Default credit hours
+    sqlite3_bind_text(stmt, 4, "THEORY", -1, SQLITE_STATIC); 
+    sqlite3_bind_int(stmt, 5, duration * 60); // Convert to minutes
+    sqlite3_bind_int(stmt, 6, 3); // Default sessions per week
+    sqlite3_bind_int(stmt, 7, 1); // Default batch_id
+    sqlite3_bind_int(stmt, 8, 1); // Default teacher_id
     
     int result = sqlite3_step(stmt);
     sqlite3_finalize(stmt);
@@ -114,20 +119,22 @@ bool DatabaseManager::insertCourse(const Activity& course) {
 
 std::vector<Activity> DatabaseManager::getAllCourses() {
     std::vector<Activity> courses;
-    const std::string query = "SELECT course_id, course_name, duration, priority FROM courses";
+    const std::string query = "SELECT course_id, course_title, session_duration, credit_hours FROM courses";
     
     sqlite3_stmt* stmt = prepareStatement(query);
     if (!stmt) return courses;
     
     while (sqlite3_step(stmt) == SQLITE_ROW) {
-        Activity activity;
-        activity.id = sqlite3_column_int(stmt, 0);
-        activity.name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-        activity.duration = sqlite3_column_int(stmt, 2);
-        activity.priority = sqlite3_column_int(stmt, 3);
-        activity.start_time = 0; // Will be set during scheduling
-        activity.end_time = activity.duration;
+        int id = sqlite3_column_int(stmt, 0);
+        int duration_minutes = sqlite3_column_int(stmt, 2);
+        double credit_hours = sqlite3_column_double(stmt, 3);
         
+        // Convert minutes to hours for start/end times (simplified)
+        int duration_hours = duration_minutes / 60;
+        if (duration_hours == 0) duration_hours = 1; // Minimum 1 hour
+        
+        // Create Activity with start=0, end=duration, weight=credit_hours
+        Activity activity(id, 0, duration_hours, credit_hours);
         courses.push_back(activity);
     }
     
@@ -147,7 +154,7 @@ bool DatabaseManager::resetDatabase() {
 }
 
 DatabaseManager::ScheduleStats DatabaseManager::getScheduleStatistics() {
-    ScheduleStats stats = {0};
+    ScheduleStats stats = {0, 0, 0, 0, 0, 0, 0, 0};
     
     sqlite3_stmt* stmt = prepareStatement("SELECT COUNT(*) FROM courses");
     if (stmt && sqlite3_step(stmt) == SQLITE_ROW) {

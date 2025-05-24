@@ -82,18 +82,18 @@ std::vector<Activity> GreedyAlgorithms::maxUtilizationSelection(std::vector<Acti
 
 // Comparator for sorting activities by end time
 bool GreedyAlgorithms::compareByEndTime(const Activity& a, const Activity& b) {
-    return a.end_time < b.end_time;
+    return a.end < b.end;
 }
 
 // Comparator for sorting activities by weight/duration ratio
 bool GreedyAlgorithms::compareByWeightRatio(const Activity& a, const Activity& b) {
-    double ratioA = static_cast<double>(a.priority) / (a.end_time - a.start_time);
-    double ratioB = static_cast<double>(b.priority) / (b.end_time - b.start_time);
+    double ratioA = static_cast<double>(a.weight) / (a.end - a.start);
+    double ratioB = static_cast<double>(b.weight) / (b.end - b.start);
     return ratioA > ratioB;
 }
 
 // Check if two activities conflict
 bool GreedyAlgorithms::hasConflict(const Activity& a, const Activity& b) {
     // Activities conflict if they overlap in time
-    return !(a.end_time <= b.start_time || b.end_time <= a.start_time);
+    return !(a.end <= b.start || b.end <= a.start);
 }

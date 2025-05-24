@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
     std::unique_ptr<DatabaseManager> dbManager;
     if (useDatabase) {
         std::cout << "\n=== Database Integration ===" << std::endl;
-        dbManager = std::make_unique<DatabaseManager>();
+        dbManager = std::make_unique<DatabaseManager>("../data/scheduling.db");
         
         if (!dbManager->initialize()) {
             std::cerr << "Error: Failed to initialize database: " << dbManager->getLastError() << std::endl;
