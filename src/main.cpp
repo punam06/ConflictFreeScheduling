@@ -15,13 +15,14 @@ int main(int argc, char* argv[]) {
     std::cout << "=============================================" << std::endl;
     
     // Parse command line arguments
-    std::string algorithm = "greedy";
+    std::string algorithm = "graph-coloring";
     std::string inputFile = "";
     std::string outputFile = "";
     bool visualize = false;
     bool showHelp = false;
     bool useDatabase = true;
     bool initDatabase = false;
+    bool runAll = false;
     
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
@@ -37,6 +38,8 @@ int main(int argc, char* argv[]) {
             useDatabase = false;
         } else if (arg == "--init-db") {
             initDatabase = true;
+        } else if (arg == "--run-all") {
+            runAll = true;
         } else if (arg == "--help" || arg == "-h") {
             showHelp = true;
         }
@@ -45,21 +48,27 @@ int main(int argc, char* argv[]) {
     if (showHelp) {
         std::cout << "\nUsage: " << argv[0] << " [options]" << std::endl;
         std::cout << "\nOptions:" << std::endl;
-        std::cout << "  --algorithm <type>  Algorithm to use (greedy, dp, branch-bound)" << std::endl;
+        std::cout << "  --algorithm <type>  Algorithm to use:" << std::endl;
+        std::cout << "                        graph-coloring  : Graph coloring for conflict resolution" << std::endl;
+        std::cout << "                        dynamic-prog    : Dynamic programming for optimal selection" << std::endl;
+        std::cout << "                        backtracking    : Backtracking for exhaustive solutions" << std::endl;
+        std::cout << "                        genetic         : Genetic algorithm for evolution-based optimization" << std::endl;
+        std::cout << "  --run-all           Run all 4 core algorithms and compare results" << std::endl;
         std::cout << "  --input <file>      Input file with activities data" << std::endl;
         std::cout << "  --output <file>     Output file for results" << std::endl;
         std::cout << "  --visualize         Enable visualization output" << std::endl;
         std::cout << "  --no-database       Disable database integration (use file input only)" << std::endl;
         std::cout << "  --init-db           Initialize/reset database with sample data" << std::endl;
         std::cout << "  --help, -h          Show this help message" << std::endl;
-        std::cout << "\nDatabase Features:" << std::endl;
-        std::cout << "  - SQLite integration for persistent storage" << std::endl;
-        std::cout << "  - Conflict tracking and resolution logging" << std::endl;
-        std::cout << "  - Schedule analytics and reporting" << std::endl;
+        std::cout << "\n4 Core Algorithms:" << std::endl;
+        std::cout << "  1. Graph Coloring    - Models conflicts as graph edges, assigns time slots as colors" << std::endl;
+        std::cout << "  2. Dynamic Programming - Optimal weighted activity selection with memoization" << std::endl;
+        std::cout << "  3. Backtracking      - Exhaustive search with pruning for optimal solutions" << std::endl;
+        std::cout << "  4. Genetic Algorithm - Population-based evolutionary optimization" << std::endl;
         std::cout << "\nExamples:" << std::endl;
-        std::cout << "  " << argv[0] << " --algorithm greedy --init-db" << std::endl;
-        std::cout << "  " << argv[0] << " --algorithm dp --visualize" << std::endl;
-        std::cout << "  " << argv[0] << " --no-database --input data/courses.txt" << std::endl;
+        std::cout << "  " << argv[0] << " --algorithm graph-coloring --init-db" << std::endl;
+        std::cout << "  " << argv[0] << " --run-all --visualize" << std::endl;
+        std::cout << "  " << argv[0] << " --algorithm genetic --no-database --input data/courses.txt" << std::endl;
         return 0;
     }
     
@@ -124,19 +133,56 @@ int main(int argc, char* argv[]) {
                   << "     | " << static_cast<int>(activity.weight) << std::endl;
     }
     
-    // Run selected algorithm
+    // Run selected algorithm or all algorithms
     std::vector<Activity> schedule;
-    std::cout << "\nRunning " << algorithm << " algorithm..." << std::endl;
     
-    if (algorithm == "greedy") {
-        schedule = scheduler.greedySchedule(activities);
-    } else if (algorithm == "dp") {
-        schedule = scheduler.dpSchedule(activities);
-    } else if (algorithm == "branch-bound") {
-        schedule = scheduler.branchAndBoundSchedule(activities);
+    if (runAll) {
+        std::cout << "\n=== Running All 4 Core Algorithms ===" << std::endl;
+        
+        // 1. Graph Coloring
+        std::cout << "\n1. Graph Coloring Algorithm:" << std::endl;
+        auto graphSchedule = scheduler.graphColoringSchedule(activities);
+        std::cout << "   Scheduled: " << graphSchedule.size() << "/" << activities.size() 
+                  << " activities (Weight: " << static_cast<int>(scheduler.calculateTotalWeight(graphSchedule)) << ")" << std::endl;
+        
+        // 2. Dynamic Programming
+        std::cout << "\n2. Dynamic Programming Algorithm:" << std::endl;
+        auto dpSchedule = scheduler.dpSchedule(activities);
+        std::cout << "   Scheduled: " << dpSchedule.size() << "/" << activities.size() 
+                  << " activities (Weight: " << static_cast<int>(scheduler.calculateTotalWeight(dpSchedule)) << ")" << std::endl;
+        
+        // 3. Backtracking
+        std::cout << "\n3. Backtracking Algorithm:" << std::endl;
+        auto backtrackSchedule = scheduler.backtrackingSchedule(activities);
+        std::cout << "   Scheduled: " << backtrackSchedule.size() << "/" << activities.size() 
+                  << " activities (Weight: " << static_cast<int>(scheduler.calculateTotalWeight(backtrackSchedule)) << ")" << std::endl;
+        
+        // 4. Genetic Algorithm
+        std::cout << "\n4. Genetic Algorithm:" << std::endl;
+        auto geneticSchedule = scheduler.geneticAlgorithmSchedule(activities);
+        std::cout << "   Scheduled: " << geneticSchedule.size() << "/" << activities.size() 
+                  << " activities (Weight: " << static_cast<int>(scheduler.calculateTotalWeight(geneticSchedule)) << ")" << std::endl;
+        
+        // Use the best result for detailed output
+        schedule = dpSchedule; // DP usually gives optimal results
+        std::cout << "\nUsing Dynamic Programming result for detailed analysis:" << std::endl;
+        
     } else {
-        std::cerr << "Unknown algorithm: " << algorithm << std::endl;
-        return 1;
+        std::cout << "\nRunning " << algorithm << " algorithm..." << std::endl;
+        
+        if (algorithm == "graph-coloring") {
+            schedule = scheduler.graphColoringSchedule(activities);
+        } else if (algorithm == "dynamic-prog" || algorithm == "dp") {
+            schedule = scheduler.dpSchedule(activities);
+        } else if (algorithm == "backtracking") {
+            schedule = scheduler.backtrackingSchedule(activities);
+        } else if (algorithm == "genetic") {
+            schedule = scheduler.geneticAlgorithmSchedule(activities);
+        } else {
+            std::cerr << "Unknown algorithm: " << algorithm << std::endl;
+            std::cerr << "Valid options: graph-coloring, dynamic-prog, backtracking, genetic" << std::endl;
+            return 1;
+        }
     }
     
     // Display results

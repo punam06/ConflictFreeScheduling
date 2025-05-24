@@ -36,23 +36,28 @@ struct Task {
 
 /**
  * @brief Main class for conflict-free scheduling algorithms
+ * Simplified to focus on 4 core algorithms:
+ * 1. Graph Coloring - For conflict resolution using graph theory
+ * 2. Dynamic Programming - For optimal weighted activity selection
+ * 3. Backtracking - For exhaustive optimal solutions
+ * 4. Genetic Algorithm - For evolutionary optimization
  */
 class ConflictFreeScheduler {
 public:
     ConflictFreeScheduler() = default;
     ~ConflictFreeScheduler() = default;
     
-    // Greedy algorithms
-    std::vector<Activity> greedySchedule(std::vector<Activity> activities);
-    std::vector<int> greedyActivitySelection(std::vector<Activity> activities);
-    std::vector<Activity> greedyWeightedSchedule(std::vector<Activity> activities);
+    // Core Algorithm 1: Graph Coloring
+    std::vector<Activity> graphColoringSchedule(std::vector<Activity> activities);
     
-    // Dynamic Programming algorithms
+    // Core Algorithm 2: Dynamic Programming
     std::vector<Activity> dpSchedule(std::vector<Activity> activities);
-    std::vector<Activity> dpWeightedSchedule(std::vector<Activity> activities);
     
-    // Branch and Bound algorithms
-    std::vector<Activity> branchAndBoundSchedule(std::vector<Activity> activities);
+    // Core Algorithm 3: Backtracking
+    std::vector<Activity> backtrackingSchedule(std::vector<Activity> activities);
+    
+    // Core Algorithm 4: Genetic Algorithm
+    std::vector<Activity> geneticAlgorithmSchedule(std::vector<Activity> activities);
     
     // Utility functions
     bool hasConflict(const Activity& a1, const Activity& a2) const;

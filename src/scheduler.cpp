@@ -1,40 +1,30 @@
 #include "scheduler.h"
-#include "algorithms/greedy.h"
+#include "algorithms/graph_coloring.h"
 #include "algorithms/dynamic_programming.h"
-#include "algorithms/branch_and_bound.h"
+#include "algorithms/backtracking.h"
+#include "algorithms/genetic_algorithm.h"
 #include <algorithm>
 #include <iostream>
 
-// Greedy algorithms
-std::vector<Activity> ConflictFreeScheduler::greedySchedule(std::vector<Activity> activities) {
-    return GreedyAlgorithms::activitySelection(activities);
+// Core Algorithm 1: Graph Coloring
+std::vector<Activity> ConflictFreeScheduler::graphColoringSchedule(std::vector<Activity> activities) {
+    return GraphColoringScheduler::coloringSchedule(activities);
 }
 
-std::vector<int> ConflictFreeScheduler::greedyActivitySelection(std::vector<Activity> activities) {
-    auto selected = GreedyAlgorithms::activitySelection(activities);
-    std::vector<int> result;
-    for (const auto& activity : selected) {
-        result.push_back(activity.id);
-    }
-    return result;
-}
-
-std::vector<Activity> ConflictFreeScheduler::greedyWeightedSchedule(std::vector<Activity> activities) {
-    return GreedyAlgorithms::weightedActivitySelection(activities);
-}
-
-// Dynamic Programming algorithms
+// Core Algorithm 2: Dynamic Programming
 std::vector<Activity> ConflictFreeScheduler::dpSchedule(std::vector<Activity> activities) {
     return DynamicProgramming::weightedActivitySelection(activities);
 }
 
-std::vector<Activity> ConflictFreeScheduler::dpWeightedSchedule(std::vector<Activity> activities) {
-    return DynamicProgramming::weightedActivitySelection(activities);
+// Core Algorithm 3: Backtracking
+std::vector<Activity> ConflictFreeScheduler::backtrackingSchedule(std::vector<Activity> activities) {
+    return BacktrackingScheduler::optimalSchedule(activities);
 }
 
-// Branch and Bound algorithms
-std::vector<Activity> ConflictFreeScheduler::branchAndBoundSchedule(std::vector<Activity> activities) {
-    return BranchAndBound::optimalWeightedSelection(activities);
+// Core Algorithm 4: Genetic Algorithm
+std::vector<Activity> ConflictFreeScheduler::geneticAlgorithmSchedule(std::vector<Activity> activities) {
+    GeneticAlgorithmScheduler::GAConfig config(50, 200, 0.8, 0.1, 5); // Simplified config
+    return GeneticAlgorithmScheduler::evolveSchedule(activities, config);
 }
 
 // Utility functions
