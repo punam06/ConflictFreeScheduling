@@ -54,6 +54,13 @@ Given a set of academic activities (courses, labs, exams) with specific time con
   - Branch and Bound Method
   - Heuristic Solutions
 
+- **Database Integration**
+  - SQLite support for lightweight deployment
+  - PostgreSQL ready for production scaling
+  - Persistent data storage and retrieval
+  - Conflict logging and resolution tracking
+  - Schedule analytics and reporting
+
 - **Comprehensive Analysis**
   - Time complexity analysis
   - Space complexity evaluation
@@ -61,7 +68,8 @@ Given a set of academic activities (courses, labs, exams) with specific time con
   - Comparative studies
 
 - **Flexible Input Handling**
-  - Multiple input formats supported
+  - Database-driven course management
+  - CSV file import/export
   - Real-time data processing
   - Batch processing capabilities
 
@@ -69,6 +77,16 @@ Given a set of academic activities (courses, labs, exams) with specific time con
   - Schedule visualization
   - Algorithm performance graphs
   - Conflict detection displays
+  - Database statistics dashboard
+
+## 🗄️ Database Features
+
+- **SQLite Integration**: Lightweight, serverless database perfect for development and small deployments
+- **PostgreSQL Support**: Production-ready database for large-scale academic institutions
+- **Data Models**: Comprehensive schema for courses, rooms, time slots, and scheduling assignments
+- **Conflict Management**: Automatic conflict detection and resolution logging
+- **Analytics**: Built-in reporting for schedule utilization and performance metrics
+- **Migration Support**: Database versioning and migration scripts
 
 ## 🧮 Algorithm Details
 

@@ -1,4 +1,5 @@
 #include "scheduler.h"
+#include "database/database_manager.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -19,6 +20,8 @@ int main(int argc, char* argv[]) {
     std::string outputFile = "";
     bool visualize = false;
     bool showHelp = false;
+    bool useDatabase = true;
+    bool initDatabase = false;
     
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
@@ -30,6 +33,10 @@ int main(int argc, char* argv[]) {
             outputFile = argv[++i];
         } else if (arg == "--visualize") {
             visualize = true;
+        } else if (arg == "--no-database") {
+            useDatabase = false;
+        } else if (arg == "--init-db") {
+            initDatabase = true;
         } else if (arg == "--help" || arg == "-h") {
             showHelp = true;
         }
@@ -42,13 +49,50 @@ int main(int argc, char* argv[]) {
         std::cout << "  --input <file>      Input file with activities data" << std::endl;
         std::cout << "  --output <file>     Output file for results" << std::endl;
         std::cout << "  --visualize         Enable visualization output" << std::endl;
+        std::cout << "  --no-database       Disable database integration (use file input only)" << std::endl;
+        std::cout << "  --init-db           Initialize/reset database with sample data" << std::endl;
         std::cout << "  --help, -h          Show this help message" << std::endl;
+        std::cout << "\nDatabase Features:" << std::endl;
+        std::cout << "  - SQLite integration for persistent storage" << std::endl;
+        std::cout << "  - Conflict tracking and resolution logging" << std::endl;
+        std::cout << "  - Schedule analytics and reporting" << std::endl;
         std::cout << "\nExamples:" << std::endl;
-        std::cout << "  " << argv[0] << " --algorithm greedy --input data/courses.txt" << std::endl;
+        std::cout << "  " << argv[0] << " --algorithm greedy --init-db" << std::endl;
         std::cout << "  " << argv[0] << " --algorithm dp --visualize" << std::endl;
+        std::cout << "  " << argv[0] << " --no-database --input data/courses.txt" << std::endl;
         return 0;
     }
     
+    // Database initialization
+    std::unique_ptr<DatabaseManager> dbManager;
+    if (useDatabase) {
+        std::cout << "\n=== Database Integration ===" << std::endl;
+        dbManager = std::make_unique<DatabaseManager>();
+        
+        if (!dbManager->initialize()) {
+            std::cerr << "Error: Failed to initialize database: " << dbManager->getLastError() << std::endl;
+            return 1;
+        }
+        
+        if (initDatabase) {
+            std::cout << "Resetting database and loading sample data..." << std::endl;
+            if (!dbManager->resetDatabase() || !dbManager->loadSampleData()) {
+                std::cerr << "Error: Failed to initialize database with sample data: " << dbManager->getLastError() << std::endl;
+                return 1;
+            }
+            std::cout << "Database initialized successfully!" << std::endl;
+        }
+        
+        // Display database statistics
+        auto stats = dbManager->getScheduleStatistics();
+        std::cout << "Database Status:" << std::endl;
+        std::cout << "  - Total Courses: " << stats.total_courses << std::endl;
+        std::cout << "  - Total Rooms: " << stats.total_rooms << std::endl;
+        std::cout << "  - Total Time Slots: " << stats.total_time_slots << std::endl;
+        std::cout << "  - Scheduled Courses: " << stats.scheduled_courses << std::endl;
+        std::cout << "  - Unresolved Conflicts: " << stats.conflicts_detected << std::endl;
+    }
+
     // Create scheduler instance
     ConflictFreeScheduler scheduler;
     
