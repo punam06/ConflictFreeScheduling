@@ -1,0 +1,14 @@
+# Simple Course Input Format
+# Format: Course Name, Start Time, End Time, Students
+# Time format: 24-hour (e.g., 9 for 9:00 AM, 14 for 2:00 PM)
+
+Data Structures,9,11,50
+Algorithms,10,12,45
+Database Systems,13,15,40
+Computer Networks,14,16,35
+Software Engineering,16,18,30
+Operating Systems,11,13,25
+Machine Learning,15,17,20
+Computer Graphics,9,11,35
+Web Programming,14,16,40
+Mobile App Development,16,18,25

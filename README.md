@@ -267,14 +267,24 @@ We welcome contributions! Please see our [Contributing Guidelines](./docs/CONTRI
 
 ## 📚 Documentation
 
-- [Algorithm Details](./docs/ALGORITHMS.md) - Detailed algorithm explanations and complexity analysis
-- [API Reference](./docs/API.md) - Complete API documentation with examples
-- [Examples](./docs/EXAMPLES.md) - Comprehensive examples and use cases
-- [Performance Analysis](./docs/PERFORMANCE.md) - Benchmarks and performance metrics
-- [Contributing Guidelines](./docs/CONTRIBUTING.md) - Development and contribution process
-- [Installation Guide](./docs/INSTALLATION.md) - Complete installation instructions
-- [Testing Guide](./docs/TESTING.md) - Testing strategies and best practices
-- [Deployment Guide](./docs/DEPLOYMENT.md) - Deployment options and configurations
+- **[📖 Complete User Guide](USER_GUIDE.md)** - Comprehensive documentation with examples
+- **[🚀 Quick Reference](QUICK_REFERENCE.md)** - Essential commands and usage patterns
+- **[📄 Input to PDF Summary](SIMPLE_INPUT_TO_PDF_SUMMARY.md)** - New features overview
+
+### Technical Documentation
+- **[🔧 Implementation Summary](IMPLEMENTATION_SUMMARY.md)** - Technical details and architecture
+- **[📊 Performance Analysis](docs/PERFORMANCE.md)** - Algorithm benchmarks and comparisons
+- **[🧪 Testing Guide](docs/TESTING.md)** - Test suite and validation procedures
+
+### Quick Usage
+```bash
+# Create course schedule from text file
+echo "Data Structures,9,11,50
+Algorithms,10,12,45" > courses.txt
+
+# Generate professional PDF schedule
+./bin/scheduler --input courses.txt --algorithm dynamic-prog --pdf --no-database
+```
 
 ## 📄 License
 

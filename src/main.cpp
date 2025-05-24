@@ -1,5 +1,7 @@
 #include "scheduler.h"
 #include "database/database_manager.h"
+#include "utils/file_parser.h"
+#include "utils/pdf_generator.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -25,6 +27,7 @@ int main(int argc, char* argv[]) {
     bool useDatabase = true;
     bool initDatabase = false;
     bool runAll = false;
+    bool generatePDF = false;
     
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
@@ -42,6 +45,8 @@ int main(int argc, char* argv[]) {
             initDatabase = true;
         } else if (arg == "--run-all") {
             runAll = true;
+        } else if (arg == "--pdf") {
+            generatePDF = true;
         } else if (arg == "--help" || arg == "-h") {
             showHelp = true;
         }
@@ -58,6 +63,7 @@ int main(int argc, char* argv[]) {
         std::cout << "  --run-all           Run all 4 core algorithms and compare results" << std::endl;
         std::cout << "  --input <file>      Input file with activities data" << std::endl;
         std::cout << "  --output <file>     Output file for results" << std::endl;
+        std::cout << "  --pdf               Generate PDF output and open in browser" << std::endl;
         std::cout << "  --visualize         Enable visualization output" << std::endl;
         std::cout << "  --no-database       Disable database integration (use file input only)" << std::endl;
         std::cout << "  --init-db           Initialize/reset database with sample data" << std::endl;
@@ -70,7 +76,12 @@ int main(int argc, char* argv[]) {
         std::cout << "\nExamples:" << std::endl;
         std::cout << "  " << argv[0] << " --algorithm graph-coloring --init-db" << std::endl;
         std::cout << "  " << argv[0] << " --run-all --visualize" << std::endl;
-        std::cout << "  " << argv[0] << " --algorithm genetic --no-database --input data/courses.txt" << std::endl;
+        std::cout << "  " << argv[0] << " --algorithm genetic --no-database --input data/sample_courses.txt" << std::endl;
+        std::cout << "  " << argv[0] << " --input data/sample_courses.txt --algorithm dynamic-prog --pdf --no-database" << std::endl;
+        std::cout << "\nInput File Format:" << std::endl;
+        std::cout << "  Course Name,Start Time,End Time,Students" << std::endl;
+        std::cout << "  Data Structures,9,11,50" << std::endl;
+        std::cout << "  Algorithms,10,12,45" << std::endl;
         return 0;
     }
     
@@ -107,30 +118,69 @@ int main(int argc, char* argv[]) {
     // Create scheduler instance
     ConflictFreeScheduler scheduler;
     
-    // Sample activities (CSE Department courses)
-    std::vector<Activity> activities = {
-        {1, 9, 11, 50},    // Data Structures: 9-11 AM, 50 students
-        {2, 10, 12, 45},   // Algorithms: 10-12 PM, 45 students  
-        {3, 13, 15, 40},   // Database Systems: 1-3 PM, 40 students
-        {4, 14, 16, 35},   // Computer Networks: 2-4 PM, 35 students
-        {5, 16, 18, 30},   // Software Engineering: 4-6 PM, 30 students
-        {6, 11, 13, 25},   // Operating Systems: 11-1 PM, 25 students
-        {7, 15, 17, 20}    // Machine Learning: 3-5 PM, 20 students
-    };
+    // Get activities from input file, database, or use default
+    std::vector<Activity> activities;
+    std::vector<std::string> courseNames;
+    
+    if (!inputFile.empty()) {
+        std::cout << "\n=== Loading Activities from Input File ===" << std::endl;
+        FileParser parser;
+        try {
+            auto result = parser.parseCSVFormat(inputFile);
+            activities = result.first;
+            courseNames = result.second;
+            std::cout << "Loaded " << activities.size() << " activities from file: " << inputFile << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "Error parsing input file: " << e.what() << std::endl;
+            std::cout << "Falling back to built-in sample data..." << std::endl;
+            inputFile = ""; // Reset to use default data
+        }
+    }
+    
+    if (inputFile.empty()) {
+        if (useDatabase && dbManager) {
+            std::cout << "\n=== Loading Activities from Database ===" << std::endl;
+            activities = dbManager->getAllCourses();
+            std::cout << "Loaded " << activities.size() << " activities from database." << std::endl;
+            // Generate default course names for database activities
+            courseNames.clear();
+            for (size_t i = 0; i < activities.size(); i++) {
+                courseNames.push_back("Course " + std::to_string(activities[i].id));
+            }
+        } else {
+            std::cout << "\n=== Using Built-in Sample Data ===" << std::endl;
+            // Sample activities (CSE Department courses)
+            activities = {
+                {1, 9, 11, 50},    // Data Structures: 9-11 AM, 50 students
+                {2, 10, 12, 45},   // Algorithms: 10-12 PM, 45 students  
+                {3, 13, 15, 40},   // Database Systems: 1-3 PM, 40 students
+                {4, 14, 16, 35},   // Computer Networks: 2-4 PM, 35 students
+                {5, 16, 18, 30},   // Software Engineering: 4-6 PM, 30 students
+                {6, 11, 13, 25},   // Operating Systems: 11-1 PM, 25 students
+                {7, 15, 17, 20}    // Machine Learning: 3-5 PM, 20 students
+            };
+            courseNames = {
+                "Data Structures", "Algorithms", "Database Systems", 
+                "Computer Networks", "Software Engineering", 
+                "Operating Systems", "Machine Learning"
+            };
+            std::cout << "Using " << activities.size() << " built-in sample activities." << std::endl;
+        }
+    }
     
     std::cout << "\nInput Activities (CSE Courses):" << std::endl;
     std::cout << "ID | Course                | Time    | Students" << std::endl;
     std::cout << "---|----------------------|---------|----------" << std::endl;
-    std::vector<std::string> courseNames = {
-        "Data Structures", "Algorithms", "Database Systems", 
-        "Computer Networks", "Software Engineering", 
-        "Operating Systems", "Machine Learning"
-    };
     
     for (size_t i = 0; i < activities.size(); i++) {
         const auto& activity = activities[i];
+        std::string courseName = (i < courseNames.size()) ? courseNames[i] : "Unknown Course";
+        // Truncate long names and pad short ones
+        if (courseName.length() > 20) {
+            courseName = courseName.substr(0, 17) + "...";
+        }
         std::cout << " " << activity.id << " | " 
-                  << courseNames[i] << std::string(21 - courseNames[i].length(), ' ') 
+                  << courseName << std::string(21 - courseName.length(), ' ') 
                   << " | " << activity.start << "-" << activity.end 
                   << "     | " << static_cast<int>(activity.weight) << std::endl;
     }
@@ -251,6 +301,19 @@ int main(int argc, char* argv[]) {
                 }
             }
             std::cout << std::endl;
+        }
+    }
+    
+    // Generate PDF if requested
+    if (generatePDF) {
+        std::cout << "\n=== Generating PDF Output ===" << std::endl;
+        PDFGenerator pdfGen;
+        try {
+            std::string filename = "schedule_" + algorithm + ".html";
+            pdfGen.generateSchedulePDF(schedule, courseNames, algorithm, filename);
+            std::cout << "PDF generated successfully! Opening in browser..." << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "Error generating PDF: " << e.what() << std::endl;
         }
     }
     
