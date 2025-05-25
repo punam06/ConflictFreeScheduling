@@ -31,12 +31,20 @@ if(PkgConfig_FOUND)
     pkg_check_modules(POSTGRESQL libpq)
 endif()
 
-# Core algorithm source files (4 focused algorithms)
+# Core algorithm source files (4 focused algorithms + enhanced generator)
 set(CORE_ALGORITHM_SOURCES
     "src/algorithms/graph_coloring.cpp"
     "src/algorithms/dynamic_programming.cpp"
     "src/algorithms/backtracking.cpp"
     "src/algorithms/genetic_algorithm.cpp"
+    "src/algorithms/enhanced_routine_generator.cpp"
+)
+
+# Utility source files
+set(UTILITY_SOURCES
+    "src/utils/pdf_generator.cpp"
+    "src/utils/file_parser.cpp"
+    "src/utils/academic_pdf_generator.cpp"
 )
 
 # Main source files
@@ -54,7 +62,7 @@ file(GLOB_RECURSE HEADERS
 )
 
 # Create main executable with focused algorithm set
-add_executable(scheduler ${MAIN_SOURCES} ${CORE_ALGORITHM_SOURCES} ${HEADERS})
+add_executable(scheduler ${MAIN_SOURCES} ${UTILITY_SOURCES} ${CORE_ALGORITHM_SOURCES} ${HEADERS})
 
 # Link SQLite3 library
 target_link_libraries(scheduler ${SQLITE3_LIBRARIES})

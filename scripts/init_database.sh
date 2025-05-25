@@ -5,7 +5,7 @@
 
 DB_PATH="data/scheduling.db"
 SCHEMA_FILE="data/schema.sql"
-SAMPLE_DATA_FILE="data/sample_data.sql"
+SAMPLE_DATA_FILE="data/updated_sample_data.sql"
 
 echo "=== Conflict-Free Scheduling Database Setup ==="
 

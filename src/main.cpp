@@ -3,6 +3,7 @@
 #include "utils/file_parser.h"
 #include "utils/pdf_generator.h"
 #include "utils/academic_pdf_generator.h"
+#include "algorithms/enhanced_routine_generator.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -13,30 +14,7 @@
 #include <memory>
 
 /**
- * @brief Main function demonstrating the con    // Generate PDF if requested
-    if (generatePDF) {
-        std::cout << "\n=== Generating PDF Output ===" << std::endl;
-        PDFGenerator pdfGen;
-        try {
-            std::string filename = "schedule_" + algorithm + ".html";
-            
-            // If database is available, use dynamic statistics
-            if (useDatabase && dbManager) {
-                auto academicStats = dbManager->getAcademicStatistics("2024-25", "Spring");
-                auto deptStats = PDFGenerator::convertAcademicStatsToDepartmentStats(academicStats, dbManager.get());
-                pdfGen.generateSchedulePDF(schedule, courseNames, filename, deptStats, algorithm);
-                std::cout << "✅ PDF generated with dynamic department statistics!" << std::endl;
-            } else {
-                // Fallback to original version without statistics
-                pdfGen.generateSchedulePDF(schedule, courseNames, filename, algorithm);
-                std::cout << "✅ PDF generated with default statistics!" << std::endl;
-            }
-            
-            std::cout << "📄 Opening in browser..." << std::endl;
-        } catch (const std::exception& e) {
-            std::cerr << "❌ Error generating PDF: " << e.what() << std::endl;
-        }
-    }cheduling system
+ * @brief Main function demonstrating the conflict-free scheduling system
  * Enhanced with academic PDF generation and professional BUP scheduling
  */
 int main(int argc, char* argv[]) {
@@ -57,6 +35,7 @@ int main(int argc, char* argv[]) {
     bool generateAcademicPDF = false;
     bool generateUniversitySchedule = false;
     bool generateComprehensiveRoutine = false;
+    bool useEnhancedGenerator = false;
     std::string batchCode = "";
     std::string sectionName = "";
     std::string facultyCode = "";
@@ -88,6 +67,8 @@ int main(int argc, char* argv[]) {
             generateUniversitySchedule = true;
         } else if (arg == "--comprehensive-routine") {
             generateComprehensiveRoutine = true;
+        } else if (arg == "--enhanced-generator") {
+            useEnhancedGenerator = true;
         } else if (arg == "--batch" && i + 1 < argc) {
             batchCode = argv[++i];
         } else if (arg == "--section" && i + 1 < argc) {
@@ -120,6 +101,7 @@ int main(int argc, char* argv[]) {
         std::cout << "  --academic-pdf      Generate professional academic schedule PDF" << std::endl;
         std::cout << "  --university-schedule Generate complete university schedule (all batches)" << std::endl;
         std::cout << "  --comprehensive-routine Generate comprehensive routine (days as rows, rooms as sub-rows)" << std::endl;
+        std::cout << "  --enhanced-generator  Use enhanced routine generator with faculty constraints" << std::endl;
         std::cout << "  --batch <code>      Specify batch code (e.g., BCSE23)" << std::endl;
         std::cout << "  --section <name>    Specify section name (A or B)" << std::endl;
         std::cout << "  --faculty <code>    Generate faculty-specific schedule" << std::endl;
@@ -143,7 +125,8 @@ int main(int argc, char* argv[]) {
         std::cout << "  3. Backtracking      - Exhaustive search with pruning for optimal solutions" << std::endl;
         std::cout << "  4. Genetic Algorithm - Population-based evolutionary optimization" << std::endl;
         std::cout << "\nExamples:" << std::endl;
-        std::cout << "  " << argv[0] << " --algorithm graph-coloring --init-db" << std::endl;
+        std::cout << "  " << argv[0] << " --enhanced-generator --init-db" << std::endl;
+        std::cout << "  " << argv[0] << " --enhanced-generator --comprehensive-routine" << std::endl;
         std::cout << "  " << argv[0] << " --run-all --visualize" << std::endl;
         std::cout << "  " << argv[0] << " --algorithm genetic --no-database --input data/sample_courses.txt" << std::endl;
         std::cout << "  " << argv[0] << " --input data/sample_courses.txt --algorithm dynamic-prog --pdf --no-database" << std::endl;
@@ -164,7 +147,7 @@ int main(int argc, char* argv[]) {
     std::shared_ptr<DatabaseManager> dbManager;
     if (useDatabase) {
         std::cout << "\n=== Database Integration ===" << std::endl;
-        dbManager = std::make_shared<DatabaseManager>("data/scheduling.db");
+        dbManager = std::make_shared<DatabaseManager>("../data/scheduling.db");
         
         if (!dbManager->initialize()) {
             std::cerr << "Error: Failed to initialize database: " << dbManager->getLastError() << std::endl;
@@ -188,6 +171,62 @@ int main(int argc, char* argv[]) {
         std::cout << "  - Total Time Slots: " << stats.total_time_slots << std::endl;
         std::cout << "  - Scheduled Courses: " << stats.scheduled_courses << std::endl;
         std::cout << "  - Unresolved Conflicts: " << stats.conflicts_detected << std::endl;
+    }
+
+    // Enhanced Routine Generator Option
+    if (useEnhancedGenerator) {
+        if (!useDatabase || !dbManager) {
+            std::cerr << "❌ Enhanced routine generator requires database integration!" << std::endl;
+            std::cerr << "    Please run with database enabled (remove --no-database)" << std::endl;
+            return 1;
+        }
+        
+        std::cout << "\n🎓 === Enhanced Routine Generator ===" << std::endl;
+        std::cout << "Generating comprehensive conflict-free schedule for BUP CSE Department" << std::endl;
+        
+        try {
+            // Create enhanced routine generator
+            auto enhancedGenerator = std::make_unique<EnhancedRoutineGenerator>(dbManager);
+            
+            // Generate complete routine
+            std::cout << "\n🔄 Generating complete university routine..." << std::endl;
+            bool success = enhancedGenerator->generateCompleteRoutine(academicYear, semester);
+            
+            if (success) {
+                std::cout << "\n✅ Enhanced routine generation completed!" << std::endl;
+                
+                // Print statistics
+                enhancedGenerator->printScheduleSummary();
+                
+                // Generate PDFs using enhanced data
+                if (generateComprehensiveRoutine || generateUniversitySchedule || generateAcademicPDF) {
+                    std::cout << "\n📄 Generating PDF outputs..." << std::endl;
+                    auto academicPDFGen = std::make_shared<AcademicPDFGenerator>(dbManager);
+                    std::string outputBase = outputFile.empty() ? "output/enhanced_schedule" : outputFile;
+                    
+                    if (generateComprehensiveRoutine) {
+                        if (academicPDFGen->generateComprehensiveUniversityRoutine(outputBase, "Enhanced Algorithm", academicYear, semester)) {
+                            std::cout << "✅ Comprehensive routine PDF generated!" << std::endl;
+                        }
+                    }
+                    
+                    if (generateUniversitySchedule) {
+                        if (academicPDFGen->generateUniversitySchedule(outputBase, "Enhanced Algorithm", academicYear, semester)) {
+                            std::cout << "✅ University schedule PDF generated!" << std::endl;
+                        }
+                    }
+                }
+                
+                return 0; // Exit after enhanced generation
+            } else {
+                std::cerr << "❌ Enhanced routine generation failed!" << std::endl;
+                return 1;
+            }
+            
+        } catch (const std::exception& e) {
+            std::cerr << "❌ Error in enhanced routine generator: " << e.what() << std::endl;
+            return 1;
+        }
     }
 
     // Create scheduler instance

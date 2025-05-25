@@ -2045,9 +2045,18 @@ bool AcademicPDFGenerator::generateComprehensiveRoutineHTML(
     const std::string& academicYear,
     const std::string& semester) {
     
+    // Create parent directories if they don't exist
+    size_t lastSlash = htmlPath.find_last_of("/\\");
+    if (lastSlash != std::string::npos) {
+        std::string directory = htmlPath.substr(0, lastSlash);
+        std::string mkdirCommand = "mkdir -p \"" + directory + "\"";
+        system(mkdirCommand.c_str());
+    }
+    
     std::ofstream file(htmlPath);
     if (!file.is_open()) {
         std::cerr << "❌ Error: Cannot create HTML file " << htmlPath << std::endl;
+        std::cerr << "   Path: " << htmlPath << std::endl;
         return false;
     }
     
