@@ -114,7 +114,7 @@ int main(int argc, char* argv[]) {
         std::cout << "  --help, -h          Show this help message" << std::endl;
         std::cout << "\n🎓 Academic Scheduling Features:" << std::endl;
         std::cout << "  • Professional PDF generation with university branding" << std::endl;
-        std::cout << "  • Section-wise schedules (BCSE21-24, Sections A & B)" << std::endl;
+        std::cout << "  • Section-wise schedules (BCSE22-25, Sections A & B)" << std::endl;
         std::cout << "  • Faculty schedules with contact information" << std::endl;
         std::cout << "  • Room utilization reports" << std::endl;
         std::cout << "  • Credit-hour based session durations" << std::endl;
@@ -147,9 +147,9 @@ int main(int argc, char* argv[]) {
     std::shared_ptr<DatabaseManager> dbManager;
     if (useDatabase) {
         std::cout << "\n=== Database Integration ===" << std::endl;
-        dbManager = std::make_shared<DatabaseManager>("../data/scheduling.db");
+        dbManager = std::make_shared<DatabaseManager>("data/scheduling.db");
         
-        if (!dbManager->initialize()) {
+        if (!dbManager->connect()) {
             std::cerr << "Error: Failed to initialize database: " << dbManager->getLastError() << std::endl;
             return 1;
         }

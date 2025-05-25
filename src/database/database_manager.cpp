@@ -42,6 +42,10 @@ bool DatabaseManager::initialize() {
     return createTables();
 }
 
+bool DatabaseManager::connect() {
+    return openConnection();
+}
+
 bool DatabaseManager::createTables() {
     return executeSQLFile("../data/schema.sql");
 }

@@ -97,7 +97,7 @@ bool PDFGenerator::generateScheduleHTML(
     file << "        <p class=\"algorithm\">Generated using: <strong>" << algorithm << " Algorithm</strong></p>\n";
     file << "        <div class=\"department-info\">\n";
     file << "            <p><strong>Department Overview:</strong></p>\n";
-    file << "            <p>• Batches: BCSE21-24 (4 batches)</p>\n";
+    file << "            <p>• Batches: BCSE22-25 (4 batches)</p>\n";
     file << "            <p>• Internal Faculty: 6 members</p>\n";
     file << "            <p>• Sections: 8 (2 per batch)</p>\n";
     file << "            <p>• Rooms: 5 (3 theory + 2 lab)</p>\n";
@@ -239,7 +239,7 @@ bool PDFGenerator::generateScheduleHTML(
     file << "        <p class=\"algorithm\">Generated using: <strong>" << algorithm << " Algorithm</strong></p>\n";
     file << "        <div class=\"department-info\">\n";
     file << "            <p><strong>Department Overview:</strong></p>\n";
-    file << "            <p>• Batches: BCSE21-24 (" << deptStats.total_batches << " batches)</p>\n";
+    file << "            <p>• Batches: BCSE22-25 (" << deptStats.total_batches << " batches)</p>\n";
     file << "            <p>• Internal Faculty: " << deptStats.total_teachers << " members</p>\n";
     file << "            <p>• Sections: " << deptStats.total_sections << " (" << (deptStats.total_sections / deptStats.total_batches) << " per batch)</p>\n";
     file << "            <p>• Rooms: " << deptStats.total_classrooms << " (" << deptStats.theory_rooms << " theory + " << deptStats.lab_rooms << " lab)</p>\n";

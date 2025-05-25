@@ -48,6 +48,7 @@ public:
     
     // Database initialization
     bool initialize();
+    bool connect(); // Just open connection without creating tables
     bool loadSampleData();
     bool resetDatabase();
     
