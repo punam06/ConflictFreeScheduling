@@ -1,29 +1,32 @@
-# 🚀 GitHub Deployment Success - PDF Download Enhancement
+# 🚀 GitHub Deployment Success - Enhanced Academic Scheduler
 
 ## ✅ **DEPLOYMENT COMPLETE!**
 
 **Repository**: https://github.com/punam06/ConflictFreeScheduling  
-**Latest Commit**: `e47dba7` - Complete automatic PDF download system  
+**Latest Commit**: `06af1bf` - Fix PDF generation issues and enhance academic scheduler 
 **Branch**: `main`  
 **Status**: ✅ Successfully pushed to GitHub  
+**Date**: May 26, 2025
 
 ---
 
 ## 📦 **What Was Deployed:**
 
 ### **🆕 New Files Added:**
-- ✅ `PDF_DOWNLOAD_GUIDE.md` - Complete PDF generation guide
-- ✅ `PDF_SUCCESS_SUMMARY.md` - Achievement overview
-- ✅ `scripts/html_to_pdf.sh` - Cross-platform PDF conversion script
-- ✅ `backtracking.html` - Sample algorithm output  
-- ✅ `genetic.html` - Genetic algorithm visualization
+- ✅ `ENHANCED_GENERATOR.md` - Documentation for the enhanced generator
+- ✅ `scripts/run_enhanced_generator.sh` - Script for running the enhanced generator
+- ✅ `src/algorithms/enhanced_routine_generator.cpp` - Implementation of enhanced generator
+- ✅ `src/algorithms/enhanced_routine_generator.h` - Header for enhanced generator
+- ✅ `data/updated_sample_data.sql` - Updated sample data for testing
+- ✅ `output/enhanced_schedule_comprehensive_routine.html` - Generated HTML schedule
+- ✅ `output/enhanced_schedule_comprehensive_routine.pdf` - Generated PDF schedule
 
 ### **🔧 Enhanced Files:**
-- ✅ `src/utils/pdf_generator.h` - Added automatic conversion method
-- ✅ `src/utils/pdf_generator.cpp` - Chrome integration implementation
-- ✅ `README.md` - Updated with PDF download instructions
-- ✅ `dynamic-prog.html` - Updated algorithm output
-- ✅ `graph-coloring.html` - Enhanced visualization
+- ✅ `src/utils/academic_pdf_generator.cpp` - Fixed path handling and directory creation
+- ✅ `src/main.cpp` - Added support for enhanced generator
+- ✅ `CMakeLists.txt` - Updated build configuration
+- ✅ `src/database/database_manager.cpp` - Improved database interactions
+- ✅ `scripts/init_database.sh` - Enhanced database initialization
 
 ---
 
