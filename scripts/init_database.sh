@@ -58,13 +58,13 @@ echo -n "Courses: "
 sqlite3 "$DB_PATH" "SELECT COUNT(*) FROM courses;"
 
 echo -n "Rooms: "
-sqlite3 "$DB_PATH" "SELECT COUNT(*) FROM rooms;"
+sqlite3 "$DB_PATH" "SELECT COUNT(*) FROM classrooms;"
 
 echo -n "Time Slots: "
 sqlite3 "$DB_PATH" "SELECT COUNT(*) FROM time_slots;"
 
 echo -n "Schedule Assignments: "
-sqlite3 "$DB_PATH" "SELECT COUNT(*) FROM schedule_assignments;"
+sqlite3 "$DB_PATH" "SELECT COUNT(*) FROM schedule;"
 
 echo ""
 echo "✓ Database setup complete!"

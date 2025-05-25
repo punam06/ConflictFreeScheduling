@@ -2,6 +2,7 @@
 #include "database/database_manager.h"
 #include "utils/file_parser.h"
 #include "utils/pdf_generator.h"
+#include "utils/academic_pdf_generator.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -9,9 +10,34 @@
 #include <sstream>
 #include <chrono>
 #include <iomanip>
+#include <memory>
 
 /**
- * @brief Main function demonstrating the conflict-free scheduling system
+ * @brief Main function demonstrating the con    // Generate PDF if requested
+    if (generatePDF) {
+        std::cout << "\n=== Generating PDF Output ===" << std::endl;
+        PDFGenerator pdfGen;
+        try {
+            std::string filename = "schedule_" + algorithm + ".html";
+            
+            // If database is available, use dynamic statistics
+            if (useDatabase && dbManager) {
+                auto academicStats = dbManager->getAcademicStatistics("2024-25", "Spring");
+                auto deptStats = PDFGenerator::convertAcademicStatsToDepartmentStats(academicStats, dbManager.get());
+                pdfGen.generateSchedulePDF(schedule, courseNames, filename, deptStats, algorithm);
+                std::cout << "✅ PDF generated with dynamic department statistics!" << std::endl;
+            } else {
+                // Fallback to original version without statistics
+                pdfGen.generateSchedulePDF(schedule, courseNames, filename, algorithm);
+                std::cout << "✅ PDF generated with default statistics!" << std::endl;
+            }
+            
+            std::cout << "📄 Opening in browser..." << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "❌ Error generating PDF: " << e.what() << std::endl;
+        }
+    }cheduling system
+ * Enhanced with academic PDF generation and professional BUP scheduling
  */
 int main(int argc, char* argv[]) {
     std::cout << "=== Conflict-Free Class Scheduling System ===" << std::endl;
@@ -28,6 +54,15 @@ int main(int argc, char* argv[]) {
     bool initDatabase = false;
     bool runAll = false;
     bool generatePDF = false;
+    bool generateAcademicPDF = false;
+    bool generateUniversitySchedule = false;
+    bool generateComprehensiveRoutine = false;
+    std::string batchCode = "";
+    std::string sectionName = "";
+    std::string facultyCode = "";
+    std::string roomCode = "";
+    std::string academicYear = "2024-25";
+    std::string semester = "Spring";
     
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
@@ -47,6 +82,24 @@ int main(int argc, char* argv[]) {
             runAll = true;
         } else if (arg == "--pdf") {
             generatePDF = true;
+        } else if (arg == "--academic-pdf") {
+            generateAcademicPDF = true;
+        } else if (arg == "--university-schedule") {
+            generateUniversitySchedule = true;
+        } else if (arg == "--comprehensive-routine") {
+            generateComprehensiveRoutine = true;
+        } else if (arg == "--batch" && i + 1 < argc) {
+            batchCode = argv[++i];
+        } else if (arg == "--section" && i + 1 < argc) {
+            sectionName = argv[++i];
+        } else if (arg == "--faculty" && i + 1 < argc) {
+            facultyCode = argv[++i];
+        } else if (arg == "--room" && i + 1 < argc) {
+            roomCode = argv[++i];
+        } else if (arg == "--year" && i + 1 < argc) {
+            academicYear = argv[++i];
+        } else if (arg == "--semester" && i + 1 < argc) {
+            semester = argv[++i];
         } else if (arg == "--help" || arg == "-h") {
             showHelp = true;
         }
@@ -64,10 +117,26 @@ int main(int argc, char* argv[]) {
         std::cout << "  --input <file>      Input file with activities data" << std::endl;
         std::cout << "  --output <file>     Output file for results" << std::endl;
         std::cout << "  --pdf               Generate PDF output and open in browser" << std::endl;
+        std::cout << "  --academic-pdf      Generate professional academic schedule PDF" << std::endl;
+        std::cout << "  --university-schedule Generate complete university schedule (all batches)" << std::endl;
+        std::cout << "  --comprehensive-routine Generate comprehensive routine (days as rows, rooms as sub-rows)" << std::endl;
+        std::cout << "  --batch <code>      Specify batch code (e.g., BCSE23)" << std::endl;
+        std::cout << "  --section <name>    Specify section name (A or B)" << std::endl;
+        std::cout << "  --faculty <code>    Generate faculty-specific schedule" << std::endl;
+        std::cout << "  --room <code>       Generate room utilization schedule" << std::endl;
+        std::cout << "  --year <year>       Academic year (default: 2024-25)" << std::endl;
+        std::cout << "  --semester <sem>    Semester (Spring/Summer/Fall, default: Spring)" << std::endl;
         std::cout << "  --visualize         Enable visualization output" << std::endl;
         std::cout << "  --no-database       Disable database integration (use file input only)" << std::endl;
         std::cout << "  --init-db           Initialize/reset database with sample data" << std::endl;
         std::cout << "  --help, -h          Show this help message" << std::endl;
+        std::cout << "\n🎓 Academic Scheduling Features:" << std::endl;
+        std::cout << "  • Professional PDF generation with university branding" << std::endl;
+        std::cout << "  • Section-wise schedules (BCSE21-24, Sections A & B)" << std::endl;
+        std::cout << "  • Faculty schedules with contact information" << std::endl;
+        std::cout << "  • Room utilization reports" << std::endl;
+        std::cout << "  • Credit-hour based session durations" << std::endl;
+        std::cout << "  • External faculty scheduling support" << std::endl;
         std::cout << "\n4 Core Algorithms:" << std::endl;
         std::cout << "  1. Graph Coloring    - Models conflicts as graph edges, assigns time slots as colors" << std::endl;
         std::cout << "  2. Dynamic Programming - Optimal weighted activity selection with memoization" << std::endl;
@@ -78,6 +147,12 @@ int main(int argc, char* argv[]) {
         std::cout << "  " << argv[0] << " --run-all --visualize" << std::endl;
         std::cout << "  " << argv[0] << " --algorithm genetic --no-database --input data/sample_courses.txt" << std::endl;
         std::cout << "  " << argv[0] << " --input data/sample_courses.txt --algorithm dynamic-prog --pdf --no-database" << std::endl;
+        std::cout << "\n🎓 Academic Examples:" << std::endl;
+        std::cout << "  " << argv[0] << " --academic-pdf --batch BCSE23 --section A" << std::endl;
+        std::cout << "  " << argv[0] << " --university-schedule --algorithm graph-coloring" << std::endl;
+        std::cout << "  " << argv[0] << " --comprehensive-routine --algorithm genetic" << std::endl;
+        std::cout << "  " << argv[0] << " --faculty DR_ASM --year 2024-25 --semester Spring" << std::endl;
+        std::cout << "  " << argv[0] << " --room CR302 --academic-pdf" << std::endl;
         std::cout << "\nInput File Format:" << std::endl;
         std::cout << "  Course Name,Start Time,End Time,Students" << std::endl;
         std::cout << "  Data Structures,9,11,50" << std::endl;
@@ -86,10 +161,10 @@ int main(int argc, char* argv[]) {
     }
     
     // Database initialization
-    std::unique_ptr<DatabaseManager> dbManager;
+    std::shared_ptr<DatabaseManager> dbManager;
     if (useDatabase) {
         std::cout << "\n=== Database Integration ===" << std::endl;
-        dbManager = std::make_unique<DatabaseManager>("../data/scheduling.db");
+        dbManager = std::make_shared<DatabaseManager>("data/scheduling.db");
         
         if (!dbManager->initialize()) {
             std::cerr << "Error: Failed to initialize database: " << dbManager->getLastError() << std::endl;
@@ -140,13 +215,10 @@ int main(int argc, char* argv[]) {
     if (inputFile.empty()) {
         if (useDatabase && dbManager) {
             std::cout << "\n=== Loading Activities from Database ===" << std::endl;
-            activities = dbManager->getAllCourses();
+            auto coursesWithTitles = dbManager->getAllCoursesWithTitles();
+            activities = coursesWithTitles.first;
+            courseNames = coursesWithTitles.second;
             std::cout << "Loaded " << activities.size() << " activities from database." << std::endl;
-            // Generate default course names for database activities
-            courseNames.clear();
-            for (size_t i = 0; i < activities.size(); i++) {
-                courseNames.push_back("Course " + std::to_string(activities[i].id));
-            }
         } else {
             std::cout << "\n=== Using Built-in Sample Data ===" << std::endl;
             // Sample activities (CSE Department courses)
@@ -272,6 +344,18 @@ int main(int argc, char* argv[]) {
     std::cout << "- Total students served: " << static_cast<int>(scheduler.calculateTotalWeight(schedule)) << std::endl;
     std::cout << "- Utilization: " << (schedule.size() * 100.0 / activities.size()) << "%" << std::endl;
     
+    // Save scheduling results to database for academic PDF generation
+    if (useDatabase && dbManager && !schedule.empty()) {
+        std::cout << "\n=== Saving Results to Database ===" << std::endl;
+        if (dbManager->saveSchedulingResults(schedule, courseNames, algorithm, academicYear, semester)) {
+            std::cout << "✅ Scheduling results saved successfully!" << std::endl;
+            std::cout << "   Academic PDF generation is now available." << std::endl;
+        } else {
+            std::cerr << "⚠️ Failed to save results to database: " << dbManager->getLastError() << std::endl;
+            std::cerr << "   Academic PDF generation may not work properly." << std::endl;
+        }
+    }
+    
     // Save to output file if specified
     if (!outputFile.empty()) {
         std::ofstream out(outputFile);
@@ -314,6 +398,134 @@ int main(int argc, char* argv[]) {
             std::cout << "PDF generated successfully! Opening in browser..." << std::endl;
         } catch (const std::exception& e) {
             std::cerr << "Error generating PDF: " << e.what() << std::endl;
+        }
+    }
+    
+    // Generate Academic PDF if requested
+    if (generateAcademicPDF || generateUniversitySchedule || generateComprehensiveRoutine || !facultyCode.empty() || !roomCode.empty()) {
+        if (!useDatabase || !dbManager) {
+            std::cerr << "❌ Academic PDF generation requires database integration!" << std::endl;
+            std::cerr << "    Please run with database enabled (remove --no-database)" << std::endl;
+            return 1;
+        }
+        
+        std::cout << "\n🎓 === Academic Schedule Generation ===" << std::endl;
+        
+        // Create academic PDF generator with database integration
+        auto academicPDFGen = std::make_shared<AcademicPDFGenerator>(dbManager);
+        
+        // Determine output base path
+        std::string outputBase = outputFile.empty() ? "output/academic_schedule" : outputFile;
+        
+        try {
+            if (generateUniversitySchedule) {
+                // Generate complete university schedule
+                std::cout << "🏛️ Generating complete university schedule..." << std::endl;
+                if (academicPDFGen->generateUniversitySchedule(outputBase, algorithm, academicYear, semester)) {
+                    std::cout << "✅ University schedule generation completed!" << std::endl;
+                } else {
+                    std::cerr << "❌ Failed to generate university schedule" << std::endl;
+                }
+                
+            } else if (generateComprehensiveRoutine) {
+                // Generate comprehensive university routine with proper format
+                std::cout << "🏛️ Generating comprehensive university routine..." << std::endl;
+                if (academicPDFGen->generateComprehensiveUniversityRoutine(outputBase, algorithm, academicYear, semester)) {
+                    std::cout << "✅ Comprehensive university routine generated successfully!" << std::endl;
+                } else {
+                    std::cerr << "❌ Failed to generate comprehensive routine" << std::endl;
+                }
+                
+            } else if (!facultyCode.empty()) {
+                // Generate faculty-specific schedule
+                std::cout << "👨‍🏫 Generating faculty schedule for: " << facultyCode << std::endl;
+                std::string facultyOutput = outputBase + "_faculty_" + facultyCode;
+                if (academicPDFGen->generateFacultyScheduleFromDB(facultyCode, facultyOutput, algorithm, academicYear, semester)) {
+                    std::cout << "✅ Faculty schedule generated successfully!" << std::endl;
+                } else {
+                    std::cerr << "❌ Failed to generate faculty schedule" << std::endl;
+                }
+                
+            } else if (!roomCode.empty()) {
+                // Generate room utilization schedule
+                std::cout << "🏢 Generating room schedule for: " << roomCode << std::endl;
+                std::string roomOutput = outputBase + "_room_" + roomCode;
+                if (academicPDFGen->generateRoomUtilizationFromDB(roomCode, roomOutput, algorithm, academicYear, semester)) {
+                    std::cout << "✅ Room schedule generated successfully!" << std::endl;
+                } else {
+                    std::cerr << "❌ Failed to generate room schedule" << std::endl;
+                }
+                
+            } else if (!batchCode.empty() && !sectionName.empty()) {
+                // Generate section-specific schedule
+                std::cout << "📚 Generating schedule for: " << batchCode << " Section " << sectionName << std::endl;
+                std::string sectionOutput = outputBase + "_" + batchCode + "_" + sectionName;
+                if (academicPDFGen->generateScheduleFromDatabase(batchCode, sectionName, sectionOutput, algorithm, academicYear, semester)) {
+                    std::cout << "✅ Section schedule generated successfully!" << std::endl;
+                } else {
+                    std::cerr << "❌ Failed to generate section schedule" << std::endl;
+                }
+                
+            } else {
+                // Default: Generate for all active batches
+                std::cout << "📋 Generating schedules for all active batches..." << std::endl;
+                auto batches = dbManager->getAllBatches();
+                
+                if (batches.empty()) {
+                    std::cerr << "❌ No active batches found in database" << std::endl;
+                    std::cerr << "    Try running with --init-db to load sample data" << std::endl;
+                } else {
+                    bool anySuccess = false;
+                    for (const auto& batch : batches) {
+                        // Generate for both sections A and B
+                        for (const std::string& section : {"A", "B"}) {
+                            std::string batchOutput = outputBase + "_" + batch.batch_code + "_" + section;
+                            std::cout << "  📄 Generating: " << batch.batch_code << " Section " << section << std::endl;
+                            
+                            if (academicPDFGen->generateScheduleFromDatabase(
+                                batch.batch_code, section, batchOutput, algorithm, academicYear, semester)) {
+                                anySuccess = true;
+                            } else {
+                                std::cerr << "    ⚠️ Failed: " << batch.batch_code << " Section " << section << std::endl;
+                            }
+                        }
+                    }
+                    
+                    if (anySuccess) {
+                        std::cout << "✅ Academic schedule generation completed!" << std::endl;
+                    } else {
+                        std::cerr << "❌ No schedules were generated successfully" << std::endl;
+                    }
+                }
+            }
+            
+        } catch (const std::exception& e) {
+            std::cerr << "❌ Error during academic PDF generation: " << e.what() << std::endl;
+        }
+        
+        // Display academic statistics
+        std::cout << "\n📊 Academic Statistics:" << std::endl;
+        auto academicStats = dbManager->getAcademicStatistics(academicYear, semester);
+        std::cout << "  • Total Batches: " << academicStats.total_batches << std::endl;
+        std::cout << "  • Internal Faculty: " << academicStats.total_teachers << std::endl;
+        std::cout << "  • Available Classrooms: " << academicStats.total_classrooms << std::endl;
+        std::cout << "  • Total Courses: " << academicStats.total_courses << std::endl;
+        std::cout << "  • Total Sections: " << academicStats.total_sections << " (4 batches × 2 sections each)" << std::endl;
+        std::cout << "  • Scheduled Sessions: " << academicStats.scheduled_sessions << std::endl;
+        std::cout << "  • Schedule Completion: " << std::fixed << std::setprecision(1) 
+                  << academicStats.schedule_completion_percentage << "%" << std::endl;
+        
+        if (academicStats.teacher_conflicts > 0 || academicStats.room_conflicts > 0 || academicStats.section_conflicts > 0) {
+            std::cout << "\n⚠️ Conflicts Detected:" << std::endl;
+            if (academicStats.teacher_conflicts > 0) {
+                std::cout << "  • Teacher conflicts: " << academicStats.teacher_conflicts << std::endl;
+            }
+            if (academicStats.room_conflicts > 0) {
+                std::cout << "  • Room conflicts: " << academicStats.room_conflicts << std::endl;
+            }
+            if (academicStats.section_conflicts > 0) {
+                std::cout << "  • Section conflicts: " << academicStats.section_conflicts << std::endl;
+            }
         }
     }
     

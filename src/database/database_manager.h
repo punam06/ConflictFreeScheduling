@@ -56,6 +56,7 @@ public:
     bool updateCourse(const Activity& course);
     bool deleteCourse(int course_id);
     std::vector<Activity> getAllCourses();
+    std::pair<std::vector<Activity>, std::vector<std::string>> getAllCoursesWithTitles();
     std::vector<Activity> getCoursesBySemester(int semester);
     Activity getCourseById(int course_id);
     
@@ -190,6 +191,169 @@ public:
     bool commitTransaction();
     bool rollbackTransaction();
     
+    // Academic structures for BUP integration
+    struct AcademicBatch {
+        int batch_id;
+        std::string batch_code;      // e.g., "BCSE23"
+        std::string batch_name;      // e.g., "Bachelor of Computer Science Engineering - 2023"
+        int year_level;              // 1, 2, 3, 4
+        int semester;                // 1, 2, 3, 4, 5, 6, 7, 8
+        int total_sections;          // Usually 2 (A and B)
+        std::string status;          // ACTIVE, INACTIVE, GRADUATED
+    };
+    
+    struct AcademicTeacher {
+        int teacher_id;
+        std::string teacher_code;    // e.g., "DR_ASM", "EXT_MSH"
+        std::string full_name;       // e.g., "Dr. ASM Shihavuddin"
+        std::string designation;     // e.g., "Professor", "Assistant Professor"
+        std::string department;      // e.g., "CSE"
+        std::string email;
+        std::string phone;
+        std::string availability_start;  // e.g., "08:30"
+        std::string availability_end;    // e.g., "17:30"
+        bool external_faculty;       // true for external teachers
+        int max_hours_per_week;
+        std::string status;
+    };
+    
+    struct AcademicCourse {
+        int course_id;
+        std::string course_code;     // e.g., "CSE2201"
+        std::string course_title;    // e.g., "Data Structures"
+        double credit_hours;         // e.g., 3.0, 1.5
+        std::string class_type;      // THEORY, LAB
+        int session_duration;        // 90 min for theory, 180 min for lab
+        int sessions_per_week;       // Usually 2 for theory, 1 for lab
+        int batch_id;
+        int teacher_id;
+        std::string department;
+        std::string status;
+    };
+    
+    struct AcademicSection {
+        int section_id;
+        int course_id;
+        std::string section_name;    // A, B
+        int max_students;            // Usually 40
+        int enrolled_students;
+        std::string status;
+    };
+    
+    struct AcademicTimeSlot {
+        int slot_id;
+        std::string slot_name;       // e.g., "SUN_S1", "MON_L1"
+        std::string day_of_week;     // SUN, MON, TUE, WED, THU
+        std::string start_time;      // e.g., "08:30"
+        std::string end_time;        // e.g., "10:00"
+        int duration_minutes;        // 90 or 180
+        std::string slot_type;       // THEORY, LAB
+        bool is_available;
+        int priority;                // Higher priority = preferred slots
+    };
+    
+    struct AcademicSchedule {
+        int schedule_id;
+        int course_id;
+        int section_id;
+        int teacher_id;
+        int room_id;
+        int slot_id;
+        int session_number;          // 1, 2 for multiple sessions per week
+        std::string academic_year;   // e.g., "2024-25"
+        std::string semester;        // SPRING, SUMMER, FALL
+        std::string status;
+        std::string notes;
+    };
+    
+    // Academic data operations
+    std::vector<AcademicBatch> getAllBatches();
+    std::vector<AcademicTeacher> getAllTeachers();
+    std::vector<AcademicCourse> getAllAcademicCourses();
+    std::vector<AcademicSection> getAllSections();
+    std::vector<AcademicTimeSlot> getAllAcademicTimeSlots();
+    std::vector<AcademicSchedule> getAllAcademicSchedules();
+    
+    // Filtered queries for academic data
+    std::vector<AcademicCourse> getCoursesByBatch(const std::string& batch_code);
+    std::vector<AcademicSchedule> getScheduleBySection(const std::string& batch_code, const std::string& section_name);
+    std::vector<AcademicSchedule> getScheduleByTeacher(int teacher_id);
+    std::vector<AcademicSchedule> getScheduleByRoom(const std::string& room_code);
+    std::vector<AcademicSchedule> getScheduleByDay(const std::string& day_of_week);
+    
+    // Academic schedule generation support
+    bool insertAcademicSchedule(const AcademicSchedule& schedule);
+    bool updateAcademicSchedule(const AcademicSchedule& schedule);
+    bool deleteAcademicSchedule(int schedule_id);
+    bool clearAllSchedules(const std::string& academic_year, const std::string& semester);
+    
+    // Professional schedule validation
+    bool validateAcademicSchedule(const AcademicSchedule& schedule);
+    bool checkTeacherAvailability(int teacher_id, int slot_id);
+    bool checkRoomAvailability(int room_id, int slot_id);
+    bool checkSectionConflict(int section_id, int slot_id);
+    
+    // Academic reporting
+    struct AcademicStats {
+        int total_batches;
+        int total_teachers;
+        int total_classrooms;
+        int total_courses;
+        int total_sections;
+        int scheduled_sessions;
+        int unscheduled_sessions;
+        double schedule_completion_percentage;
+        int teacher_conflicts;
+        int room_conflicts;
+        int section_conflicts;
+    };
+    
+    AcademicStats getAcademicStatistics(const std::string& academic_year, const std::string& semester);
+    
+    // Professional PDF data export
+    struct PDFScheduleData {
+        std::string batch_code;
+        std::string section_name;
+        std::vector<AcademicSchedule> schedules;
+        std::vector<AcademicCourse> courses;
+        std::vector<AcademicTeacher> teachers;
+        std::vector<Room> rooms;
+        std::vector<AcademicTimeSlot> time_slots;
+    };
+    
+    PDFScheduleData getPDFScheduleData(const std::string& batch_code, const std::string& section_name, 
+                                      const std::string& academic_year, const std::string& semester);
+    
+    // Bridge between file-based scheduling and database
+    bool saveSchedulingResults(
+        const std::vector<Activity>& scheduledActivities,
+        const std::vector<std::string>& courseNames,
+        const std::string& algorithm,
+        const std::string& academic_year = "2024-25",
+        const std::string& semester = "SPRING"
+    );
+    
+    bool convertActivitiesToAcademicSchedule(
+        const std::vector<Activity>& activities,
+        const std::vector<std::string>& courseNames,
+        const std::string& academic_year,
+        const std::string& semester
+    );
+    
+    // Create time slots for file-based activity times
+    bool createTimeSlotFromActivity(const Activity& activity);
+    
+    // Get or create course mapping for file input
+    int getOrCreateCourseFromActivity(const Activity& activity, const std::string& courseName);
+    
+    // Get default assignments for file-based scheduling
+    int getDefaultTeacherId();
+    int getDefaultRoomId(const std::string& course_type = "THEORY", int required_capacity = 30);
+    int getDefaultSectionId();
+    
+    // Get room type counts
+    std::pair<int, int> getRoomTypeCounts(); // returns {theory_rooms, lab_rooms}
+
     // PostgreSQL support (future implementation)
     bool connectToPostgreSQL(const std::string& connection_string);
     bool migrateToPostgreSQL();

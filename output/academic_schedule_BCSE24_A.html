@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Schedule - BUP CSE Department</title>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 10mm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-size: 12px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-20px, -20px) rotate(180deg); }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        
+        .university-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo-icon {
+            font-size: 48px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .logo-text {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .university-info {
+            flex: 1;
+        }
+        
+        .university-name {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .department-name {
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .schedule-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .academic-info {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+        }
+        
+        .academic-year, .semester {
+            background: rgba(255,255,255,0.15);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+        
+        .algorithm-badge {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        /* Content Styles */
+        .content {
+            padding: 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Statistics Section */
+        .statistics-section {
+            margin-bottom: 30px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-top: 4px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            transition: left 0.5s;
+        }
+        
+        .stat-card:hover::before {
+            left: 100%;
+        }
+        
+        .stat-card.primary { border-top-color: #3498db; }
+        .stat-card.success { border-top-color: #27ae60; }
+        .stat-card.info { border-top-color: #17a2b8; }
+        .stat-card.warning { border-top-color: #f39c12; }
+        .stat-card.secondary { border-top-color: #6c757d; }
+        .stat-card.dark { border-top-color: #343a40; }
+        
+        .stat-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        
+        /* Schedule Grid */
+        .schedule-section {
+            margin-bottom: 30px;
+        }
+        
+        .schedule-grid {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .schedule-table th {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 15px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .time-header {
+            width: 140px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+        }
+        
+        .day-header {
+            width: calc((100% - 140px) / 5);
+        }
+        
+        .schedule-table td {
+            padding: 8px;
+            border-bottom: 1px solid #ecf0f1;
+            border-right: 1px solid #ecf0f1;
+            vertical-align: top;
+            height: 120px;
+        }
+        
+        .time-slot {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            text-align: center;
+            padding: 15px 8px !important;
+        }
+        
+        .slot-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .slot-name {
+            font-weight: 700;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        
+        .slot-time {
+            font-size: 10px;
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .slot-type {
+            font-size: 8px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .slot-type.theory-course {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .slot-type.lab-course {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .course-cell {
+            position: relative;
+            padding: 4px !important;
+        }
+        
+        .course-block {
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 2px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .course-block:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .theory-course {
+            border-color: #3498db;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        }
+        
+        .lab-course {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+        }
+        
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .course-code {
+            font-weight: 700;
+            font-size: 11px;
+            color: #2c3e50;
+            text-transform: uppercase;
+        }
+        
+        .section-badge {
+            background: #34495e;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 8px;
+            font-weight: 600;
+        }
+        
+        .course-title {
+            font-size: 9px;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            line-height: 1.2;
+            font-weight: 500;
+        }
+        
+        .course-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .faculty-info, .room-info {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 8px;
+            color: #5d6d7e;
+        }
+        
+        .faculty-icon, .room-icon {
+            font-size: 10px;
+        }
+        
+        .faculty-name, .room-code {
+            font-weight: 500;
+        }
+        
+        .credit-badge {
+            background: #27ae60;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 7px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 2px;
+        }
+        
+        .empty-slot {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #bdc3c7;
+            font-style: italic;
+            font-size: 11px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 1px dashed #dee2e6;
+            border-radius: 8px;
+        }
+        
+        /* Course Details Section */
+        .details-section {
+            margin-bottom: 30px;
+        }
+        
+        .course-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .batch-section-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-top: 4px solid #3498db;
+        }
+        
+        .batch-section-header {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .batch-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .course-count {
+            background: #3498db;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .course-list {
+            padding: 15px;
+        }
+        
+        .course-item {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid;
+            transition: all 0.3s ease;
+        }
+        
+        .course-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .course-item.theory-course {
+            border-color: #3498db;
+            background: linear-gradient(135deg, #f8fbff, #e3f2fd);
+        }
+        
+        .course-item.lab-course {
+            border-color: #f39c12;
+            background: linear-gradient(135deg, #fffbf5, #fff3e0);
+        }
+        
+        .course-primary {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .course-primary .course-code {
+            font-size: 12px;
+            font-weight: 700;
+            color: #2c3e50;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        
+        .course-primary .course-title {
+            font-size: 12px;
+            font-weight: 500;
+            color: #34495e;
+        }
+        
+        .course-secondary {
+            display: flex;
+            gap: 15px;
+            font-size: 10px;
+            color: #5d6d7e;
+            flex-wrap: wrap;
+        }
+        
+        .schedule-time, .faculty-name, .room-code, .credit-info {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+        
+        .schedule-time::before { content: '📅'; }
+        .faculty-name::before { content: '👨‍🏫'; }
+        .room-code::before { content: '🏫'; }
+        .credit-info::before { content: '🎯'; }
+        
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .generation-info, .system-info, .print-info {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .print-info {
+            font-weight: 600;
+            color: #f39c12;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                background: white !important;
+                font-size: 10px;
+            }
+            
+            .container {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+            
+            .header, .footer {
+                break-inside: avoid;
+            }
+            
+            .course-block, .stat-card, .course-item {
+                break-inside: avoid;
+            }
+            
+            .schedule-table {
+                page-break-inside: auto;
+            }
+            
+            .schedule-table tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                margin: 10px;
+                border-radius: 0;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .university-name {
+                font-size: 24px;
+            }
+            
+            .department-name {
+                font-size: 16px;
+            }
+            
+            .schedule-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .course-details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- University Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="university-logo">
+                    <div class="logo-icon">🎓</div>
+                    <div class="logo-text">BUP</div>
+                </div>
+                <div class="university-info">
+                    <h1 class="university-name">Bangladesh University of Professionals</h1>
+                    <h2 class="department-name">Department of Computer Science & Engineering</h2>
+                    <div class="schedule-meta">
+                        <div class="academic-info">
+                            <span class="academic-year">Academic Year: 2024-25</span>
+                            <span class="semester">Spring Semester</span>
+                        </div>
+                        <div class="algorithm-info">
+                            <span class="algorithm-badge">graph-coloring Algorithm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Statistics Section -->
+            
+        <div class="statistics-section">
+            <h3 class="section-title">📊 Schedule Statistics</h3>
+            <div class="stats-grid">
+                <div class="stat-card primary">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-number">20</div>
+                    <div class="stat-label">Total Classes</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">54</div>
+                    <div class="stat-label">Total Credits</div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Sections</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-icon">👨‍🏫</div>
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Faculty</div>
+                </div>
+                <div class="stat-card secondary">
+                    <div class="stat-icon">🏫</div>
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Rooms</div>
+                </div>
+                <div class="stat-card dark">
+                    <div class="stat-icon">🔬</div>
+                    <div class="stat-number">4/16</div>
+                    <div class="stat-label">Lab/Theory</div>
+                </div>
+            </div>
+        </div>
+            
+            <!-- Weekly Schedule Grid -->
+            <div class="schedule-section">
+                <h3 class="section-title">📅 Weekly Class Schedule</h3>
+                
+        <div class="schedule-grid">
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th class="time-header">Time Slot</th>
+                        <th class="day-header">Sunday</th>
+                        <th class="day-header">Monday</th>
+                        <th class="day-header">Tuesday</th>
+                        <th class="day-header">Wednesday</th>
+                        <th class="day-header">Thursday</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="time-row">
+                        <td class="time-slot">
+                            <div class="slot-info">
+                                <span class="slot-name">S1</span>
+                                <span class="slot-time">08:30 - 10:00</span>
+                                <span class="slot-type theory-course">THEORY</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="time-row">
+                        <td class="time-slot">
+                            <div class="slot-info">
+                                <span class="slot-name">S2</span>
+                                <span class="slot-time">10:10 - 11:40</span>
+                                <span class="slot-type theory-course">THEORY</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="time-row">
+                        <td class="time-slot">
+                            <div class="slot-info">
+                                <span class="slot-name">S3</span>
+                                <span class="slot-time">11:50 - 13:20</span>
+                                <span class="slot-type theory-course">THEORY</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="time-row">
+                        <td class="time-slot">
+                            <div class="slot-info">
+                                <span class="slot-name">S4</span>
+                                <span class="slot-time">14:00 - 15:30</span>
+                                <span class="slot-type theory-course">THEORY</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="time-row">
+                        <td class="time-slot">
+                            <div class="slot-info">
+                                <span class="slot-name">L1</span>
+                                <span class="slot-time">08:30 - 11:30</span>
+                                <span class="slot-type lab-course">LAB</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="time-row">
+                        <td class="time-slot">
+                            <div class="slot-info">
+                                <span class="slot-name">L2</span>
+                                <span class="slot-time">11:50 - 14:50</span>
+                                <span class="slot-type lab-course">LAB</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                        <td class="course-cell">
+                            <div class="empty-slot">
+                                <span class="empty-text">Free Time</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+            </div>
+            
+            <!-- Course Details -->
+            <div class="details-section">
+                <h3 class="section-title">📚 Course Details</h3>
+                
+        <div class="course-details-grid">
+            <div class="batch-section-card">
+                <div class="batch-section-header">
+                    <h4 class="batch-title">BCSE24 - Section A</h4>
+                    <span class="course-count">20 Courses</span>
+                </div>
+                <div class="course-list">
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE1101</span>
+                                <span class="course-title">Computer Fundamentals</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 0:00:00 - 3:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">ENG1101</span>
+                                <span class="course-title">English Composition</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 10:00:00 - 11:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE2201</span>
+                                <span class="course-title">Data Structures</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 12:00:00 - 13:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE2202</span>
+                                <span class="course-title">Object Oriented Programming</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 14:00:00 - 15:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item lab-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE2203</span>
+                                <span class="course-title">OOP Lab</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 16:00:00 - 19:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">1.5 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE2204</span>
+                                <span class="course-title">Digital Logic Design</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 20:00:00 - 21:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">MAT2201</span>
+                                <span class="course-title">Discrete Mathematics</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 22:00:00 - 23:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE3301</span>
+                                <span class="course-title">Algorithms</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 24:00:00 - 25:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE3302</span>
+                                <span class="course-title">Database Systems</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 26:00:00 - 27:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item lab-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE3303</span>
+                                <span class="course-title">Database Lab</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 28:00:00 - 31:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">1.5 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE3304</span>
+                                <span class="course-title">Computer Networks</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 32:00:00 - 33:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE3305</span>
+                                <span class="course-title">Software Engineering</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 34:00:00 - 35:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE4401</span>
+                                <span class="course-title">Operating Systems</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 36:00:00 - 37:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE4402</span>
+                                <span class="course-title">Artificial Intelligence</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 38:00:00 - 39:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE4403</span>
+                                <span class="course-title">Machine Learning</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 40:00:00 - 43:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE4404</span>
+                                <span class="course-title">Capstone Project</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 44:00:00 - 45:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item lab-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE4405</span>
+                                <span class="course-title">Project Lab</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 46:00:00 - 47:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">1.5 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE1102</span>
+                                <span class="course-title">Programming Fundamentals</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 4:00:00 - 5:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item lab-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">CSE1103</span>
+                                <span class="course-title">Programming Lab</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 6:00:00 - 7:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">1.5 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="course-item theory-course">
+                        <div class="course-info">
+                            <div class="course-primary">
+                                <span class="course-code">MAT1101</span>
+                                <span class="course-title">Calculus I</span>
+                            </div>
+                            <div class="course-secondary">
+                                <span class="schedule-time">Monday 8:00:00 - 9:00:00</span>
+                                <span class="faculty-name">Dr. Abu Sayed Md. Latiful Hoque</span>
+                                <span class="room-code">R101</span>
+                                <span class="credit-info">3.0 cr</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p class="generation-info">
+                    📄 Generated on: May 24 2025 at 21:09:25
+                </p>
+                <p class="system-info">
+                    🖥️ BUP Conflict-Free Scheduling System | Algorithm: graph-coloring
+                </p>
+                <p class="print-info">
+                    💡 For PDF: Press <strong>Ctrl+P</strong> (Windows) or <strong>Cmd+P</strong> (Mac) → Save as PDF
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
