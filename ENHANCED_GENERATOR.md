@@ -10,7 +10,7 @@ This update adds a comprehensive academic scheduling system for the BUP CSE Depa
   - BCSE24 (5 theory, 4 lab)
   - BCSE25 (6 theory, 3 lab)
 
-- **Comprehensive Room Management**: Schedules across 5 classrooms (CR302, CR303, CR304, CR504, LAB1003)
+- **Comprehensive Room Management**: Schedules across 5 classrooms (CR302, CR303, CR304, CR504, CR1003)
 
 - **Advanced Time Slot Handling**: Supports specific time slots (8:30 AM - 5:00 PM) with lunch breaks (1:30-2:00 PM)
 

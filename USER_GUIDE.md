@@ -9,9 +9,10 @@
 6. [Algorithms Explained](#algorithms-explained)
 7. [Output Options](#output-options)
 8. [Database Integration](#database-integration)
-9. [Examples & Use Cases](#examples--use-cases)
-10. [Troubleshooting](#troubleshooting)
-11. [Advanced Features](#advanced-features)
+9. [Enhanced Routine Generator](#enhanced-routine-generator)
+10. [Examples & Use Cases](#examples--use-cases)
+11. [Troubleshooting](#troubleshooting)
+12. [Advanced Features](#advanced-features)
 
 ---
 
@@ -21,6 +22,7 @@ The **Conflict-Free Class Scheduling System** is a comprehensive tool designed f
 
 ### Key Features
 - ✅ **4 Core Algorithms**: Graph Coloring, Dynamic Programming, Backtracking, Genetic Algorithm
+- ✅ **Enhanced Routine Generator**: Specialized for BUP CSE Department scheduling
 - ✅ **Simple Text Input**: CSV and plain text file support
 - ✅ **Professional PDF Output**: University-branded, printable schedules
 - ✅ **Database Integration**: SQLite support for large-scale scheduling
@@ -165,6 +167,23 @@ Mobile App Development,8,10,25
 | `--init-db` | Initialize database with sample data | `--init-db` |
 | `--help, -h` | Show help message | `--help` |
 
+### Command Line Reference
+
+| Option | Description | Example |
+|--------|-------------|---------|
+| `-h`, `--help` | Show help message | `./bin/scheduler --help` |
+| `--input <file>` | Specify input file | `./bin/scheduler --input data/sample.txt` |
+| `--output <file>` | Specify output file | `./bin/scheduler --output results.txt` |
+| `--algorithm <name>` | Choose algorithm | `./bin/scheduler --algorithm graph-coloring` |
+| `--pdf` | Generate PDF output | `./bin/scheduler --output schedule --pdf` |
+| `--visualize` | Create visual output | `./bin/scheduler --visualize` |
+| `--init-db` | Initialize database | `./bin/scheduler --init-db` |
+| `--no-database` | Skip database (use file) | `./bin/scheduler --no-database` |
+| `--run-all` | Run and compare all algorithms | `./bin/scheduler --run-all` |
+| `--enhanced-generator` | Use enhanced routine generator | `./bin/scheduler --enhanced-generator` |
+| `--comprehensive-routine` | Create complete department schedule | `./bin/scheduler --enhanced-generator --comprehensive-routine` |
+| `--batch <batch_name>` | Generate for specific batch | `./bin/scheduler --enhanced-generator --batch BCSE23` |
+
 ### Algorithm Types
 
 | Algorithm | Flag | Best For |
@@ -300,6 +319,94 @@ The system uses SQLite with tables for:
 
 ---
 
+## Enhanced Routine Generator
+
+The **Enhanced Routine Generator** is a specialized scheduling module designed specifically for the Bangladesh University of Professionals (BUP) Computer Science and Engineering Department. It provides comprehensive scheduling capabilities with academic-focused constraints and outputs.
+
+### Key Capabilities
+
+- **Department-Specific Design**: Optimized for BUP CSE Department structure and requirements
+- **Multi-Batch Handling**: Manages scheduling for 4 batches simultaneously (BCSE22, BCSE23, BCSE24, BCSE25)
+- **Room Resource Allocation**: Efficiently assigns 5 different classrooms (CR302, CR303, CR304, CR504, CR1003)
+- **Academic Time Slot Management**: Handles standard academic hours (8:30 AM - 5:00 PM) with lunch break considerations
+- **Course Credit Handling**: Supports different credit structures:
+  - Theory: 1.5 hours (2 sessions/week, 3.0 credit)
+  - Labs: 3 hours (1 session/week, 1.5 credit) or (1 session/2 weeks, 0.75 credit)
+
+### Using the Enhanced Generator
+
+#### Basic Usage
+
+```bash
+# Navigate to build directory
+cd build
+
+# Run enhanced generator
+./scheduler --enhanced-generator
+
+# Generate comprehensive routine PDF
+./scheduler --enhanced-generator --comprehensive-routine
+```
+
+#### Batch-Specific Scheduling
+
+```bash
+# Generate schedule for a specific batch
+./scheduler --enhanced-generator --batch BCSE23
+
+# Generate comprehensive routine with custom output path
+./scheduler --enhanced-generator --comprehensive-routine --output custom_path/routine
+```
+
+#### Convenience Script
+
+A convenience script is provided to quickly generate comprehensive routines:
+
+```bash
+# Run from project root
+./scripts/run_enhanced_generator.sh
+
+# View the generated PDF
+open output/enhanced_schedule_comprehensive_routine.pdf
+```
+
+### Comprehensive Routine Generation
+
+The comprehensive routine feature generates a complete departmental schedule in both HTML and PDF formats. This schedule includes:
+
+- Day-wise scheduling (Sunday through Thursday)
+- All batches in a single view
+- Color-coding for different course types
+- Room allocations
+- Faculty assignments
+- Time slot visualizations
+
+#### Sample Command
+
+```bash
+# Initialize fresh database and generate comprehensive routine
+./build/scheduler --init-db
+./build/scheduler --enhanced-generator --comprehensive-routine --output output/enhanced_schedule
+```
+
+### Output Files
+
+The enhanced generator produces two main output types:
+
+1. **HTML Output**: `enhanced_schedule_comprehensive_routine.html`
+   - Interactive format viewable in any browser
+   - Contains all scheduling data in tabular format
+   - Includes CSS styling for visual clarity
+
+2. **PDF Output**: `enhanced_schedule_comprehensive_routine.pdf`
+   - Professional print-ready format
+   - Preserves all styling and layout from HTML
+   - Suitable for official department distribution
+   
+Both files are created in the specified output directory (defaults to `output/` in the project root).
+
+---
+
 ## Examples & Use Cases
 
 ### Example 1: Computer Science Department
@@ -404,6 +511,17 @@ echo "Test Course,9,10,20" > test.txt
 - **Browser doesn't open**: PDF generation creates HTML file, manually open in browser
 - **No styling**: Check if CSS is embedded in HTML file
 - **Permission issues**: Ensure write permissions in project directory
+- **"No schedule data available for conversion"**: Ensure the enhanced generator has completed successfully
+- **"Cannot create HTML file"**: Check that the output directory exists; the system now automatically creates directories
+
+```bash
+# Manually create output directory if needed
+mkdir -p output
+chmod 755 output
+
+# Run with explicit output path
+./build/scheduler --enhanced-generator --comprehensive-routine --output $(pwd)/output/schedule
+```
 
 #### 4. Database Errors
 ```bash
