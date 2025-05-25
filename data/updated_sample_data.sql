@@ -43,7 +43,7 @@ INSERT INTO classrooms (room_code, capacity, room_type, building, floor_number, 
 ('CR303', 40, 'THEORY', 'FBS Building', 3, 'Projector, Whiteboard, AC', 'AVAILABLE'),
 ('CR304', 50, 'THEORY', 'FBS Building', 3, 'Projector, Whiteboard, AC', 'AVAILABLE'),
 ('CR504', 35, 'LAB', 'FBS Building', 5, 'Computers(35), Projector, AC', 'AVAILABLE'),
-('LAB1003', 30, 'LAB', 'Gen Belal Tower', 10, 'Computers(30), Projector, AC', 'AVAILABLE');
+('CR1003', 30, 'LAB', 'Gen Belal Tower', 10, 'Computers(30), Projector, AC', 'AVAILABLE');
 
 -- Insert Time Slots (Sunday to Thursday, 8:30 AM - 5:00 PM with lunch break)
 INSERT INTO time_slots (slot_name, day_of_week, start_time, end_time, duration_minutes, slot_type, is_available, priority) VALUES

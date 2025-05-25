@@ -13,7 +13,7 @@
  * This class generates conflict-free academic schedules based on:
  * - 4 batches: BCSE22, BCSE23, BCSE24, BCSE25
  * - Course distribution per batch as specified
- * - 5 classrooms: CR302, CR303, CR304, CR504, LAB1003
+ * - 5 classrooms: CR302, CR303, CR304, CR504, CR1003
  * - Time slots: Sunday-Thursday, 8:30 AM - 5:00 PM with lunch break
  * - Faculty availability and preferences
  */
