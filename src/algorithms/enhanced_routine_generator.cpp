@@ -259,9 +259,29 @@ bool EnhancedRoutineGenerator::generateCompleteRoutine(const std::string& academ
                     break;
                 }
                 
-                // Shuffle candidates for variety
-                std::shuffle(candidateSlots.begin(), candidateSlots.end(), 
-                           std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count()));
+                // Prioritize slots that minimize gaps for this batch-section
+                if (minimizeGaps) {
+                    std::string batchSection = course.batch_code + "-" + course.section_name;
+                    
+                    // Find existing classes for this batch-section
+                    std::vector<ScheduleAssignment> batchClasses;
+                    for (const auto& existing : currentSchedule) {
+                        if (existing.course.batch_code == course.batch_code && 
+                            existing.course.section_name == course.section_name) {
+                            batchClasses.push_back(existing);
+                        }
+                    }
+                    
+                    // Sort candidate slots by gap-minimization score
+                    std::sort(candidateSlots.begin(), candidateSlots.end(),
+                        [&](const std::pair<TimeSlotInfo, RoomInfo>& a, const std::pair<TimeSlotInfo, RoomInfo>& b) {
+                            return calculateGapScore(a.first, batchClasses) < calculateGapScore(b.first, batchClasses);
+                        });
+                } else {
+                    // Shuffle candidates for variety if gap minimization is disabled
+                    std::shuffle(candidateSlots.begin(), candidateSlots.end(), 
+                               std::default_random_engine(std::chrono::system_clock::now().time_since_epoch().count()));
+                }
                 
                 // Try each candidate
                 for (const auto& [timeSlot, room] : candidateSlots) {
@@ -337,6 +357,11 @@ bool EnhancedRoutineGenerator::generateCompleteRoutine(const std::string& academ
         }
         
         std::cout << "   ✅ Schedule saved successfully!" << std::endl;
+    }
+    
+    // Apply gap minimization optimization if enabled and we have scheduled courses
+    if (minimizeGaps && successfullyScheduled > 0) {
+        minimizeGapsBetweenClasses();
     }
     
     return successfullyScheduled > 0;
@@ -445,4 +470,232 @@ void EnhancedRoutineGenerator::printScheduleSummary() const {
         std::cout << "   Other issues: " << (stats.total_conflicts - stats.teacher_conflicts - 
                                            stats.room_conflicts - stats.batch_conflicts) << std::endl;
     }
+}
+
+void EnhancedRoutineGenerator::minimizeGapsBetweenClasses() {
+    std::cout << "\n🔄 Optimizing schedule to minimize gaps between classes..." << std::endl;
+    
+    // Group schedule assignments by batch-section
+    std::map<std::string, std::vector<ScheduleAssignment*>> batchSectionSchedules;
+    
+    for (auto& assignment : currentSchedule) {
+        std::string batchSection = assignment.course.batch_code + "-" + assignment.course.section_name;
+        batchSectionSchedules[batchSection].push_back(&assignment);
+    }
+    
+    int totalOptimizations = 0;
+    
+    // Process each batch-section
+    for (auto& [batchSection, assignments] : batchSectionSchedules) {
+        std::cout << "   📚 Optimizing " << batchSection << " with " << assignments.size() << " classes..." << std::endl;
+        
+        // Group assignments by day
+        std::map<std::string, std::vector<ScheduleAssignment*>> daySchedules;
+        for (auto* assignment : assignments) {
+            daySchedules[assignment->time_slot.day_of_week].push_back(assignment);
+        }
+        
+        // Optimize each day
+        for (auto& [day, dayAssignments] : daySchedules) {
+            if (dayAssignments.size() < 2) continue; // No optimization needed for single class
+            
+            // Sort assignments by current start time
+            std::sort(dayAssignments.begin(), dayAssignments.end(),
+                [](const ScheduleAssignment* a, const ScheduleAssignment* b) {
+                    return a->time_slot.start_time < b->time_slot.start_time;
+                });
+            
+            // Find available consecutive slots for this batch-section on this day
+            std::vector<TimeSlotInfo> daySlots;
+            for (const auto& slot : allTimeSlots) {
+                if (slot.day_of_week == day && slot.is_available) {
+                    daySlots.push_back(slot);
+                }
+            }
+            
+            // Sort day slots by start time
+            std::sort(daySlots.begin(), daySlots.end(),
+                [](const TimeSlotInfo& a, const TimeSlotInfo& b) {
+                    return a.start_time < b.start_time;
+                });
+            
+            // Try to find consecutive slots
+            for (size_t i = 0; i < daySlots.size() && i + dayAssignments.size() <= daySlots.size(); ++i) {
+                bool canReassign = true;
+                std::vector<TimeSlotInfo> consecutiveSlots;
+                
+                // Check if we can get enough consecutive slots
+                for (size_t j = 0; j < dayAssignments.size(); ++j) {
+                    if (i + j >= daySlots.size()) {
+                        canReassign = false;
+                        break;
+                    }
+                    
+                    const auto& targetSlot = daySlots[i + j];
+                    auto* assignment = dayAssignments[j];
+                    
+                    // Check if slot type matches course requirements
+                    bool slotMatches = false;
+                    if (assignment->course.class_type == "THEORY" && targetSlot.duration_minutes == 90) {
+                        slotMatches = true;
+                    } else if (assignment->course.class_type == "LAB" && targetSlot.duration_minutes == 180) {
+                        slotMatches = true;
+                    }
+                    
+                    if (!slotMatches) {
+                        canReassign = false;
+                        break;
+                    }
+                    
+                    // Check faculty availability
+                    auto facultySlots = teacherAvailability[assignment->course.teacher_id];
+                    bool facultyAvailable = std::any_of(facultySlots.begin(), facultySlots.end(),
+                        [&](const TimeSlotInfo& fSlot) { return fSlot.slot_id == targetSlot.slot_id; });
+                    
+                    if (!facultyAvailable) {
+                        canReassign = false;
+                        break;
+                    }
+                    
+                    // Check for conflicts (excluding current assignments for this batch-section)
+                    bool hasConflict = false;
+                    for (const auto& existing : currentSchedule) {
+                        // Skip if it's one of our current assignments for this batch-section
+                        bool isOurAssignment = false;
+                        for (const auto* ourAssignment : dayAssignments) {
+                            if (&existing == ourAssignment) {
+                                isOurAssignment = true;
+                                break;
+                            }
+                        }
+                        if (isOurAssignment) continue;
+                        
+                        // Check for conflicts
+                        if (existing.time_slot.slot_id == targetSlot.slot_id) {
+                            // Teacher conflict
+                            if (existing.course.teacher_id == assignment->course.teacher_id) {
+                                hasConflict = true;
+                                break;
+                            }
+                            // Room conflict (if we're keeping the same room)
+                            if (existing.room.room_id == assignment->room.room_id) {
+                                hasConflict = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (hasConflict) {
+                        canReassign = false;
+                        break;
+                    }
+                    
+                    consecutiveSlots.push_back(targetSlot);
+                }
+                
+                // If we can reassign all classes to consecutive slots, do it
+                if (canReassign && consecutiveSlots.size() == dayAssignments.size()) {
+                    // Check if this actually improves the schedule (reduces gaps)
+                    int currentGaps = 0;
+                    int newGaps = 0;
+                    
+                    // Calculate current gaps
+                    for (size_t j = 1; j < dayAssignments.size(); ++j) {
+                        auto prevEndTime = dayAssignments[j-1]->time_slot.end_time;
+                        auto currStartTime = dayAssignments[j]->time_slot.start_time;
+                        if (prevEndTime < currStartTime) {
+                            currentGaps++;
+                        }
+                    }
+                    
+                    // Calculate new gaps (should be 0 for consecutive slots)
+                    for (size_t j = 1; j < consecutiveSlots.size(); ++j) {
+                        auto prevEndTime = consecutiveSlots[j-1].end_time;
+                        auto currStartTime = consecutiveSlots[j].start_time;
+                        if (prevEndTime < currStartTime) {
+                            newGaps++;
+                        }
+                    }
+                    
+                    // Only apply if it reduces gaps
+                    if (newGaps < currentGaps) {
+                        // Apply the reassignment
+                        for (size_t j = 0; j < dayAssignments.size(); ++j) {
+                            dayAssignments[j]->time_slot = consecutiveSlots[j];
+                        }
+                        
+                        totalOptimizations++;
+                        std::cout << "     ✅ " << batchSection << " on " << day 
+                                 << ": Reduced gaps from " << currentGaps << " to " << newGaps << std::endl;
+                        break; // Move to next day
+                    }
+                }
+            }
+        }
+    }
+    
+    std::cout << "   🎯 Total optimizations applied: " << totalOptimizations << std::endl;
+    
+    // Note: The optimized schedule is now in memory (currentSchedule)
+    // The database will be updated when the main routine generation completes
+    if (totalOptimizations > 0) {
+        std::cout << "   ✅ Schedule optimized in memory. Database will be updated on completion." << std::endl;
+    }
+}
+
+double EnhancedRoutineGenerator::calculateGapScore(const TimeSlotInfo& candidate_slot, 
+                                                  const std::vector<ScheduleAssignment>& existing_classes) const {
+    if (existing_classes.empty()) {
+        return 0.0; // No penalty for first class
+    }
+    
+    double score = 0.0;
+    
+    // Group existing classes by day
+    std::map<std::string, std::vector<std::string>> daySchedules;
+    for (const auto& assignment : existing_classes) {
+        daySchedules[assignment.time_slot.day_of_week].push_back(assignment.time_slot.start_time);
+    }
+    
+    // Check if candidate slot's day already has classes
+    auto dayIt = daySchedules.find(candidate_slot.day_of_week);
+    if (dayIt != daySchedules.end()) {
+        // Calculate minimum gap to existing classes on same day
+        double minGap = std::numeric_limits<double>::max();
+        
+        for (const std::string& existingTime : dayIt->second) {
+            // Calculate time difference in minutes
+            double candidateMinutes = timeStringToMinutes(candidate_slot.start_time);
+            double existingMinutes = timeStringToMinutes(existingTime);
+            double gap = std::abs(candidateMinutes - existingMinutes);
+            
+            if (gap < minGap) {
+                minGap = gap;
+            }
+        }
+        
+        // Prefer slots that create smaller gaps (lower score is better)
+        // Give bonus for adjacent slots (90-minute theory classes or 180-minute lab classes)
+        if (minGap <= 95) { // Adjacent or overlapping (with 5-minute buffer)
+            score = 0.0; // Best score for consecutive classes
+        } else if (minGap <= 185) { // One slot gap
+            score = 1.0; // Small penalty for one gap
+        } else if (minGap <= 275) { // Two slot gap
+            score = 2.0; // Medium penalty
+        } else {
+            score = 3.0 + (minGap / 100.0); // Higher penalty for larger gaps
+        }
+    } else {
+        // New day - give moderate score to encourage spreading across days
+        score = 1.5;
+    }
+    
+    return score;
+}
+
+double EnhancedRoutineGenerator::timeStringToMinutes(const std::string& timeStr) const {
+    // Convert time string "HH:MM:SS" to minutes since midnight
+    int hours = std::stoi(timeStr.substr(0, 2));
+    int minutes = std::stoi(timeStr.substr(3, 2));
+    return hours * 60.0 + minutes;
 }

@@ -34,6 +34,7 @@ public:
     static bool generateSchedulePDF(
         const std::vector<Activity>& schedule,
         const std::vector<std::string>& courseNames,
+        const std::vector<std::string>& teacherNames,
         const std::string& outputPath,
         const std::string& algorithm = "Dynamic Programming"
     );
@@ -50,15 +51,16 @@ public:
     static bool generateSchedulePDF(
         const std::vector<Activity>& schedule,
         const std::vector<std::string>& courseNames,
+        const std::vector<std::string>& teacherNames,
         const std::string& outputPath,
         const DepartmentStats& deptStats,
         const std::string& algorithm = "Dynamic Programming"
     );
-    
-    /**
+     /**
      * @brief Generate HTML version of the schedule
-     * @param schedule Vector of scheduled activities  
+     * @param schedule Vector of scheduled activities
      * @param courseNames Vector of course names (optional)
+     * @param teacherNames Vector of teacher names (optional)
      * @param htmlPath Path for the output HTML
      * @param algorithm Algorithm name used
      * @return true if successful, false otherwise
@@ -66,6 +68,7 @@ public:
     static bool generateScheduleHTML(
         const std::vector<Activity>& schedule,
         const std::vector<std::string>& courseNames,
+        const std::vector<std::string>& teacherNames,
         const std::string& htmlPath,
         const std::string& algorithm = "Dynamic Programming"
     );
@@ -74,6 +77,7 @@ public:
      * @brief Generate HTML version of the schedule with department statistics
      * @param schedule Vector of scheduled activities  
      * @param courseNames Vector of course names (optional)
+     * @param teacherNames Vector of teacher names (optional)
      * @param htmlPath Path for the output HTML
      * @param deptStats Department statistics
      * @param algorithm Algorithm name used
@@ -82,6 +86,7 @@ public:
     static bool generateScheduleHTML(
         const std::vector<Activity>& schedule,
         const std::vector<std::string>& courseNames,
+        const std::vector<std::string>& teacherNames,
         const std::string& htmlPath,
         const DepartmentStats& deptStats,
         const std::string& algorithm = "Dynamic Programming"
@@ -128,6 +133,11 @@ private:
      * @brief Get course name by ID or generate default
      */
     static std::string getCourseName(int id, const std::vector<std::string>& courseNames);
+    
+    /**
+     * @brief Get teacher name by ID or generate default
+     */
+    static std::string getTeacherName(int id, const std::vector<std::string>& teacherNames);
 };
 
 #endif // PDF_GENERATOR_H

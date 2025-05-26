@@ -42,14 +42,15 @@ std::vector<Activity> FileParser::parseSimpleFormat(const std::string& filename)
     return activities;
 }
 
-std::pair<std::vector<Activity>, std::vector<std::string>> FileParser::parseCSVFormat(const std::string& filename) {
+std::tuple<std::vector<Activity>, std::vector<std::string>, std::vector<std::string>> FileParser::parseCSVFormat(const std::string& filename) {
     std::vector<Activity> activities;
     std::vector<std::string> courseNames;
+    std::vector<std::string> teacherNames;
     std::ifstream file(filename);
     
     if (!file.is_open()) {
         std::cerr << "Error: Cannot open file " << filename << std::endl;
-        return {activities, courseNames};
+        return {activities, courseNames, teacherNames};
     }
     
     std::string line;
@@ -64,9 +65,10 @@ std::pair<std::vector<Activity>, std::vector<std::string>> FileParser::parseCSVF
             continue;
         }
         
-        // Skip header line if it contains "Course" or "Name"
+        // Skip header line if it contains "Course" or "Name" or "Teacher"
         if (firstLine && (line.find("Course") != std::string::npos || 
-                         line.find("Name") != std::string::npos)) {
+                         line.find("Name") != std::string::npos ||
+                         line.find("Teacher") != std::string::npos)) {
             firstLine = false;
             continue;
         }
@@ -78,10 +80,12 @@ std::pair<std::vector<Activity>, std::vector<std::string>> FileParser::parseCSVF
                 std::string courseName = trim(parts[0]);
                 int startTime = std::stoi(trim(parts[1]));
                 int endTime = std::stoi(trim(parts[2]));
-                double students = std::stod(trim(parts[3]));
+                std::string teacherName = trim(parts[3]);
                 
-                activities.push_back({id++, startTime, endTime, students});
+                // Use default weight of 1.0 for all activities
+                activities.push_back({id++, startTime, endTime, 1.0});
                 courseNames.push_back(courseName);
+                teacherNames.push_back(teacherName);
             } catch (const std::exception& e) {
                 std::cerr << "Error parsing line: " << line << std::endl;
             }
@@ -90,7 +94,7 @@ std::pair<std::vector<Activity>, std::vector<std::string>> FileParser::parseCSVF
     
     file.close();
     std::cout << "Loaded " << activities.size() << " courses from " << filename << std::endl;
-    return {activities, courseNames};
+    return {activities, courseNames, teacherNames};
 }
 
 std::string FileParser::trim(const std::string& str) {

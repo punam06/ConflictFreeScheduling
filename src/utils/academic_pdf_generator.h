@@ -113,6 +113,22 @@ public:
         const std::string& outputPath,
         const std::string& algorithm
     );
+    
+    // CSV to Academic Course conversion for enhanced weekly routine generation
+    std::vector<AcademicCourse> convertActivitiesToAcademicCourses(
+        const std::vector<Activity>& activities,
+        const std::vector<std::string>& courseNames,
+        const std::vector<std::string>& teacherNames
+    );
+    
+    // Generate weekly routine from CSV input
+    bool generateWeeklyRoutineFromCSV(
+        const std::vector<Activity>& activities,
+        const std::vector<std::string>& courseNames, 
+        const std::vector<std::string>& teacherNames,
+        const std::string& outputPath,
+        const std::string& algorithm = "Dynamic Programming"
+    );
 
 private:
     // Helper methods for HTML generation

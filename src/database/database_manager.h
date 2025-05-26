@@ -350,6 +350,8 @@ public:
     // Get default assignments for file-based scheduling
     int getDefaultTeacherId();
     int getDefaultRoomId(const std::string& course_type = "THEORY", int required_capacity = 30);
+    int getAvailableRoomAtTimeSlot(int slot_id, const std::string& course_type = "THEORY", int required_capacity = 30);
+    int getDistributedRoomId(const std::string& course_type = "THEORY", int required_capacity = 30);
     int getDefaultSectionId();
     
     // Get room type counts

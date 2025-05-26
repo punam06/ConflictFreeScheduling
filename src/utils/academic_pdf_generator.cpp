@@ -2366,3 +2366,102 @@ std::string AcademicPDFGenerator::extractSlotPattern(const std::string& slotName
     // Fallback: return the original name
     return slotName;
 }
+
+// CSV to Academic Course conversion for enhanced weekly routine generation
+std::vector<AcademicCourse> AcademicPDFGenerator::convertActivitiesToAcademicCourses(
+    const std::vector<Activity>& activities,
+    const std::vector<std::string>& courseNames,
+    const std::vector<std::string>& teacherNames) {
+    
+    std::vector<AcademicCourse> academicCourses;
+    
+    // Define default mapping for time slots to days and periods
+    std::map<int, std::pair<std::string, std::string>> timeSlotMapping = {
+        {8, {"SUN", "S1"}}, {9, {"SUN", "S2"}}, {10, {"MON", "S1"}}, {11, {"MON", "S2"}},
+        {12, {"TUE", "S1"}}, {13, {"TUE", "S2"}}, {14, {"WED", "S1"}}, {15, {"WED", "S2"}},
+        {16, {"THU", "S1"}}, {17, {"THU", "S2"}}, {18, {"THU", "S3"}}
+    };
+    
+    // Default room assignments
+    std::vector<std::string> rooms = {"CR303", "CR304", "CR302", "LAB1", "LAB2"};
+    
+    for (size_t i = 0; i < activities.size(); ++i) {
+        const auto& activity = activities[i];
+        AcademicCourse course;
+        
+        // Basic course information
+        course.courseCode = "CSE" + std::to_string(2200 + activity.id);
+        course.courseTitle = (i < courseNames.size()) ? courseNames[i] : "Course " + std::to_string(activity.id);
+        course.facultyName = (i < teacherNames.size()) ? teacherNames[i] : "Faculty " + std::to_string(activity.id);
+        course.facultyDesignation = "Professor";
+        course.roomCode = rooms[i % rooms.size()];
+        course.sectionName = (i % 2 == 0) ? "A" : "B";
+        course.batchName = "BCSE24";
+        course.creditHours = 3.0;
+        course.classType = "THEORY";
+        course.sessionDuration = 90;
+        course.enrolledStudents = static_cast<int>(activity.weight);
+        course.isExternal = false;
+        course.sessionNumber = 1;
+        
+        // Time mapping
+        auto timeMapping = timeSlotMapping.find(activity.start);
+        if (timeMapping != timeSlotMapping.end()) {
+            course.dayOfWeek = timeMapping->second.first;
+            course.timeSlot = timeMapping->second.first + "_" + timeMapping->second.second;
+        } else {
+            course.dayOfWeek = "SUN";
+            course.timeSlot = "SUN_S1";
+        }
+        
+        // Format times
+        course.startTime = std::to_string(activity.start) + ":00";
+        course.endTime = std::to_string(activity.end) + ":00";
+        
+        academicCourses.push_back(course);
+    }
+    
+    return academicCourses;
+}
+
+// Generate weekly routine from CSV input
+bool AcademicPDFGenerator::generateWeeklyRoutineFromCSV(
+    const std::vector<Activity>& activities,
+    const std::vector<std::string>& courseNames, 
+    const std::vector<std::string>& teacherNames,
+    const std::string& outputPath,
+    const std::string& algorithm) {
+    
+    std::cout << "\n🎓 === Generating Weekly Routine from CSV ===" << std::endl;
+    std::cout << "Converting CSV data to academic schedule format..." << std::endl;
+    
+    // Convert activities to academic courses
+    auto academicCourses = convertActivitiesToAcademicCourses(activities, courseNames, teacherNames);
+    
+    if (academicCourses.empty()) {
+        std::cerr << "❌ Failed to convert activities to academic courses" << std::endl;
+        return false;
+    }
+    
+    std::cout << "✅ Converted " << academicCourses.size() << " courses to academic format" << std::endl;
+    
+    // Generate HTML with comprehensive routine format
+    std::string htmlPath = outputPath + "_weekly_routine.html";
+    if (!generateComprehensiveRoutineHTML(academicCourses, htmlPath, algorithm, "2024-25", "Spring")) {
+        std::cerr << "❌ Failed to generate weekly routine HTML" << std::endl;
+        return false;
+    }
+    
+    std::cout << "📄 Generated weekly routine HTML: " << htmlPath << std::endl;
+    
+    // Try to generate PDF
+    std::string pdfPath = outputPath + "_weekly_routine.pdf";
+    if (PDFGenerator::convertHTMLtoPDF(htmlPath, pdfPath)) {
+        std::cout << "✅ Weekly routine PDF generated successfully!" << std::endl;
+        return PDFGenerator::openInBrowser(pdfPath);
+    } else {
+        std::cout << "📱 Opening HTML in browser for manual PDF conversion..." << std::endl;
+        std::cout << "💡 In browser: Press Cmd+P → Save as PDF" << std::endl;
+        return PDFGenerator::openInBrowser(htmlPath);
+    }
+}

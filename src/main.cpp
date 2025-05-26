@@ -235,14 +235,16 @@ int main(int argc, char* argv[]) {
     // Get activities from input file, database, or use default
     std::vector<Activity> activities;
     std::vector<std::string> courseNames;
+    std::vector<std::string> teacherNames;
     
     if (!inputFile.empty()) {
         std::cout << "\n=== Loading Activities from Input File ===" << std::endl;
         FileParser parser;
         try {
             auto result = parser.parseCSVFormat(inputFile);
-            activities = result.first;
-            courseNames = result.second;
+            activities = std::get<0>(result);
+            courseNames = std::get<1>(result);
+            teacherNames = std::get<2>(result);
             std::cout << "Loaded " << activities.size() << " activities from file: " << inputFile << std::endl;
         } catch (const std::exception& e) {
             std::cerr << "Error parsing input file: " << e.what() << std::endl;
@@ -262,18 +264,23 @@ int main(int argc, char* argv[]) {
             std::cout << "\n=== Using Built-in Sample Data ===" << std::endl;
             // Sample activities (CSE Department courses)
             activities = {
-                {1, 9, 11, 50},    // Data Structures: 9-11 AM, 50 students
-                {2, 10, 12, 45},   // Algorithms: 10-12 PM, 45 students  
-                {3, 13, 15, 40},   // Database Systems: 1-3 PM, 40 students
-                {4, 14, 16, 35},   // Computer Networks: 2-4 PM, 35 students
-                {5, 16, 18, 30},   // Software Engineering: 4-6 PM, 30 students
-                {6, 11, 13, 25},   // Operating Systems: 11-1 PM, 25 students
-                {7, 15, 17, 20}    // Machine Learning: 3-5 PM, 20 students
+                {1, 9, 11, 1.0},   // Data Structures: 9-11 AM
+                {2, 10, 12, 1.0},  // Algorithms: 10-12 PM
+                {3, 13, 15, 1.0},  // Database Systems: 1-3 PM
+                {4, 14, 16, 1.0},  // Computer Networks: 2-4 PM
+                {5, 16, 18, 1.0},  // Software Engineering: 4-6 PM
+                {6, 11, 13, 1.0},  // Operating Systems: 11-1 PM
+                {7, 15, 17, 1.0}   // Machine Learning: 3-5 PM
             };
             courseNames = {
                 "Data Structures", "Algorithms", "Database Systems", 
                 "Computer Networks", "Software Engineering", 
                 "Operating Systems", "Machine Learning"
+            };
+            teacherNames = {
+                "Dr. Ahmed Rahman", "Prof. Sarah Khan", "Dr. Mohammad Ali",
+                "Ms. Fatima Sheikh", "Dr. Hassan Ahmed", "Prof. Nadia Alam",
+                "Dr. Tariq Mahmud"
             };
             std::cout << "Using " << activities.size() << " built-in sample activities." << std::endl;
         }
@@ -430,13 +437,45 @@ int main(int argc, char* argv[]) {
     // Generate PDF if requested
     if (generatePDF) {
         std::cout << "\n=== Generating PDF Output ===" << std::endl;
-        PDFGenerator pdfGen;
-        try {
-            std::string filename = "schedule_" + algorithm + ".html";
-            pdfGen.generateSchedulePDF(schedule, courseNames, algorithm, filename);
-            std::cout << "PDF generated successfully! Opening in browser..." << std::endl;
-        } catch (const std::exception& e) {
-            std::cerr << "Error generating PDF: " << e.what() << std::endl;
+        
+        // Check if we have CSV input data to generate enhanced weekly routine
+        if (!inputFile.empty() && !schedule.empty()) {
+            std::cout << "🎓 Generating enhanced weekly routine from CSV input..." << std::endl;
+            
+            try {
+                // Use academic PDF generator for proper weekly routine format
+                auto academicPDFGen = std::make_shared<AcademicPDFGenerator>(nullptr);
+                
+                std::string outputBase = "output/csv_weekly_routine_" + algorithm;
+                if (academicPDFGen->generateWeeklyRoutineFromCSV(schedule, courseNames, teacherNames, outputBase, algorithm)) {
+                    std::cout << "✅ Enhanced weekly routine generated successfully!" << std::endl;
+                } else {
+                    std::cerr << "⚠️ Failed to generate enhanced weekly routine, falling back to simple format..." << std::endl;
+                    // Fallback to simple PDF generator
+                    PDFGenerator pdfGen;
+                    std::string filename = "output/schedule_" + algorithm + ".html";
+                    pdfGen.generateSchedulePDF(schedule, courseNames, teacherNames, algorithm, filename);
+                }
+            } catch (const std::exception& e) {
+                std::cerr << "❌ Error generating enhanced routine: " << e.what() << std::endl;
+                std::cerr << "   Falling back to simple format..." << std::endl;
+                
+                // Fallback to simple PDF generator
+                PDFGenerator pdfGen;
+                std::string filename = "output/schedule_" + algorithm + ".html";
+                pdfGen.generateSchedulePDF(schedule, courseNames, teacherNames, algorithm, filename);
+            }
+        } else {
+            // Use simple PDF generator for other cases
+            std::cout << "📄 Generating simple PDF format..." << std::endl;
+            PDFGenerator pdfGen;
+            try {
+                std::string filename = "output/schedule_" + algorithm + ".html";
+                pdfGen.generateSchedulePDF(schedule, courseNames, teacherNames, algorithm, filename);
+                std::cout << "PDF generated successfully! Opening in browser..." << std::endl;
+            } catch (const std::exception& e) {
+                std::cerr << "Error generating PDF: " << e.what() << std::endl;
+            }
         }
     }
     

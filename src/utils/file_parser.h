@@ -6,6 +6,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <tuple>
 
 /**
  * @brief Simple file parser for course input
@@ -22,9 +23,9 @@ public:
     /**
      * @brief Parse course data from CSV format
      * @param filename Path to the CSV file
-     * @return Vector of Activity objects with course names
+     * @return Tuple of Activity objects, course names, and teacher names
      */
-    static std::pair<std::vector<Activity>, std::vector<std::string>> parseCSVFormat(const std::string& filename);
+    static std::tuple<std::vector<Activity>, std::vector<std::string>, std::vector<std::string>> parseCSVFormat(const std::string& filename);
     
 private:
     /**

@@ -8,12 +8,14 @@
 bool PDFGenerator::generateSchedulePDF(
     const std::vector<Activity>& schedule,
     const std::vector<std::string>& courseNames,
+    const std::vector<std::string>& teacherNames,
     const std::string& outputPath,
     const std::string& algorithm) {
     
     // First generate HTML
     std::string htmlPath = outputPath + ".html";
-    if (!generateScheduleHTML(schedule, courseNames, htmlPath, algorithm)) {
+    std::vector<std::string> emptyTeacherNames; // Empty teacher names for backward compatibility
+    if (!generateScheduleHTML(schedule, courseNames, teacherNames, htmlPath, algorithm)) {
         return false;
     }
     
@@ -35,13 +37,15 @@ bool PDFGenerator::generateSchedulePDF(
 bool PDFGenerator::generateSchedulePDF(
     const std::vector<Activity>& schedule,
     const std::vector<std::string>& courseNames,
+    const std::vector<std::string>& teacherNames,
     const std::string& outputPath,
     const DepartmentStats& deptStats,
     const std::string& algorithm) {
     
     // First generate HTML with department statistics
     std::string htmlPath = outputPath + ".html";
-    if (!generateScheduleHTML(schedule, courseNames, htmlPath, deptStats, algorithm)) {
+    std::vector<std::string> emptyTeacherNames; // Empty teacher names for backward compatibility
+    if (!generateScheduleHTML(schedule, courseNames, teacherNames, htmlPath, deptStats, algorithm)) {
         return false;
     }
     
@@ -63,6 +67,7 @@ bool PDFGenerator::generateSchedulePDF(
 bool PDFGenerator::generateScheduleHTML(
     const std::vector<Activity>& schedule,
     const std::vector<std::string>& courseNames,
+    const std::vector<std::string>& teacherNames,
     const std::string& htmlPath,
     const std::string& algorithm) {
     
@@ -111,8 +116,8 @@ bool PDFGenerator::generateScheduleHTML(
     file << "            <span class=\"stat-label\">Courses Scheduled</span>\n";
     file << "        </div>\n";
     file << "        <div class=\"stat-box\">\n";
-    file << "            <span class=\"stat-number\">" << static_cast<int>(totalWeight) << "</span>\n";
-    file << "            <span class=\"stat-label\">Total Students</span>\n";
+    file << "            <span class=\"stat-number\">" << teacherNames.size() << "</span>\n";
+    file << "            <span class=\"stat-label\">Total Teachers</span>\n";
     file << "        </div>\n";
     file << "        <div class=\"stat-box\">\n";
     file << "            <span class=\"stat-number\">0</span>\n";
@@ -127,10 +132,10 @@ bool PDFGenerator::generateScheduleHTML(
     file << "                <tr>\n";
     file << "                    <th>Course ID</th>\n";
     file << "                    <th>Course Name</th>\n";
+    file << "                    <th>Teacher</th>\n";
     file << "                    <th>Start Time</th>\n";
     file << "                    <th>End Time</th>\n";
     file << "                    <th>Duration</th>\n";
-    file << "                    <th>Students</th>\n";
     file << "                    <th>Status</th>\n";
     file << "                </tr>\n";
     file << "            </thead>\n";
@@ -147,10 +152,10 @@ bool PDFGenerator::generateScheduleHTML(
         file << "                <tr>\n";
         file << "                    <td>" << activity.id << "</td>\n";
         file << "                    <td>" << getCourseName(activity.id, courseNames) << "</td>\n";
+        file << "                    <td>" << getTeacherName(activity.id, teacherNames) << "</td>\n";
         file << "                    <td>" << formatTime(activity.start) << "</td>\n";
         file << "                    <td>" << formatTime(activity.end) << "</td>\n";
         file << "                    <td>" << (activity.end - activity.start) << "h</td>\n";
-        file << "                    <td>" << static_cast<int>(activity.weight) << "</td>\n";
         file << "                    <td><span class=\"status-scheduled\">✓ Scheduled</span></td>\n";
         file << "                </tr>\n";
     }
@@ -175,7 +180,7 @@ bool PDFGenerator::generateScheduleHTML(
             if (hour >= activity.start && hour < activity.end) {
                 file << "                    <div class=\"course-block\">\n";
                 file << "                        <strong>" << getCourseName(activity.id, courseNames) << "</strong><br>\n";
-                file << "                        " << static_cast<int>(activity.weight) << " students\n";
+                file << "                        " << getTeacherName(activity.id, teacherNames) << "\n";
                 file << "                    </div>\n";
             }
         }
@@ -204,6 +209,7 @@ bool PDFGenerator::generateScheduleHTML(
 bool PDFGenerator::generateScheduleHTML(
     const std::vector<Activity>& schedule,
     const std::vector<std::string>& courseNames,
+    const std::vector<std::string>& teacherNames,
     const std::string& htmlPath,
     const DepartmentStats& deptStats,
     const std::string& algorithm) {
@@ -253,8 +259,8 @@ bool PDFGenerator::generateScheduleHTML(
     file << "            <span class=\"stat-label\">Courses Scheduled</span>\n";
     file << "        </div>\n";
     file << "        <div class=\"stat-box\">\n";
-    file << "            <span class=\"stat-number\">" << static_cast<int>(totalWeight) << "</span>\n";
-    file << "            <span class=\"stat-label\">Total Students</span>\n";
+    file << "            <span class=\"stat-number\">" << teacherNames.size() << "</span>\n";
+    file << "            <span class=\"stat-label\">Total Teachers</span>\n";
     file << "        </div>\n";
     file << "        <div class=\"stat-box\">\n";
     file << "            <span class=\"stat-number\">0</span>\n";
@@ -269,10 +275,10 @@ bool PDFGenerator::generateScheduleHTML(
     file << "                <tr>\n";
     file << "                    <th>Course ID</th>\n";
     file << "                    <th>Course Name</th>\n";
+    file << "                    <th>Teacher</th>\n";
     file << "                    <th>Start Time</th>\n";
     file << "                    <th>End Time</th>\n";
     file << "                    <th>Duration</th>\n";
-    file << "                    <th>Students</th>\n";
     file << "                    <th>Status</th>\n";
     file << "                </tr>\n";
     file << "            </thead>\n";
@@ -289,10 +295,10 @@ bool PDFGenerator::generateScheduleHTML(
         file << "                <tr>\n";
         file << "                    <td>" << activity.id << "</td>\n";
         file << "                    <td>" << getCourseName(activity.id, courseNames) << "</td>\n";
+        file << "                    <td>" << getTeacherName(activity.id, teacherNames) << "</td>\n";
         file << "                    <td>" << formatTime(activity.start) << "</td>\n";
         file << "                    <td>" << formatTime(activity.end) << "</td>\n";
-        file << "                    <td>" << (activity.end - activity.start) << " min</td>\n";
-        file << "                    <td>" << static_cast<int>(activity.weight) << "</td>\n";
+        file << "                    <td>" << (activity.end - activity.start) << "h</td>\n";
         file << "                    <td><span class=\"status-scheduled\">✓ Scheduled</span></td>\n";
         file << "                </tr>\n";
     }
@@ -354,6 +360,26 @@ std::string PDFGenerator::getCourseName(int id, const std::vector<std::string>& 
     }
     
     return "Course " + std::to_string(id);
+}
+
+std::string PDFGenerator::getTeacherName(int id, const std::vector<std::string>& teacherNames) {
+    if (id > 0 && id <= static_cast<int>(teacherNames.size())) {
+        return teacherNames[id - 1];
+    }
+    
+    // Default teacher names
+    std::vector<std::string> defaultNames = {
+        "Dr. Ahmed Rahman", "Prof. Sarah Khan", "Dr. Mohammad Ali",
+        "Ms. Fatima Sheikh", "Dr. Hassan Ahmed", "Prof. Nadia Alam",
+        "Dr. Tariq Mahmud", "Prof. Ayesha Siddiqui", "Dr. Omar Farooq",
+        "Ms. Zara Ahmed"
+    };
+    
+    if (id > 0 && id <= static_cast<int>(defaultNames.size())) {
+        return defaultNames[id - 1];
+    }
+    
+    return "Teacher " + std::to_string(id);
 }
 
 std::string PDFGenerator::generateCSS() {

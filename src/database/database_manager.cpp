@@ -779,9 +779,26 @@ bool DatabaseManager::convertActivitiesToAcademicSchedule(
             return false;
         }
         
-        // Determine course type and capacity from activity duration 
-        std::string course_type = (activity.end - activity.start) > 120 ? "LAB" : "THEORY";
-        int required_capacity = 30; // Default capacity since Activity doesn't have student count
+        // Get actual course type and capacity from database
+        std::string course_type = "THEORY"; // Default
+        int required_capacity = 30; // Default capacity
+        
+        const char* type_sql = "SELECT class_type, session_duration FROM courses WHERE course_id = ?";
+        sqlite3_stmt* type_stmt = prepareStatement(type_sql);
+        if (type_stmt) {
+            sqlite3_bind_int(type_stmt, 1, course_id);
+            if (sqlite3_step(type_stmt) == SQLITE_ROW) {
+                const char* class_type_str = (const char*)sqlite3_column_text(type_stmt, 0);
+                if (class_type_str) {
+                    course_type = std::string(class_type_str);
+                }
+                // Adjust capacity based on course type (lab courses typically need more space)
+                if (course_type == "LAB") {
+                    required_capacity = 25; // Labs typically have fewer students but need more space per student
+                }
+            }
+            sqlite3_finalize(type_stmt);
+        }
         
         // Create academic schedule entry
         AcademicSchedule schedule;
@@ -789,7 +806,7 @@ bool DatabaseManager::convertActivitiesToAcademicSchedule(
         schedule.course_id = course_id;
         schedule.section_id = getDefaultSectionId();
         schedule.teacher_id = getDefaultTeacherId();
-        schedule.room_id = getDefaultRoomId(course_type, required_capacity);
+        schedule.room_id = getAvailableRoomAtTimeSlot(slot_id, course_type, required_capacity);
         schedule.slot_id = slot_id;
         schedule.session_number = 1;
         schedule.academic_year = academic_year;
@@ -1004,6 +1021,150 @@ int DatabaseManager::getDefaultRoomId(const std::string& course_type, int requir
     sqlite3_finalize(stmt);
     
     return room_id;
+}
+
+int DatabaseManager::getAvailableRoomAtTimeSlot(int slot_id, const std::string& course_type, int required_capacity) {
+    // First, try to find preferred room type (exact match)
+    const char* preferred_sql = R"(
+        SELECT r.room_id 
+        FROM classrooms r
+        WHERE r.status = 'AVAILABLE' 
+        AND r.room_type = ? 
+        AND r.capacity >= ?
+        AND r.room_id NOT IN (
+            SELECT DISTINCT room_id 
+            FROM schedule 
+            WHERE slot_id = ? 
+            AND status = 'SCHEDULED'
+        )
+        ORDER BY ABS(r.capacity - ?) ASC, r.room_id ASC 
+        LIMIT 1
+    )";
+    
+    sqlite3_stmt* stmt = prepareStatement(preferred_sql);
+    if (!stmt) {
+        return getDefaultRoomId(course_type, required_capacity);
+    }
+    
+    // Bind parameters
+    sqlite3_bind_text(stmt, 1, course_type.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 2, required_capacity);
+    sqlite3_bind_int(stmt, 3, slot_id);
+    sqlite3_bind_int(stmt, 4, required_capacity);
+    
+    int room_id = 0;
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        room_id = sqlite3_column_int(stmt, 0);
+    }
+    sqlite3_finalize(stmt);
+    
+    // If no preferred room found and this is a THEORY course, try LAB rooms
+    if (room_id == 0 && course_type == "THEORY") {
+        const char* fallback_sql = R"(
+            SELECT r.room_id 
+            FROM classrooms r
+            WHERE r.status = 'AVAILABLE' 
+            AND r.room_type = 'LAB' 
+            AND r.capacity >= ?
+            AND r.room_id NOT IN (
+                SELECT DISTINCT room_id 
+                FROM schedule 
+                WHERE slot_id = ? 
+                AND status = 'SCHEDULED'
+            )
+            ORDER BY ABS(r.capacity - ?) ASC, r.room_id ASC 
+            LIMIT 1
+        )";
+        
+        stmt = prepareStatement(fallback_sql);
+        if (stmt) {
+            sqlite3_bind_int(stmt, 1, required_capacity);
+            sqlite3_bind_int(stmt, 2, slot_id);
+            sqlite3_bind_int(stmt, 3, required_capacity);
+            
+            if (sqlite3_step(stmt) == SQLITE_ROW) {
+                room_id = sqlite3_column_int(stmt, 0);
+            }
+            sqlite3_finalize(stmt);
+        }
+    }
+    
+    // If still no room found, try with room distribution logic
+    if (room_id == 0) {
+        room_id = getDistributedRoomId(course_type, required_capacity);
+    }
+    
+    return room_id;
+}
+
+int DatabaseManager::getDistributedRoomId(const std::string& course_type, int required_capacity) {
+    // First, try preferred room type with balanced load distribution
+    const char* preferred_sql = R"(
+        SELECT r.room_id, r.room_code, COUNT(s.schedule_id) as usage_count
+        FROM classrooms r
+        LEFT JOIN schedule s ON r.room_id = s.room_id AND s.status = 'SCHEDULED'
+        WHERE r.status = 'AVAILABLE' 
+        AND r.room_type = ? 
+        AND r.capacity >= ?
+        GROUP BY r.room_id, r.room_code
+        ORDER BY usage_count ASC, ABS(r.capacity - ?) ASC, r.room_id ASC
+        LIMIT 1
+    )";
+    
+    sqlite3_stmt* stmt = prepareStatement(preferred_sql);
+    if (!stmt) {
+        return getDefaultRoomId(course_type, required_capacity);
+    }
+    
+    // Bind parameters
+    sqlite3_bind_text(stmt, 1, course_type.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int(stmt, 2, required_capacity);
+    sqlite3_bind_int(stmt, 3, required_capacity);
+    
+    int room_id = 0;
+    int min_usage = 0;
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        room_id = sqlite3_column_int(stmt, 0);
+        min_usage = sqlite3_column_int(stmt, 2); // usage_count
+    }
+    sqlite3_finalize(stmt);
+    
+    // If this is a THEORY course and preferred rooms are heavily used (more than 8 courses),
+    // consider using LAB rooms for better distribution
+    if (course_type == "THEORY" && (room_id == 0 || min_usage > 8)) {
+        const char* fallback_sql = R"(
+            SELECT r.room_id, r.room_code, COUNT(s.schedule_id) as usage_count
+            FROM classrooms r
+            LEFT JOIN schedule s ON r.room_id = s.room_id AND s.status = 'SCHEDULED'
+            WHERE r.status = 'AVAILABLE' 
+            AND r.room_type = 'LAB' 
+            AND r.capacity >= ?
+            GROUP BY r.room_id, r.room_code
+            ORDER BY usage_count ASC, ABS(r.capacity - ?) ASC, r.room_id ASC
+            LIMIT 1
+        )";
+        
+        stmt = prepareStatement(fallback_sql);
+        if (stmt) {
+            sqlite3_bind_int(stmt, 1, required_capacity);
+            sqlite3_bind_int(stmt, 2, required_capacity);
+            
+            int lab_room_id = 0;
+            int lab_usage = 0;
+            if (sqlite3_step(stmt) == SQLITE_ROW) {
+                lab_room_id = sqlite3_column_int(stmt, 0);
+                lab_usage = sqlite3_column_int(stmt, 2);
+            }
+            sqlite3_finalize(stmt);
+            
+            // Use lab room if it has significantly less usage or if no theory room was found
+            if (room_id == 0 || (lab_room_id > 0 && lab_usage < min_usage - 2)) {
+                room_id = lab_room_id;
+            }
+        }
+    }
+    
+    return room_id > 0 ? room_id : getDefaultRoomId(course_type, required_capacity);
 }
 
 std::pair<int, int> DatabaseManager::getRoomTypeCounts() {

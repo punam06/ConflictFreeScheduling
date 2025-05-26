@@ -95,6 +95,10 @@ private:
     bool balanceRoomUsage;
     int maxTriesPerCourse;
     
+    // Helper functions for gap minimization
+    double calculateGapScore(const TimeSlotInfo& candidate_slot, const std::vector<ScheduleAssignment>& existing_classes) const;
+    double timeStringToMinutes(const std::string& timeStr) const;
+    
 public:
     explicit EnhancedRoutineGenerator(std::shared_ptr<DatabaseManager> dbMgr);
     
