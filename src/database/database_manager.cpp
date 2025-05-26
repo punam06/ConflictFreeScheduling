@@ -753,38 +753,24 @@ bool DatabaseManager::convertActivitiesToAcademicSchedule(
     const std::string& academic_year,
     const std::string& semester) {
     
+    // Get all available time slots to map algorithm results to
+    std::vector<AcademicTimeSlot> availableSlots = getAllAcademicTimeSlots();
+    if (availableSlots.empty()) {
+        last_error = "No available time slots found in database";
+        return false;
+    }
+    
     for (size_t i = 0; i < activities.size(); i++) {
         const Activity& activity = activities[i];
         std::string courseName = (i < courseNames.size()) ? courseNames[i] : "Unknown Course";
         
-        // Create a time slot for this activity
-        if (!createTimeSlotFromActivity(activity)) {
-            last_error = "Failed to create time slot for activity " + std::to_string(activity.id);
-            return false;
-        }
+        // Map algorithm time index to database time slot
+        // Algorithm uses indices 0-106, we need to map to our 45 available slots
+        int slot_index = activity.start % availableSlots.size();
+        int slot_id = availableSlots[slot_index].slot_id;
         
-        // Retrieve the time slot ID we just created
-        int slot_id = -1;
-        sqlite3_stmt* stmt = prepareStatement(
-            "SELECT slot_id FROM time_slots WHERE start_time = ? AND end_time = ? LIMIT 1");
-        if (!stmt) return false;
-        
-        char start_time[9], end_time[9];
-        snprintf(start_time, sizeof(start_time), "%02d:%02d:00", activity.start / 60, activity.start % 60);
-        snprintf(end_time, sizeof(end_time), "%02d:%02d:00", activity.end / 60, activity.end % 60);
-        
-        sqlite3_bind_text(stmt, 1, start_time, -1, SQLITE_STATIC);
-        sqlite3_bind_text(stmt, 2, end_time, -1, SQLITE_STATIC);
-        
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
-            slot_id = sqlite3_column_int(stmt, 0);
-        }
-        sqlite3_finalize(stmt);
-        
-        if (slot_id == -1) {
-            last_error = "Could not find created time slot for activity " + std::to_string(activity.id);
-            return false;
-        }
+        std::cout << "📅 Mapping activity " << activity.id << " (start=" << activity.start 
+                  << ") to slot " << slot_id << " (" << availableSlots[slot_index].slot_name << ")" << std::endl;
         
         // Get or create course ID
         int course_id = getOrCreateCourseFromActivity(activity, courseName);
