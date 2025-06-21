@@ -1,0 +1,11 @@
+id,start,end,weight,name,room
+1,0,90,3.0,Programming Fundamentals,CSE-101
+2,100,190,3.0,Data Structures,CSE-102
+3,50,140,1.0,Programming Lab,LAB-1
+4,200,290,3.0,Algorithms,CSE-101
+5,150,210,1.5,Database Lab,LAB-2
+6,300,390,3.0,Software Engineering,CSE-201
+7,400,490,3.0,Computer Networks,CSE-202
+8,350,410,1.0,Network Lab,LAB-1
+9,500,590,3.0,Operating Systems,CSE-101
+10,600,690,1.5,OS Lab,LAB-2
