@@ -293,17 +293,40 @@ class AcademicPDFGenerator(PDFGenerator):
             Path to generated HTML file
         """
         title = f"{batch_code} Section {section} - {semester} Schedule"
-        filename = f"academic_schedule_{batch_code}_{section}.html"
+        html_filename = f"academic_schedule_{batch_code}_{section}.html"
+        pdf_filename = f"academic_schedule_{batch_code}_{section}.pdf"
         
         # Generate enhanced HTML with academic styling
-        filepath = os.path.join(self.output_dir, filename)
+        html_filepath = os.path.join(self.output_dir, html_filename)
+        pdf_filepath = os.path.join(self.output_dir, pdf_filename)
+        
         html_content = self._generate_academic_html(activities, title, batch_code, section, semester)
         
-        with open(filepath, 'w', encoding='utf-8') as f:
+        # Save HTML file
+        with open(html_filepath, 'w', encoding='utf-8') as f:
             f.write(html_content)
         
-        print(f"✅ Academic schedule generated: {filepath}")
-        return filepath
+        print(f"✅ Academic schedule generated: {html_filepath}")
+        
+        # Try to generate PDF using WeasyPrint
+        try:
+            import weasyprint
+            html_doc = weasyprint.HTML(string=html_content, base_url='.')
+            html_doc.write_pdf(pdf_filepath)
+            print(f"✅ Academic PDF schedule generated: {pdf_filepath}")
+            return pdf_filepath
+        except ImportError:
+            print("⚠️ WeasyPrint not available - trying ReportLab...")
+        except Exception as e:
+            print(f"⚠️ WeasyPrint PDF generation failed: {e} - trying ReportLab...")
+        
+        # Try ReportLab as fallback
+        if self.generate_pdf_with_reportlab(activities, pdf_filepath, title, batch_code, section):
+            print(f"✅ Academic PDF schedule generated with ReportLab: {pdf_filepath}")
+            return pdf_filepath
+        else:
+            print("⚠️ PDF generation failed - HTML version available")
+            return html_filepath
     
     def _generate_academic_html(self, activities: List[Activity], title: str, 
                                batch_code: str, section: str, semester: str) -> str:
@@ -484,3 +507,110 @@ class AcademicPDFGenerator(PDFGenerator):
 """
         
         return html
+    
+    def generate_pdf_with_reportlab(self, activities: List[Activity], 
+                                   pdf_filepath: str, title: str, 
+                                   batch_code: str, section: str) -> bool:
+        """
+        Generate PDF using ReportLab as fallback
+        
+        Args:
+            activities: List of scheduled activities
+            pdf_filepath: Output PDF file path
+            title: Schedule title
+            batch_code: Batch code
+            section: Section name
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        try:
+            from reportlab.pdfgen import canvas
+            from reportlab.lib.pagesizes import letter, A4
+            from reportlab.lib.units import inch
+            from reportlab.lib import colors
+            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+            from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+            
+            # Create PDF document
+            doc = SimpleDocTemplate(pdf_filepath, pagesize=A4)
+            styles = getSampleStyleSheet()
+            story = []
+            
+            # Custom styles
+            title_style = ParagraphStyle(
+                'CustomTitle',
+                parent=styles['Heading1'],
+                fontSize=16,
+                textColor=colors.darkblue,
+                alignment=1,  # Center alignment
+                spaceAfter=20
+            )
+            
+            header_style = ParagraphStyle(
+                'CustomHeader',
+                parent=styles['Heading2'],
+                fontSize=12,
+                textColor=colors.black,
+                alignment=1,
+                spaceAfter=10
+            )
+            
+            # Add title and header
+            story.append(Paragraph("Bangladesh University of Professionals", title_style))
+            story.append(Paragraph("Department of Computer Science & Engineering", header_style))
+            story.append(Paragraph(f"Academic Schedule - {batch_code} Section {section}", header_style))
+            story.append(Spacer(1, 20))
+            
+            # Create table data
+            data = [['ID', 'Course Name', 'Start Time', 'End Time', 'Duration', 'Credits', 'Room']]
+            
+            for activity in activities:
+                start_hours = activity.start // 60
+                start_mins = activity.start % 60
+                end_hours = activity.end // 60
+                end_mins = activity.end % 60
+                duration = activity.end - activity.start
+                
+                data.append([
+                    str(activity.id),
+                    activity.name or 'N/A',
+                    f"{start_hours:02d}:{start_mins:02d}",
+                    f"{end_hours:02d}:{end_mins:02d}",
+                    f"{duration} min",
+                    str(activity.weight),
+                    activity.room or 'TBD'
+                ])
+            
+            # Create and style table
+            table = Table(data)
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.darkblue),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('FONTSIZE', (0, 0), (-1, 0), 10),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.lightgrey),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black)
+            ]))
+            
+            story.append(table)
+            story.append(Spacer(1, 20))
+            
+            # Add summary
+            total_activities = len(activities)
+            total_weight = sum(activity.weight for activity in activities)
+            story.append(Paragraph(f"Total Activities: {total_activities}", styles['Normal']))
+            story.append(Paragraph(f"Total Credits: {total_weight}", styles['Normal']))
+            
+            # Build PDF
+            doc.build(story)
+            return True
+            
+        except ImportError:
+            print("❌ ReportLab not available")
+            return False
+        except Exception as e:
+            print(f"❌ ReportLab PDF generation failed: {e}")
+            return False
