@@ -317,7 +317,9 @@ class FileParser:
             activity.id = i + 1
         
         # Create directory if it doesn't exist
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        dirname = os.path.dirname(filename)
+        if dirname:  # Only create directory if dirname is not empty
+            os.makedirs(dirname, exist_ok=True)
         
         return FileParser.write_csv(activities, filename)
 
