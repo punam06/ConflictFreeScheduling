@@ -2,24 +2,39 @@
 # -*- coding: utf-8 -*-
 
 """
-Conflict-Free Class Scheduling System - Main Application
+Enhanced Conflict-Free Class Scheduling System
+==============================================
 
-This is the main entry point for the conflict-free scheduling system.
-Enhanced with academic PDF generation and professional BUP scheduling.
+A comprehensive academic scheduling system that automatically generates 
+conflict-free course schedules using multiple optimization algorithms.
+
+Features:
+- Multiple scheduling algorithms (Graph Coloring, Dynamic Programming, Backtracking, Genetic)
+- Database integration with MySQL
+- Enhanced PDF generation with eye-catching designs
+- Faculty input system with automatic room allocation
+- Comprehensive, batch-wise, and section-wise routine generation
+- Interactive command-line interface
+
+Author: Punam
+Version: 2.0 (Enhanced)
 """
 
 import sys
 import os
 import argparse
-from typing import List, Dict
 import time
+from typing import List, Dict, Optional
 
-# Add src to path for imports
+# Add src to Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 from scheduler import ConflictFreeScheduler, Activity
 from utils.file_parser import FileParser
 from utils.pdf_generator import PDFGenerator, AcademicPDFGenerator
+from utils.enhanced_pdf_generator import EnhancedPDFGenerator
+from utils.faculty_input import FacultyInputSystem
+# Database import is conditional - only when needed
 
 # Import algorithms directly for the run-all feature
 from algorithms.graph_coloring import GraphColoringScheduler
@@ -43,6 +58,43 @@ def print_algorithm_info():
     print("  2. Dynamic Programming - Optimal weighted activity selection with memoization")
     print("  3. Backtracking      - Exhaustive search with pruning for optimal solutions")
     print("  4. Genetic Algorithm - Population-based evolutionary optimization")
+
+
+def ensure_activity_attributes(activity: Activity) -> Activity:
+    """
+    Ensure activity has all required attributes for enhanced PDF generation
+    
+    Args:
+        activity: Activity object to check
+        
+    Returns:
+        Activity with all required attributes
+    """
+    if not hasattr(activity, 'faculty'):
+        activity.faculty = "TBA"
+    if not hasattr(activity, 'course_code'):
+        activity.course_code = f"CSE{activity.id:03d}"
+    
+    # Ensure attributes are not None
+    if activity.faculty is None:
+        activity.faculty = "TBA"
+    if activity.course_code is None:
+        activity.course_code = f"CSE{activity.id:03d}"
+        
+    return activity
+
+
+def ensure_activities_attributes(activities: List[Activity]) -> List[Activity]:
+    """
+    Ensure all activities have required attributes
+    
+    Args:
+        activities: List of activities
+        
+    Returns:
+        List of activities with all required attributes
+    """
+    return [ensure_activity_attributes(activity) for activity in activities]
 
 
 def run_single_algorithm(algorithm: str, activities: List[Activity]) -> List[Activity]:
@@ -126,6 +178,24 @@ def get_user_input() -> Dict:
     """
     print("\n📝 Please provide scheduling parameters:")
     
+    # Ask for routine type
+    print("\nSelect routine generation type:")
+    print("1. Section-wise routine (specific batch and section)")
+    print("2. Batch-wise routine (all sections of a batch)")
+    print("3. Comprehensive routine (all batches and sections)")
+    print("4. Faculty input routine (custom faculty scheduling)")
+    
+    routine_choice = input("\nEnter your choice (1-4) [1]: ").strip() or "1"
+    
+    routine_types = {
+        "1": "section",
+        "2": "batch", 
+        "3": "comprehensive",
+        "4": "faculty"
+    }
+    
+    routine_type = routine_types.get(routine_choice, "section")
+    
     # Ask for algorithm preference
     print("\nSelect scheduling algorithm:")
     print("1. Graph Coloring (default)")
@@ -133,56 +203,67 @@ def get_user_input() -> Dict:
     print("3. Backtracking")
     print("4. Genetic Algorithm")
     print("5. Run All Algorithms")
+    print("6. Preserve Realistic Schedule (No Optimization)")
     
-    algorithm_choice = input("\nEnter your choice (1-5) [1]: ").strip() or "1"
+    algorithm_choice = input("\nEnter your choice (1-6) [1]: ").strip() or "1"
     
     algorithm_map = {
         "1": "graph-coloring",
         "2": "dynamic-prog",
         "3": "backtracking",
         "4": "genetic",
-        "5": "run-all"
+        "5": "run-all",
+        "6": "preserve"
     }
     
     algorithm = algorithm_map.get(algorithm_choice, "graph-coloring")
     
-    # Ask for input file
-    use_custom_input = input("\nUse custom input file? (y/n) [n]: ").lower().strip() == "y"
+    # Ask for input file (unless faculty mode)
+    use_custom_input = False
     input_file = None
     
-    if use_custom_input:
-        input_file = input("Enter path to input file (CSV/JSON): ").strip()
+    if routine_type != "faculty":
+        use_custom_input = input("\nUse custom input file? (y/n) [n]: ").lower().strip() == "y"
         
-        # Validate file exists
-        if not os.path.exists(input_file):
-            print(f"❌ File not found: {input_file}")
-            print("Using default sample data instead.")
-            input_file = None
+        if use_custom_input:
+            input_file = input("Enter path to input file (CSV/JSON): ").strip()
+            
+            # Validate file exists
+            if not os.path.exists(input_file):
+                print(f"❌ File not found: {input_file}")
+                print("Using default sample data instead.")
+                input_file = None
     
-    # Ask for batch information
-    use_batch = input("\nSpecify academic batch information? (y/n) [n]: ").lower().strip() == "y"
+    # Ask for batch information (except for comprehensive mode)
     batch = None
     section = "A"
     
-    if use_batch:
-        batch = input("Enter batch code (e.g., BCSE24) [BCSE24]: ").strip() or "BCSE24"
-        section = input("Enter section (A/B) [A]: ").strip().upper() or "A"
-        section = "A" if section not in ["A", "B"] else section
+    if routine_type in ["section", "batch"]:
+        batch = input("\nEnter batch code (e.g., BCSE24) [BCSE24]: ").strip() or "BCSE24"
+        
+        if routine_type == "section":
+            section = input("Enter section (A/B) [A]: ").strip().upper() or "A"
+            section = "A" if section not in ["A", "B"] else section
     
     # PDF output type
     pdf_type = input("\nSelect PDF type (academic/basic) [academic]: ").lower().strip() or "academic"
     use_basic_pdf = pdf_type == "basic"
     
-    # Use database
-    use_database = input("\nUse database for input? (y/n) [n]: ").lower().strip() == "y"
+    # Use database (auto-enable for comprehensive and faculty modes)
+    if routine_type in ["comprehensive", "faculty"]:
+        use_database = True
+        print(f"\n🔄 Database mode automatically enabled for {routine_type} routine")
+    else:
+        use_database = input("\nUse database for input? (y/n) [n]: ").lower().strip() == "y"
     
     if use_database:
-        init_db = input("Initialize database with sample data? (y/n) [y]: ").lower().strip() != "n"
+        init_db = input("Initialize database with realistic CSE department data? (y/n) [y]: ").lower().strip() != "n"
     else:
         init_db = False
     
     # Return user selections as dictionary
     return {
+        "routine_type": routine_type,
         "algorithm": algorithm,
         "run_all": algorithm == "run-all",
         "input_file": input_file,
@@ -210,18 +291,19 @@ def create_args_from_user_input(user_input: Dict) -> argparse.Namespace:
         run_all=user_input.get("run_all", False),
         input=user_input.get("input_file"),
         output=None,
-        pdf=user_input.get("use_basic_pdf", False),
-        academic_pdf=not user_input.get("use_basic_pdf", False),
+        basic_pdf=user_input.get("use_basic_pdf", False),
+        enhanced=not user_input.get("use_basic_pdf", False),
+        routine_type=user_input.get("routine_type", "section"),
+        comprehensive=user_input.get("routine_type") == "comprehensive",
+        batch_wise=user_input.get("routine_type") == "batch",
+        faculty_input=user_input.get("routine_type") == "faculty",
         batch=user_input.get("batch"),
         section=user_input.get("section", "A"),
         semester="Spring 2025",
         use_database=user_input.get("use_database", False),
         init_db=user_input.get("init_db", False),
         no_database=not user_input.get("use_database", False),
-        visualize=False,
-        enhanced_generator=False,
-        comprehensive_routine=False,
-        university_schedule=False
+        visualize=False
     )
     
     return args
@@ -247,9 +329,9 @@ def load_activities(args) -> List[Activity]:
             db = DatabaseManager()
             
             if args.init_db:
-                print("🔄 Initializing database with sample data...")
-                if db.initialize_with_sample_data():
-                    print("✅ Database initialized successfully")
+                print("🔄 Initializing database with realistic CSE department data...")
+                if db.initialize_with_realistic_data():
+                    print("✅ Realistic database initialized successfully")
                 else:
                     print("❌ Database initialization failed")
                     return activities
@@ -259,7 +341,12 @@ def load_activities(args) -> List[Activity]:
                     return activities
             
             if args.batch:
-                activities = db.get_courses_by_batch(args.batch)
+                activities = db.get_realistic_activities_by_batch(args.batch)
+            elif hasattr(args, 'routine_type') and args.routine_type == "comprehensive":
+                activities = db.get_all_realistic_activities()
+            elif hasattr(args, 'algorithm') and args.algorithm == "preserve":
+                # For preserve mode, always use realistic activities
+                activities = db.get_all_realistic_activities()
             else:
                 activities = db.get_all_courses()
             
@@ -302,6 +389,263 @@ def load_activities(args) -> List[Activity]:
     return activities
 
 
+def preserve_realistic_schedule(activities: List[Activity]) -> List[Activity]:
+    """
+    Preserve the realistic schedule without running optimization algorithms
+    
+    Args:
+        activities: List of activities with realistic timing
+        
+    Returns:
+        Activities with preserved realistic schedule
+    """
+    print("🔄 Using realistic schedule (no algorithm optimization)")
+    print("📊 Preserving original realistic timing and assignments")
+    
+    # The activities already have realistic timing, faculty, and room assignments
+    # No need to run scheduling algorithms
+    return activities
+
+
+def handle_faculty_input_routine() -> List[Activity]:
+    """
+    Handle faculty input routine generation
+    
+    Returns:
+        List of activities generated from faculty input
+    """
+    print("\n" + "="*60)
+    print("🎓 FACULTY INPUT SYSTEM")
+    print("="*60)
+    
+    faculty_system = FacultyInputSystem()
+    
+    # Check if existing faculty data exists
+    if os.path.exists("data/faculty_data.json"):
+        load_existing = input("\n📁 Existing faculty data found. Load it? (y/n) [y]: ").lower().strip() != "n"
+        if load_existing and faculty_system.load_faculty_data():
+            print("✅ Existing faculty data loaded")
+        else:
+            print("🔄 Starting fresh faculty input")
+    
+    # Main faculty input loop
+    while True:
+        print("\n" + "-"*40)
+        print("Faculty Input Options:")
+        print("1. Add Faculty Member")
+        print("2. Assign Courses to Faculty")
+        print("3. View Current Schedule")
+        print("4. Generate Routine")
+        print("5. Save and Exit")
+        
+        choice = input("\nSelect option (1-5): ").strip()
+        
+        if choice == "1":
+            faculty_system.add_faculty_interactive()
+        elif choice == "2":
+            faculty_system.interactive_course_assignment()
+        elif choice == "3":
+            faculty_system.print_schedule_summary()
+        elif choice == "4":
+            break
+        elif choice == "5":
+            faculty_system.save_faculty_data()
+            print("👋 Faculty data saved. Generating routine...")
+            break
+        else:
+            print("❌ Invalid choice. Please select 1-5.")
+    
+    # Convert faculty courses to Activity objects
+    activities = []
+    for course in faculty_system.courses:
+        activity = Activity(
+            id=len(activities) + 1,
+            start=course['start_time'],
+            end=course['end_time'],
+            weight=course['credits'],
+            name=course['course_name'],
+            room=course['room']
+        )
+        # Add faculty and course code information
+        activity.faculty = course['faculty_name']
+        activity.course_code = course['course_code']
+        activities.append(activity)
+    
+    return activities
+
+
+def handle_comprehensive_routine(activities: List[Activity]) -> str:
+    """
+    Handle comprehensive routine generation for all batches
+    
+    Args:
+        activities: List of all activities
+        
+    Returns:
+        Path to generated routine
+    """
+    print("\n🔄 Generating comprehensive routine for all batches...")
+    
+    # Group activities by batch/section (simulate multiple batches)
+    batches = {
+        "BCSE24 Section A": activities[:len(activities)//3] if len(activities) >= 3 else activities,
+        "BCSE24 Section B": activities[len(activities)//3:2*len(activities)//3] if len(activities) >= 6 else [],
+        "BCSE23 Section A": activities[2*len(activities)//3:] if len(activities) >= 9 else []
+    }
+    
+    # Remove empty batches
+    batches = {k: v for k, v in batches.items() if v}
+    
+    pdf_gen = EnhancedPDFGenerator()
+    return pdf_gen.generate_comprehensive_routine(batches)
+
+
+def handle_batch_routine(activities: List[Activity], batch_code: str) -> str:
+    """
+    Handle batch-wise routine generation
+    
+    Args:
+        activities: List of activities for the batch
+        batch_code: Batch code
+        
+    Returns:
+        Path to generated routine
+    """
+    print(f"\n🔄 Generating routine for batch {batch_code}...")
+    
+    pdf_gen = EnhancedPDFGenerator()
+    return pdf_gen.generate_batch_routine(activities, batch_code)
+
+
+def handle_section_routine(activities: List[Activity], batch_code: str, section: str) -> str:
+    """
+    Handle section-wise routine generation
+    
+    Args:
+        activities: List of activities for the section
+        batch_code: Batch code
+        section: Section name
+        
+    Returns:
+        Path to generated routine
+    """
+    print(f"\n🔄 Generating routine for {batch_code} Section {section}...")
+    
+    pdf_gen = EnhancedPDFGenerator()
+    
+    # Add sample faculty information to activities if not present
+    faculties = ["Dr. Ahmed Rahman", "Prof. Fatema Khatun", "Dr. Mohammad Ali", "Ms. Rashida Begum", "Mr. Karim Hassan"]
+    for i, activity in enumerate(activities):
+        if not hasattr(activity, 'faculty') or not activity.faculty:
+            activity.faculty = faculties[i % len(faculties)]
+        if not hasattr(activity, 'course_code') or not activity.course_code:
+            activity.course_code = f"CSE{activity.id + 100:03d}"
+    
+    return pdf_gen.generate_section_routine(activities, batch_code, section)
+
+
+def process_enhanced_routine(user_input: Dict, activities: List[Activity]) -> str:
+    """
+    Process enhanced routine generation based on user input
+    
+    Args:
+        user_input: User input dictionary
+        activities: List of activities
+        
+    Returns:
+        Path to generated routine
+    """
+    routine_type = user_input.get("routine_type", "section")
+    batch = user_input.get("batch", "BCSE24")
+    section = user_input.get("section", "A")
+    
+    if routine_type == "faculty":
+        # Faculty input mode - get activities from faculty system
+        activities = handle_faculty_input_routine()
+        if not activities:
+            print("❌ No courses assigned through faculty input system")
+            return None
+        routine_type = "section"  # Continue with section routine after faculty input
+    
+    # Generate routine based on type
+    if routine_type == "comprehensive":
+        return handle_comprehensive_routine(activities)
+    elif routine_type == "batch":
+        return handle_batch_routine(activities, batch)
+    elif routine_type == "section":
+        return handle_section_routine(activities, batch, section)
+    else:
+        print(f"❌ Unknown routine type: {routine_type}")
+        return None
+
+
+def print_realistic_schedule(activities: List[Activity]):
+    """
+    Print a realistic schedule with day and time information
+    
+    Args:
+        activities: List of scheduled activities
+    """
+    if not activities:
+        print("❌ No activities to display")
+        return
+    
+    print("\n" + "="*100)
+    print("📅 REALISTIC CLASS SCHEDULE")
+    print("="*100)
+    
+    # Check if activities have original day/time information
+    has_day_info = any(hasattr(activity, 'day') and hasattr(activity, 'time_slot') for activity in activities)
+    
+    if has_day_info:
+        # Display with original day/time information
+        days_schedule = {}
+        for activity in activities:
+            day = getattr(activity, 'day', 'Unknown')
+            if day not in days_schedule:
+                days_schedule[day] = []
+            days_schedule[day].append(activity)
+        
+        # Sort days in order
+        day_order = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday']
+        
+        for day in day_order:
+            if day in days_schedule:
+                print(f"\n📅 {day.upper()}")
+                print("-" * 90)
+                
+                # Sort activities by start time
+                day_activities = sorted(days_schedule[day], key=lambda x: x.start)
+                
+                for activity in day_activities:
+                    time_slot = getattr(activity, 'time_slot', f"{activity.start//60:02d}:{activity.start%60:02d}-{activity.end//60:02d}:{activity.end%60:02d}")
+                    print(f"  {time_slot:<12} | {activity.course_code:<8} | {activity.name:<30} | {activity.faculty:<20} | Room: {activity.room}")
+    else:
+        # Display with scheduled times (fallback)
+        print("\n📋 SCHEDULED ACTIVITIES")
+        print("-" * 90)
+        print(f"{'Time':<12} | {'Code':<8} | {'Course Name':<30} | {'Faculty':<20} | {'Room':<8}")
+        print("-" * 90)
+        
+        # Sort activities by start time
+        sorted_activities = sorted(activities, key=lambda x: x.start)
+        
+        for activity in sorted_activities:
+            # Convert minutes to hours:minutes format
+            start_hour = activity.start // 60
+            start_min = activity.start % 60
+            end_hour = activity.end // 60
+            end_min = activity.end % 60
+            time_display = f"{start_hour:02d}:{start_min:02d}-{end_hour:02d}:{end_min:02d}"
+            
+            print(f"  {time_display:<12} | {activity.course_code:<8} | {activity.name:<30} | {activity.faculty:<20} | {activity.room:<8}")
+    
+    print("\n" + "="*100)
+    print(f"📊 Total Classes: {len(activities)}")
+    print(f"📊 Total Credit Hours: {sum(activity.weight for activity in activities):.1f}")
+    print("="*100)
+
+
 def main():
     """Main application function"""
     print_banner()
@@ -310,15 +654,16 @@ def main():
     if len(sys.argv) > 1:
         # Parse command line arguments
         parser = argparse.ArgumentParser(
-            description="Conflict-Free Class Scheduling System",
+            description="Enhanced Conflict-Free Class Scheduling System",
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog="""
 Examples:
-  python main.py                          (Interactively asks for input)
-  python main.py --algorithm graph-coloring
-  python main.py --run-all --visualize
+  python main.py                              (Interactive mode - enhanced features)
+  python main.py --algorithm graph_color
+  python main.py --run-all --enhanced
   python main.py --init-db
-  python main.py --input data/courses.csv --pdf    (Generate basic PDF instead of academic)
+  python main.py --comprehensive --enhanced  (Generate comprehensive routine)
+  python main.py --input data/courses.csv --basic-pdf
             """
         )
         
@@ -326,17 +671,23 @@ Examples:
         parser.add_argument('--algorithm', choices=['graph-coloring', 'dynamic-prog', 'backtracking', 'genetic'],
                         default='graph-coloring', help='Algorithm to use')
         parser.add_argument('--run-all', action='store_true', help='Run all 4 algorithms and compare results')
+        parser.add_argument('--preserve-schedule', action='store_true', help='Preserve realistic schedule without optimization')
         
         # Input/Output options
         parser.add_argument('--input', help='Input file with activities data')
         parser.add_argument('--output', help='Output file for results')
         
         # PDF Generation
-        parser.add_argument('--pdf', action='store_true', help='Generate basic PDF output instead of academic PDF')
-        parser.add_argument('--academic-pdf', action='store_true', help='Generate professional academic schedule PDF (default behavior)')
+        parser.add_argument('--basic-pdf', action='store_true', help='Generate basic PDF output')
+        parser.add_argument('--enhanced', action='store_true', help='Use enhanced PDF generator (default)')
+        
+        # Routine Type Selection
+        parser.add_argument('--comprehensive', action='store_true', help='Generate comprehensive routine for all batches')
+        parser.add_argument('--batch-wise', action='store_true', help='Generate batch-wise routine')
+        parser.add_argument('--faculty-input', action='store_true', help='Use faculty interactive input system')
         
         # Academic options
-        parser.add_argument('--batch', help='Specify batch code (e.g., BCSE23)')
+        parser.add_argument('--batch', help='Specify batch code (e.g., BCSE24)')
         parser.add_argument('--section', default='A', help='Specify section name (A or B)')
         parser.add_argument('--semester', default='Spring 2025', help='Semester information')
         
@@ -347,20 +698,40 @@ Examples:
         
         # Other options
         parser.add_argument('--visualize', action='store_true', help='Enable visualization output')
-        parser.add_argument('--enhanced-generator', action='store_true', help='Use enhanced routine generator')
-        parser.add_argument('--comprehensive-routine', action='store_true', help='Generate comprehensive routine')
-        parser.add_argument('--university-schedule', action='store_true', help='Generate complete university schedule')
         
         args = parser.parse_args()
+        
+        # Handle preserve schedule flag
+        if args.preserve_schedule:
+            args.algorithm = "preserve"
+        
+        # Set default enhanced mode unless basic PDF is explicitly requested
+        if not args.basic_pdf:
+            args.enhanced = True
+            
+        # Determine routine type based on flags
+        if args.comprehensive:
+            args.routine_type = "comprehensive"
+        elif args.batch_wise:
+            args.routine_type = "batch"
+        elif args.faculty_input:
+            args.routine_type = "faculty"
+        else:
+            args.routine_type = "section"
     else:
         # No command line arguments provided, use interactive mode
         print("\n🖥️ Interactive Mode: No command line arguments provided.")
         user_input = get_user_input()
         args = create_args_from_user_input(user_input)
-        print("\n✅ Using user-provided parameters for scheduling.")
+        
+        # Set enhanced mode by default unless basic PDF is selected
+        if not user_input.get("use_basic_pdf", False):
+            args.enhanced = True
+            
+        print("\n✅ Using user-provided parameters for enhanced scheduling.")
     
     # Handle special flags
-    if args.enhanced_generator or args.comprehensive_routine or args.university_schedule:
+    if hasattr(args, 'enhanced') and args.enhanced:
         args.use_database = True
     
     if args.no_database:
@@ -380,7 +751,15 @@ Examples:
         print("❌ No activities loaded. Exiting.")
         return 1
     
+    # Ensure all activities have required attributes
+    activities = ensure_activities_attributes(activities)
+    
     print(f"✅ Loaded {len(activities)} activities")
+    
+    # Show the original realistic schedule before algorithms run
+    if activities and any(hasattr(activity, 'day') for activity in activities):
+        print("\n🔍 ORIGINAL REALISTIC SCHEDULE (Before Algorithm Processing):")
+        print_realistic_schedule(activities)
     
     # Process activities
     if args.run_all:
@@ -392,38 +771,78 @@ Examples:
                            key=lambda k: scheduler.calculate_total_weight(results[k]))
         best_result = results[best_algorithm]
         
+        # Ensure activities have required attributes
+        best_result = ensure_activities_attributes(best_result)
+        
         print(f"\n🏆 Best result: {best_algorithm.upper()}")
         
-        # Always generate PDF output by default (academic PDF is the preferred format)
-        if args.pdf:  # Basic PDF was explicitly requested
+        # Use enhanced PDF generation based on user input
+        if hasattr(args, 'routine_type') and args.routine_type in ["comprehensive", "batch", "faculty"]:
+            # Use enhanced routine system
+            user_input = {
+                "routine_type": args.routine_type,
+                "batch": args.batch or "BCSE24",
+                "section": args.section
+            }
+            output_path = process_enhanced_routine(user_input, best_result)
+            if output_path:
+                print(f"\n✅ Enhanced {args.routine_type} routine generated: {output_path}")
+        elif hasattr(args, 'basic_pdf') and args.basic_pdf:
+            # Basic PDF generation
             pdf_gen = PDFGenerator()
             output_path = pdf_gen.generate_schedule_html(best_result, f"Schedule - {best_algorithm.upper()}")
             print(f"\n✅ Basic PDF schedule generated: {output_path}")
-        else:  # Academic PDF is the default in all cases
-            pdf_gen = AcademicPDFGenerator()
+        else:
+            # Enhanced section routine (default)
             batch_code = args.batch if args.batch else "BCSE24"
-            output_path = pdf_gen.generate_academic_schedule(best_result, batch_code, args.section, args.semester)
-            print(f"\n✅ Academic PDF schedule generated: {output_path}")
+            output_path = handle_section_routine(best_result, batch_code, args.section)
+            print(f"\n✅ Enhanced section routine generated: {output_path}")
+    
+    elif hasattr(args, 'preserve_schedule') and args.preserve_schedule or (hasattr(args, 'algorithm') and args.algorithm == "preserve"):
+        # Preserve realistic schedule without optimization
+        result = preserve_realistic_schedule(activities)
+        
+        if result:
+            # Print realistic schedule with day and time information
+            print_realistic_schedule(result)
+            
+            # Generate enhanced PDF
+            batch_code = args.batch if args.batch else "BCSE24"
+            output_path = handle_section_routine(result, batch_code, args.section)
+            print(f"\n✅ Enhanced realistic routine generated: {output_path}")
     
     else:
         # Run single algorithm
         result = run_single_algorithm(args.algorithm, activities)
         
         if result:
-            # Print schedule
-            scheduler = ConflictFreeScheduler()
-            scheduler.print_schedule(result)
+            # Ensure activities have required attributes
+            result = ensure_activities_attributes(result)
             
-            # Always generate PDF output by default (academic PDF is the preferred format)
-            if args.pdf:  # Basic PDF was explicitly requested
+            # Print realistic schedule with day and time information
+            print_realistic_schedule(result)
+            
+            # Use enhanced PDF generation based on user input
+            if hasattr(args, 'routine_type') and args.routine_type in ["comprehensive", "batch", "faculty"]:
+                # Use enhanced routine system
+                user_input = {
+                    "routine_type": args.routine_type,
+                    "batch": args.batch or "BCSE24",
+                    "section": args.section
+                }
+                output_path = process_enhanced_routine(user_input, result)
+                if output_path:
+                    print(f"\n✅ Enhanced {args.routine_type} routine generated: {output_path}")
+            elif hasattr(args, 'basic_pdf') and args.basic_pdf:
+                # Basic PDF generation
                 pdf_gen = PDFGenerator()
                 output_path = pdf_gen.generate_schedule_html(result, f"Schedule - {args.algorithm.upper()}")
                 print(f"\n✅ Basic PDF schedule generated: {output_path}")
-            else:  # Academic PDF is the default in all cases
-                pdf_gen = AcademicPDFGenerator()
+            else:
+                # Enhanced section routine (default)
                 batch_code = args.batch if args.batch else "BCSE24"
-                output_path = pdf_gen.generate_academic_schedule(result, batch_code, args.section, args.semester)
-                print(f"\n✅ Academic PDF schedule generated: {output_path}")
+                output_path = handle_section_routine(result, batch_code, args.section)
+                print(f"\n✅ Enhanced section routine generated: {output_path}")
             
             # Save to file if requested
             if args.output:

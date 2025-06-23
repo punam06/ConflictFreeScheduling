@@ -22,6 +22,8 @@ class Activity:
     weight: float = 1.0
     name: str = ""
     room: str = ""
+    faculty: str = ""
+    course_code: str = ""
 
 
 class PDFGenerator:

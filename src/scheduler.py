@@ -19,6 +19,8 @@ class Activity:
     weight: float = 1.0  # Default weight for unweighted problems
     name: str = ""
     room: str = ""
+    faculty: str = ""  # Faculty name
+    course_code: str = ""  # Course code
     
     def __str__(self) -> str:
         return f"Activity {self.id}: start={self.start}, end={self.end}, weight={self.weight}"
