@@ -731,7 +731,8 @@ Examples:
         print("\n✅ Using user-provided parameters for enhanced scheduling.")
     
     # Handle special flags
-    if hasattr(args, 'enhanced') and args.enhanced:
+    # Enhanced mode doesn't automatically require database - only specific routine types do
+    if hasattr(args, 'routine_type') and args.routine_type in ["comprehensive", "faculty"]:
         args.use_database = True
     
     if args.no_database:
@@ -788,10 +789,10 @@ Examples:
             if output_path:
                 print(f"\n✅ Enhanced {args.routine_type} routine generated: {output_path}")
         elif hasattr(args, 'basic_pdf') and args.basic_pdf:
-            # Basic PDF generation
+            # Basic HTML generation
             pdf_gen = PDFGenerator()
             output_path = pdf_gen.generate_schedule_html(best_result, f"Schedule - {best_algorithm.upper()}")
-            print(f"\n✅ Basic PDF schedule generated: {output_path}")
+            print(f"\n✅ Basic HTML schedule generated: {output_path}")
         else:
             # Enhanced section routine (default)
             batch_code = args.batch if args.batch else "BCSE24"
@@ -834,10 +835,10 @@ Examples:
                 if output_path:
                     print(f"\n✅ Enhanced {args.routine_type} routine generated: {output_path}")
             elif hasattr(args, 'basic_pdf') and args.basic_pdf:
-                # Basic PDF generation
+                # Basic HTML generation
                 pdf_gen = PDFGenerator()
                 output_path = pdf_gen.generate_schedule_html(result, f"Schedule - {args.algorithm.upper()}")
-                print(f"\n✅ Basic PDF schedule generated: {output_path}")
+                print(f"\n✅ Basic HTML schedule generated: {output_path}")
             else:
                 # Enhanced section routine (default)
                 batch_code = args.batch if args.batch else "BCSE24"
