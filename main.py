@@ -22,6 +22,7 @@ Version: 2.0 (Enhanced)
 
 import sys
 import os
+import json
 import argparse
 import time
 from typing import List, Dict, Optional
@@ -430,14 +431,92 @@ def handle_faculty_input_routine() -> List[Activity]:
     
     faculty_system = FacultyInputSystem()
     
-    # Check if existing faculty data exists
+    # Check if existing faculty data exists and has content
     if os.path.exists("data/faculty_data.json"):
-        load_existing = input("\n📁 Existing faculty data found. Load it? (y/n) [y]: ").lower().strip() != "n"
-        if load_existing and faculty_system.load_faculty_data():
-            print("✅ Existing faculty data loaded")
+        try:
+            with open("data/faculty_data.json", "r") as f:
+                data = json.load(f)
+                has_data = len(data.get("courses", [])) > 0
+        except:
+            has_data = False
+            
+        if has_data:
+            # Auto-load existing data if it has courses
+            if faculty_system.load_faculty_data():
+                print("✅ Existing faculty data loaded automatically")
+                print(f"📊 Found {len(faculty_system.courses)} courses")
+                
+                # Skip interactive menu if we have data and just generate routine
+                print("� Generating routine from existing faculty data...")
+            else:
+                print("⚠️ Failed to load faculty data, starting interactive mode")
+                return faculty_input_interactive_mode(faculty_system)
         else:
-            print("🔄 Starting fresh faculty input")
+            # File exists but empty - start interactive mode
+            try:
+                load_existing = input("\n📁 Empty faculty data file found. Start interactive input? (y/n) [y]: ").lower().strip() != "n"
+                if load_existing:
+                    return faculty_input_interactive_mode(faculty_system)
+                else:
+                    print("❌ No faculty data available")
+                    return []
+            except EOFError:
+                # Non-interactive mode - use test data
+                print("🔄 Non-interactive mode detected. Using test data...")
+                if os.path.exists("data/faculty_input_test.json"):
+                    faculty_system.load_faculty_data("data/faculty_input_test.json")
+                    print("✅ Test faculty data loaded")
+                else:
+                    print("❌ No test data available")
+                    return []
+    else:
+        # No file exists - start interactive mode
+        try:
+            start_input = input("\n📝 No faculty data found. Start interactive input? (y/n) [y]: ").lower().strip() != "n"
+            if start_input:
+                return faculty_input_interactive_mode(faculty_system)
+            else:
+                print("❌ No faculty data available")
+                return []
+        except EOFError:
+            # Non-interactive mode - use test data
+            print("🔄 Non-interactive mode detected. Using test data...")
+            if os.path.exists("data/faculty_input_test.json"):
+                faculty_system.load_faculty_data("data/faculty_input_test.json")
+                print("✅ Test faculty data loaded")
+            else:
+                print("❌ No test data available")
+                return []
+
+    # Convert faculty courses to Activity objects
+    activities = []
+    for course in faculty_system.courses:
+        activity = Activity(
+            id=len(activities) + 1,
+            start=course['start_time'],
+            end=course['end_time'],
+            weight=course['credits'],
+            name=course['course_name'],
+            room=course['room']
+        )
+        # Add faculty and course code information
+        activity.faculty = course['faculty_name']
+        activity.course_code = course['course_code']
+        activities.append(activity)
     
+    return activities
+
+
+def faculty_input_interactive_mode(faculty_system) -> List[Activity]:
+    """
+    Handle interactive faculty input mode
+    
+    Args:
+        faculty_system: FacultyInputSystem instance
+        
+    Returns:
+        List of activities generated from faculty input
+    """
     # Main faculty input loop
     while True:
         print("\n" + "-"*40)
@@ -464,7 +543,7 @@ def handle_faculty_input_routine() -> List[Activity]:
             break
         else:
             print("❌ Invalid choice. Please select 1-5.")
-    
+
     # Convert faculty courses to Activity objects
     activities = []
     for course in faculty_system.courses:

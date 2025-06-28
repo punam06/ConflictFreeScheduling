@@ -172,297 +172,573 @@
       "designation": "Professor & Chairman"
     }
   ],
-
-  "courses": [
+  "batch_courses": {
+  "BCSE-2022": [
     {
-      "code": "CSE-3201",
-      "name": "Computer Network",
-      "credits": 3.00,
-      "type": "Theory"
+      "course_no": "CSE-3201",
+      "course_title": "Computer Network",
+      "credit": "3.00",
+      "faculty": [
+        "S M Salim Reza, PhD"
+      ]
     },
     {
-      "code": "CSE-3202",
-      "name": "Computer Network Laboratory",
-      "credits": 1.50,
-      "type": "Lab"
+      "course_no": "CSE-3202",
+      "course_title": "Computer Network Laboratory",
+      "credit": "1.50",
+      "faculty": [
+        "S M Salim Reza, PhD",
+        "A. A. M. Shah Sadman"
+      ]
     },
     {
-      "code": "CSE-3203",
-      "name": "Digital System Design",
-      "credits": 3.00,
-      "type": "Theory"
+      "course_no": "CSE-3203",
+      "course_title": "Digital System Design",
+      "credit": "3.00",
+      "faculty": [
+        "Md. Abdus Sattar"
+      ]
     },
     {
-      "code": "CSE-3204",
-      "name": "Digital System Design Laboratory",
-      "credits": 0.75,
-      "type": "Lab"
+      "course_no": "CSE-3204",
+      "course_title": "Digital System Design Laboratory",
+      "credit": "0.75",
+      "faculty": [
+        "Md. Abdus Sattar",
+        "Lec Anika Ashraf"
+      ]
     },
     {
-      "code": "CSE-3205",
-      "name": "Software Engineering",
-      "credits": 3.00,
-      "type": "Theory"
+      "course_no": "CSE-3205",
+      "course_title": "Software Engineering",
+      "credit": "3.00",
+      "faculty": [
+        "Dr. Md. Humayun Kabir"
+      ]
     },
     {
-      "code": "CSE-3206",
-      "name": "Software Engineering Laboratory",
-      "credits": 0.75,
-      "type": "Lab"
+      "course_no": "CSE-3206",
+      "course_title": "Software Engineering Laboratory",
+      "credit": "0.75",
+      "faculty": [
+        "Md Musfique Anwar, PhD",
+        "Lec Rumana Yasmin"
+      ]
     },
     {
-      "code": "CSE-3208",
-      "name": "Software Development Project-I",
-      "credits": 1.50,
-      "type": "Project"
+      "course_no": "CSE-3208",
+      "course_title": "Software Development Project-I",
+      "credit": "1.50",
+      "faculty": [
+        "Aditya Rajbongshi",
+        "Lec Rubel Sheikh"
+      ]
     },
     {
-      "code": "GERM-3209",
-      "name": "Fundamentals of Research Methodology",
-      "credits": 3.00,
-      "type": "Theory"
+      "course_no": "GERM-3209",
+      "course_title": "Fundamentals of Research Methodology",
+      "credit": "3.00",
+      "faculty": [
+        "Saeed Mahmud Ullah, PhD"
+      ]
     },
     {
-      "code": "GEESL-3211",
-      "name": "Environment, Sustainability and Law",
-      "credits": 3.00,
-      "type": "Theory"
+      "course_no": "GEESL-3211",
+      "course_title": "Environment, Sustainability and Law",
+      "credit": "3.00",
+      "faculty": [
+        "Abdul Kadir Ibne Kamal, Ph.D"
+      ]
     },
     {
-      "code": "CSE-3200",
-      "name": "Industrial Training",
-      "credits": 1.00,
-      "type": "Training"
-    },
-    {
-      "code": "CSE-2202",
-      "name": "Engineering Drawing and CAD Laboratory",
-      "credits": 1.50,
-      "type": "Lab"
-    },
-    {
-      "code": "CSE-2203",
-      "name": "Computer Architecture",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "CSE-2205",
-      "name": "Data Structures and Algorithms-II",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "CSE-2206",
-      "name": "Data Structures and Algorithms-II Laboratory",
-      "credits": 1.50,
-      "type": "Lab"
-    },
-    {
-      "code": "GEEM-2207",
-      "name": "Engineering Ethics and Moral Philosophy",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "CSE-2208",
-      "name": "Object Oriented Programming Laboratory-II",
-      "credits": 0.75,
-      "type": "Lab"
-    },
-    {
-      "code": "ICE-2209",
-      "name": "Digital Electronics and Pulse Technique",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "ICE-2210",
-      "name": "Digital Electronics and Pulse Technique Laboratory",
-      "credits": 0.75,
-      "type": "Lab"
-    },
-    {
-      "code": "MATH-2211",
-      "name": "Statistics",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "CSE-2101",
-      "name": "Data Structures and Algorithms-1",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "CSE-2102",
-      "name": "Data Structures and Algorithms- I Laboratory",
-      "credits": 1.50,
-      "type": "Lab"
-    },
-    {
-      "code": "CSE-2103",
-      "name": "Object Oriented Programming Language",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "CSE-2104",
-      "name": "Object Oriented Programming Language Laboratory-I",
-      "credits": 1.50,
-      "type": "Lab"
-    },
-    {
-      "code": "CSE-2105",
-      "name": "Theory of Computation",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "ICE-2107",
-      "name": "Electrical Drives and Instrumentation",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "ICE-2108",
-      "name": "Electrical Drives and Instrumentation Laboratory",
-      "credits": 0.75,
-      "type": "Lab"
-    },
-    {
-      "code": "ENG-2110",
-      "name": "Presentation Skill Development",
-      "credits": 1.50,
-      "type": "Theory"
-    },
-    {
-      "code": "MATH-2111",
-      "name": "Differential Equations, Laplace Transform and Fourier Transform",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "ENG-1102",
-      "name": "Communicative English-I",
-      "credits": 1.50,
-      "type": "Theory"
-    },
-    {
-      "code": "CHEM-1103",
-      "name": "Fundamentals of Chemistry",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "ICE-1105",
-      "name": "Electrical Circuits Analysis",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "ICE-1106",
-      "name": "Electrical Circuits Analysis Laboratory",
-      "credits": 0.75,
-      "type": "Lab"
-    },
-    {
-      "code": "GED-1119",
-      "name": "Bangladesh Studies",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "MATH-1109",
-      "name": "Differential and Integral Calculus",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "PHY-1115",
-      "name": "Physics",
-      "credits": 3.00,
-      "type": "Theory"
-    },
-    {
-      "code": "PHY-1116",
-      "name": "Physics Laboratory",
-      "credits": 0.75,
-      "type": "Lab"
-    },
-    {
-      "code": "MATH-1113",
-      "name": "Discrete Math",
-      "credits": 3.00,
-      "type": "Theory"
+      "course_no": "CSE-3200",
+      "course_title": "Industrial Training",
+      "credit": "1.00",
+      "faculty": [
+        "Lec Iyolita Islam",
+        "Lec Rumana Yasmin"
+      ]
     }
   ],
-
-  "sections": {
+  "BCSE-2023": [
+    {
+      "course_no": "CSE-2202",
+      "course_title": "Engineering Drawing and CAD Laboratory",
+      "credit": "1.50",
+      "faculty": [
+        "Lec Iyolita Islam"
+      ]
+    },
+    {
+      "course_no": "CSE-2203",
+      "course_title": "Computer Architecture",
+      "credit": "3.00",
+      "faculty": [
+        "Lec Iyolita Islam"
+      ]
+    },
+    {
+      "course_no": "CSE-2205",
+      "course_title": "Data Structures and Algorithms-II",
+      "credit": "3.00",
+      "faculty": [
+        "Lec Sayma Alam Suha"
+      ]
+    },
+    {
+      "course_no": "CSE-2206",
+      "course_title": "Data Structures and Algorithms-II Laboratory",
+      "credit": "1.50",
+      "faculty": [
+        "Lec Sayma Alam Suha",
+        "Lec Iyolita Islam"
+      ]
+    },
+    {
+      "course_no": "GEEM-2207",
+      "course_title": "Engineering Ethics and Moral Philosophy",
+      "credit": "3.00",
+      "faculty": [
+        "Colonel S M Saiful Islam, SUP, psc"
+      ]
+    },
+    {
+      "course_no": "CSE-2208",
+      "course_title": "Object Oriented Programming Laboratory-II",
+      "credit": "0.75",
+      "faculty": [
+        "Aditya Rajbongshi",
+        "Lec Sayma Alam Suha"
+      ]
+    },
+    {
+      "course_no": "ICE-2209",
+      "course_title": "Digital Electronics and Pulse Technique",
+      "credit": "3.00",
+      "faculty": [
+        "Abul Kalam Azad, PhD"
+      ]
+    },
+    {
+      "course_no": "ICE-2210",
+      "course_title": "Digital Electronics and Pulse Technique Laboratory",
+      "credit": "0.75",
+      "faculty": [
+        "Abul Kalam Azad, PhD",
+        "A. A. M. Shah Sadman"
+      ]
+    },
+    {
+      "course_no": "MATH-2211",
+      "course_title": "Statistics",
+      "credit": "3.00",
+      "faculty": [
+        "Md. Manirul Alam Sarker, PhD"
+      ]
+    }
+  ],
+  "BCSE-2024": [
+    {
+      "course_no": "CSE-2101",
+      "course_title": "Data Structures and Algorithms-1",
+      "credit": "3.00",
+      "faculty": [
+        "Lec Rumana Yasmin"
+      ]
+    },
+    {
+      "course_no": "CSE-2102",
+      "course_title": "Data Structures and Algorithms- I Laboratory",
+      "credit": "1.50",
+      "faculty": [
+        "Lec Rumana Yasmin",
+        "Lec Sobhana Jahan"
+      ]
+    },
+    {
+      "course_no": "CSE-2103",
+      "course_title": "Object Oriented Programming Language",
+      "credit": "3.00",
+      "faculty": [
+        "Lec Sobhana Jahan"
+      ]
+    },
+    {
+      "course_no": "CSE-2104",
+      "course_title": "Object Oriented Programming Language Laboratory-I",
+      "credit": "1.50",
+      "faculty": [
+        "Lec Sobhana Jahan",
+        "Lec Rumana Yasmin"
+      ]
+    },
+    {
+      "course_no": "CSE-2105",
+      "course_title": "Theory of Computation",
+      "credit": "3.00",
+      "faculty": [
+        "Dr. Abu Sayed Md. Mostafizur Rahaman"
+      ]
+    },
+    {
+      "course_no": "ICE-2107",
+      "course_title": "Electrical Drives and Instrumentation",
+      "credit": "3.00",
+      "faculty": [
+        "S. M. Mahfuz Alam, PhD"
+      ]
+    },
+    {
+      "course_no": "ICE-2108",
+      "course_title": "Electrical Drives and Instrumentation Laboratory",
+      "credit": "0.75",
+      "faculty": [
+        "Lec Sayma Alam Suha"
+      ]
+    },
+    {
+      "course_no": "ENG-2110",
+      "course_title": "Presentation Skill Development",
+      "credit": "1.50",
+      "faculty": [
+        "Lecturer, Ridwana Islam Ruhama",
+        "Lec Nazneen"
+      ]
+    },
+    {
+      "course_no": "MATH-2111",
+      "course_title": "Differential Equations, Laplace Transform and Fourier Transform",
+      "credit": "3.00",
+      "faculty": [
+        "Dr. K.M. ARIFUL KABIR"
+      ]
+    }
+  ],
+  "BCSE-2025": [
+    {
+      "course_no": "ENG-1102",
+      "course_title": "Communicative English-I",
+      "credit": "1.50",
+      "faculty": [
+        "Lecturer, Ridwana Islam Ruhama",
+        "Lec Sobhana Jahan"
+      ]
+    },
+    {
+      "course_no": "CHEM-1103",
+      "course_title": "Fundamentals of Chemistry",
+      "credit": "3.00",
+      "faculty": [
+        "Prof. Shahed Rana, PhD"
+      ]
+    },
+    {
+      "course_no": "ICE-1105",
+      "course_title": "Electrical Circuits Analysis",
+      "credit": "3.00",
+      "faculty": [
+        "Md. Mahmudur Rahman, PhD"
+      ]
+    },
+    {
+      "course_no": "ICE-1106",
+      "course_title": "Electrical Circuits Analysis Laboratory",
+      "credit": "0.75",
+      "faculty": [
+        "Md. Mahadi Hasan",
+        "Lec Nazneen Akhter"
+      ]
+    },
+    {
+      "course_no": "GED-1119",
+      "course_title": "Bangladesh Studies",
+      "credit": "3.00",
+      "faculty": [
+        "Dr. A. K. M. Shahnawaz"
+      ]
+    },
+    {
+      "course_no": "MATH-1109",
+      "course_title": "Differential and Integral Calculus",
+      "credit": "3.00",
+      "faculty": [
+        "Col Eare Md Morshed Alam, PhD"
+      ]
+    },
+    {
+      "course_no": "PHY-1115",
+      "course_title": "Physics",
+      "credit": "3",
+      "faculty": [
+        "Professor Dr. Md. Ziaul Ahsan"
+      ]
+    },
+    {
+      "course_no": "PHY-1116",
+      "course_title": "Physics Laboratory",
+      "credit": "0.75",
+      "faculty": [
+        "Lec Nazneen Akhter"
+      ]
+    },
+    {
+      "course_no": "MATH-1113",
+      "course_title": "Discrete Math",
+      "credit": "3",
+      "faculty": [
+        "Dr. Mohammad Ferdows"
+      ]
+    }
+  ]
+},
+"sections": {
     "BCSE22": {
-      "semester": 8,
-      "year": 4,
+      "semester": 2,
+      "year": 3,
       "courses": [
-        {"code": "CSE4401", "name": "Software Engineering", "credits": 3, "type": "Theory"},
-        {"code": "CSE4402", "name": "Software Engineering Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE4403", "name": "Machine Learning", "credits": 3, "type": "Theory"},
-        {"code": "CSE4404", "name": "Machine Learning Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE4405", "name": "Computer Graphics", "credits": 3, "type": "Theory"},
-        {"code": "CSE4406", "name": "Computer Graphics Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE4407", "name": "Thesis/Project", "credits": 3, "type": "Project"},
-        {"code": "CSE4408", "name": "Computer Vision", "credits": 3, "type": "Theory"},
-        {"code": "CSE4409", "name": "Artificial Intelligence", "credits": 3, "type": "Theory"},
-        {"code": "CSE4410", "name": "Cybersecurity", "credits": 3, "type": "Theory"}
+        {
+          "code": "CSE-3201",
+          "name": "Computer Network",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "CSE-3202",
+          "name": "Computer Network Laboratory",
+          "credits": 1.5,
+          "type": "Lab"
+        },
+        {
+          "code": "CSE-3203",
+          "name": "Digital System Design",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "CSE-3204",
+          "name": "Digital System Design Laboratory",
+          "credits": 0.75,
+          "type": "Lab"
+        },
+        {
+          "code": "CSE-3205",
+          "name": "Software Engineering",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "CSE-3206",
+          "name": "Software Engineering Laboratory",
+          "credits": 0.75,
+          "type": "Lab"
+        },
+        {
+          "code": "CSE-3208",
+          "name": "Software Development Project-I",
+          "credits": 1.5,
+          "type": "Project"
+        },
+        {
+          "code": "GERM-3209",
+          "name": "Fundamentals of Research Methodology",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "GEESL-3211",
+          "name": "Environment, Sustainability and Law",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "CSE-3200",
+          "name": "Industrial Training",
+          "credits": 1,
+          "type": "Project"
+        }
       ]
     },
     "BCSE23": {
-      "semester": 6,
-      "year": 3,
+      "semester": 2,
+      "year": 2,
       "courses": [
-        {"code": "CSE3321", "name": "Computer Networks", "credits": 3, "type": "Theory"},
-        {"code": "CSE3322", "name": "Computer Networks Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE3323", "name": "Operating Systems", "credits": 3, "type": "Theory"},
-        {"code": "CSE3324", "name": "Operating Systems Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE3325", "name": "Database Management Systems", "credits": 3, "type": "Theory"},
-        {"code": "CSE3326", "name": "Database Management Systems Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE3327", "name": "Web Development Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "MATH3321", "name": "Discrete Mathematics", "credits": 3, "type": "Theory"},
-        {"code": "CSE3328", "name": "Algorithm Analysis", "credits": 3, "type": "Theory"}
+        {
+          "code": "CSE-2202",
+          "name": "Engineering Drawing and CAD Laboratory",
+          "credits": 1.5,
+          "type": "Lab"
+        },
+        {
+          "code": "CSE-2203",
+          "name": "Computer Architecture",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "CSE-2205",
+          "name": "Data Structures and Algorithms-II",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "CSE-2206",
+          "name": "Data Structures and Algorithms-II Laboratory",
+          "credits": 1.5,
+          "type": "Lab"
+        },
+        {
+          "code": "GEEM-2207",
+          "name": "Engineering Ethics and Moral Philosophy",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "CSE-2208",
+          "name": "Object Oriented Programming Laboratory-II",
+          "credits": 0.75,
+          "type": "Lab"
+        },
+        {
+          "code": "ICE-2209",
+          "name": "Digital Electronics and Pulse Technique",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "ICE-2210",
+          "name": "Digital Electronics and Pulse Technique Laboratory",
+          "credits": 0.75,
+          "type": "Lab"
+        },
+        {
+          "code": "MATH-2211",
+          "name": "Statistics",
+          "credits": 3,
+          "type": "Theory"
+        }
       ]
     },
     "BCSE24": {
-      "semester": 4,
+      "semester": 1,
       "year": 2,
       "courses": [
-        {"code": "CSE2221", "name": "Data Structures", "credits": 3, "type": "Theory"},
-        {"code": "CSE2222", "name": "Data Structures Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE2223", "name": "Object Oriented Programming", "credits": 3, "type": "Theory"},
-        {"code": "CSE2224", "name": "Object Oriented Programming Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE2225", "name": "Digital Logic Design", "credits": 3, "type": "Theory"},
-        {"code": "CSE2226", "name": "Digital Logic Design Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "MATH2221", "name": "Statistics", "credits": 3, "type": "Theory"},
-        {"code": "ENG2221", "name": "Technical Writing", "credits": 3, "type": "Theory"},
-        {"code": "CSE2227", "name": "Computer Architecture", "credits": 3, "type": "Theory"}
+        {
+          "code": "CSE-2101",
+          "name": "Data Structures and Algorithms-1",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "CSE-2102",
+          "name": "Data Structures and Algorithms- I Laboratory",
+          "credits": 1.5,
+          "type": "Lab"
+        },
+        {
+          "code": "CSE-2103",
+          "name": "Object Oriented Programming Language",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "CSE-2104",
+          "name": "Object Oriented Programming Language Laboratory-I",
+          "credits": 1.5,
+          "type": "Lab"
+        },
+        {
+          "code": "CSE-2105",
+          "name": "Theory of Computation",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "ICE-2107",
+          "name": "Electrical Drives and Instrumentation",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "ICE-2108",
+          "name": "Electrical Drives and Instrumentation Laboratory",
+          "credits": 0.75,
+          "type": "Lab"
+        },
+        {
+          "code": "ENG-2110",
+          "name": "Presentation Skill Development",
+          "credits": 1.5,
+          "type": "Lab"
+        },
+        {
+          "code": "MATH-2111",
+          "name": "Differential Equations, Laplace Transform and Fourier Transform",
+          "credits": 3,
+          "type": "Theory"
+        }
       ]
     },
     "BCSE25": {
-      "semester": 2,
+      "semester": 1,
       "year": 1,
       "courses": [
-        {"code": "CSE1121", "name": "Programming Fundamentals", "credits": 3, "type": "Theory"},
-        {"code": "CSE1122", "name": "Programming Fundamentals Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE1123", "name": "Computer Fundamentals", "credits": 3, "type": "Theory"},
-        {"code": "MATH1121", "name": "Calculus I", "credits": 3, "type": "Theory"},
-        {"code": "MATH1122", "name": "Linear Algebra", "credits": 3, "type": "Theory"},
-        {"code": "ENG1121", "name": "English I", "credits": 3, "type": "Theory"},
-        {"code": "ENG1122", "name": "English I Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "PHYS1121", "name": "Physics I", "credits": 3, "type": "Theory"},
-        {"code": "CSE1124", "name": "Introduction to Computing", "credits": 3, "type": "Theory"}
+        {
+          "code": "ENG-1102",
+          "name": "Communicative English-I",
+          "credits": 1.5,
+          "type": "Theory"
+        },
+        {
+          "code": "CHEM-1103",
+          "name": "Fundamentals of Chemistry",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "ICE-1105",
+          "name": "Electrical Circuits Analysis",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "ICE-1106",
+          "name": "Electrical Circuits Analysis Laboratory",
+          "credits": 0.75,
+          "type": "Lab"
+        },
+        {
+          "code": "GED-1119",
+          "name": "Bangladesh Studies",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "MATH-1109",
+          "name": "Differential and Integral Calculus",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "PHY-1115",
+          "name": "Physics",
+          "credits": 3,
+          "type": "Theory"
+        },
+        {
+          "code": "PHY-1116",
+          "name": "Physics Laboratory",
+          "credits": 0.75,
+          "type": "Lab"
+        },
+        {
+          "code": "MATH-1113",
+          "name": "Discrete Math",
+          "credits": 3,
+          "type": "Theory"
+        }
       ]
     }
   },
- 
-
   "faculty_preferences": {
     "Prof. Abul Kamal Azad": {
       "preferred_times": [
@@ -1418,4 +1694,3 @@
     }
   }
 }
-
