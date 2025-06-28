@@ -399,6 +399,22 @@
   ],
 
   "sections": {
+    "BCSE22": {
+      "semester": 8,
+      "year": 4,
+      "courses": [
+        {"code": "CSE4401", "name": "Software Engineering", "credits": 3, "type": "Theory"},
+        {"code": "CSE4402", "name": "Software Engineering Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "CSE4403", "name": "Machine Learning", "credits": 3, "type": "Theory"},
+        {"code": "CSE4404", "name": "Machine Learning Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "CSE4405", "name": "Computer Graphics", "credits": 3, "type": "Theory"},
+        {"code": "CSE4406", "name": "Computer Graphics Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "CSE4407", "name": "Thesis/Project", "credits": 3, "type": "Project"},
+        {"code": "CSE4408", "name": "Computer Vision", "credits": 3, "type": "Theory"},
+        {"code": "CSE4409", "name": "Artificial Intelligence", "credits": 3, "type": "Theory"},
+        {"code": "CSE4410", "name": "Cybersecurity", "credits": 3, "type": "Theory"}
+      ]
+    },
     "BCSE23": {
       "semester": 6,
       "year": 3,
@@ -410,20 +426,23 @@
         {"code": "CSE3325", "name": "Database Management Systems", "credits": 3, "type": "Theory"},
         {"code": "CSE3326", "name": "Database Management Systems Lab", "credits": 1.5, "type": "Lab"},
         {"code": "CSE3327", "name": "Web Development Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "MATH3321", "name": "Discrete Mathematics", "credits": 3, "type": "Theory"}
+        {"code": "MATH3321", "name": "Discrete Mathematics", "credits": 3, "type": "Theory"},
+        {"code": "CSE3328", "name": "Algorithm Analysis", "credits": 3, "type": "Theory"}
       ]
     },
-    "BCSE22": {
-      "semester": 8,
-      "year": 4,
+    "BCSE24": {
+      "semester": 4,
+      "year": 2,
       "courses": [
-        {"code": "CSE4401", "name": "Software Engineering", "credits": 3, "type": "Theory"},
-        {"code": "CSE4402", "name": "Software Engineering Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE4403", "name": "Machine Learning", "credits": 3, "type": "Theory"},
-        {"code": "CSE4404", "name": "Machine Learning Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE4405", "name": "Computer Graphics", "credits": 3, "type": "Theory"},
-        {"code": "CSE4406", "name": "Computer Graphics Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE4407", "name": "Thesis/Project", "credits": 3, "type": "Project"}
+        {"code": "CSE2221", "name": "Data Structures", "credits": 3, "type": "Theory"},
+        {"code": "CSE2222", "name": "Data Structures Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "CSE2223", "name": "Object Oriented Programming", "credits": 3, "type": "Theory"},
+        {"code": "CSE2224", "name": "Object Oriented Programming Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "CSE2225", "name": "Digital Logic Design", "credits": 3, "type": "Theory"},
+        {"code": "CSE2226", "name": "Digital Logic Design Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "MATH2221", "name": "Statistics", "credits": 3, "type": "Theory"},
+        {"code": "ENG2221", "name": "Technical Writing", "credits": 3, "type": "Theory"},
+        {"code": "CSE2227", "name": "Computer Architecture", "credits": 3, "type": "Theory"}
       ]
     },
     "BCSE25": {
@@ -437,7 +456,8 @@
         {"code": "MATH1122", "name": "Linear Algebra", "credits": 3, "type": "Theory"},
         {"code": "ENG1121", "name": "English I", "credits": 3, "type": "Theory"},
         {"code": "ENG1122", "name": "English I Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "PHYS1121", "name": "Physics I", "credits": 3, "type": "Theory"}
+        {"code": "PHYS1121", "name": "Physics I", "credits": 3, "type": "Theory"},
+        {"code": "CSE1124", "name": "Introduction to Computing", "credits": 3, "type": "Theory"}
       ]
     }
   },
