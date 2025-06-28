@@ -1,6 +1,6 @@
-# Conflict-Free Scheduling System
+# Enhanced Conflict-Free Scheduling System
 
-A comprehensive academic scheduling system that automatically generates conflict-free course schedules using multiple optimization algorithms.
+A comprehensive academic scheduling system that automatically generates conflict-free course schedules using multiple optimization algorithms with proper time slots and modern UI.
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -9,11 +9,24 @@ A comprehensive academic scheduling system that automatically generates conflict
 ## 🎯 Features
 
 - **Multiple Algorithms**: Graph Coloring, Dynamic Programming, Backtracking, Genetic Algorithm
+- **Academic Routine Generator**: Comprehensive routine with proper time slots (8:30 AM - 5:30 PM)
 - **Enhanced PDF Generation**: Modern, eye-catching schedules with faculty and room information
 - **Database Integration**: MySQL support with realistic CSE department data
 - **Interactive Faculty System**: Faculty input with automatic room allocation
-- **Flexible Routine Types**: Section-wise, batch-wise, comprehensive, and faculty-driven scheduling
+- **Flexible Routine Types**: Section-wise, batch-wise, comprehensive, and academic routines
 - **Realistic Data**: Authentic faculty names, department rooms, and university time slots
+- **Modern UI**: Attractive table format with gradient backgrounds and responsive design
+
+## ✨ New Academic Routine Features
+
+- **📅 Schedule**: Sunday to Thursday, 8:30 AM - 5:30 PM
+- **⏰ Time Slots**: 1.5-hour slots with 15-minute breaks
+- **🍽️ Break Time**: 1:30 PM - 2:00 PM (lunch break)
+- **🎓 All Batches**: BCSE22, BCSE23, BCSE24, BCSE25 
+- **📚 All Sections**: A & B for each batch
+- **👨‍🏫 Real Faculty**: 10 faculty members with proper designations
+- **🏢 Proper Rooms**: Theory and lab room assignments
+- **📱 Responsive UI**: Modern table format with attractive styling
 
 ## 🚀 Quick Start
 
@@ -55,6 +68,14 @@ python main.py --run-all --use-database
 
 ### Enhanced Routine Generation
 ```bash
+# Generate comprehensive academic routine (NEW!)
+python main.py --academic-routine
+
+# Generate section-wise routine
+python main.py --enhanced --batch BCSE24 --section A
+
+# Generate academic PDF
+python main.py --input data/sample_courses.json --academic-pdf --batch BCSE24 --section A
 # Generate comprehensive routine for all batches
 python main.py --comprehensive --use-database
 

@@ -33,6 +33,7 @@ from scheduler import ConflictFreeScheduler, Activity
 from utils.file_parser import FileParser
 from utils.pdf_generator import PDFGenerator, AcademicPDFGenerator
 from utils.enhanced_pdf_generator import EnhancedPDFGenerator
+from utils.comprehensive_routine_generator import ComprehensiveRoutineGenerator
 from utils.faculty_input import FacultyInputSystem
 # Database import is conditional - only when needed
 
@@ -663,6 +664,7 @@ Examples:
   python main.py --run-all --enhanced
   python main.py --init-db
   python main.py --comprehensive --enhanced  (Generate comprehensive routine)
+  python main.py --academic-routine          (Generate academic routine with proper time slots)
   python main.py --input data/courses.csv --basic-pdf
             """
         )
@@ -679,10 +681,12 @@ Examples:
         
         # PDF Generation
         parser.add_argument('--basic-pdf', action='store_true', help='Generate basic PDF output')
+        parser.add_argument('--academic-pdf', action='store_true', help='Generate university-branded academic PDF')
         parser.add_argument('--enhanced', action='store_true', help='Use enhanced PDF generator (default)')
         
         # Routine Type Selection
         parser.add_argument('--comprehensive', action='store_true', help='Generate comprehensive routine for all batches')
+        parser.add_argument('--academic-routine', action='store_true', help='Generate comprehensive academic routine with proper time slots')
         parser.add_argument('--batch-wise', action='store_true', help='Generate batch-wise routine')
         parser.add_argument('--faculty-input', action='store_true', help='Use faculty interactive input system')
         
@@ -705,13 +709,15 @@ Examples:
         if args.preserve_schedule:
             args.algorithm = "preserve"
         
-        # Set default enhanced mode unless basic PDF is explicitly requested
-        if not args.basic_pdf:
+        # Set default enhanced mode unless basic PDF or academic PDF is explicitly requested
+        if not args.basic_pdf and not args.academic_pdf:
             args.enhanced = True
             
         # Determine routine type based on flags
         if args.comprehensive:
             args.routine_type = "comprehensive"
+        elif args.academic_routine:
+            args.routine_type = "academic_routine"
         elif args.batch_wise:
             args.routine_type = "batch"
         elif args.faculty_input:
@@ -744,6 +750,25 @@ Examples:
     # Show algorithm information
     print_algorithm_info()
     
+    # Handle academic routine generation (new comprehensive routine with proper time slots)
+    if hasattr(args, 'routine_type') and args.routine_type == "academic_routine":
+        print("\n🎓 Generating comprehensive academic routine with proper time slots...")
+        generator = ComprehensiveRoutineGenerator()
+        data_file = "data/comprehensive_routine_data.json"
+        
+        # Generate both PDF and HTML
+        pdf_file = generator.generate_comprehensive_routine_pdf(data_file)
+        html_file = generator.generate_html_routine(data_file)
+        
+        if pdf_file and html_file:
+            print(f"\n✅ Academic routine generation complete!")
+            print(f"📄 PDF: {pdf_file}")
+            print(f"🌐 HTML: {html_file}")
+            return 0
+        else:
+            print("❌ Failed to generate academic routine")
+            return 1
+
     # Load activities
     print("\n📂 Loading activities...")
     activities = load_activities(args)
@@ -793,6 +818,12 @@ Examples:
             pdf_gen = PDFGenerator()
             output_path = pdf_gen.generate_schedule_html(best_result, f"Schedule - {best_algorithm.upper()}")
             print(f"\n✅ Basic HTML schedule generated: {output_path}")
+        elif hasattr(args, 'academic_pdf') and args.academic_pdf:
+            # Academic PDF generation
+            batch_code = args.batch if args.batch else "BCSE24"
+            pdf_gen = AcademicPDFGenerator()
+            output_path = pdf_gen.generate_academic_schedule(best_result, batch_code, args.section, args.semester)
+            print(f"\n✅ Academic PDF generated: {output_path}")
         else:
             # Enhanced section routine (default)
             batch_code = args.batch if args.batch else "BCSE24"
@@ -839,6 +870,12 @@ Examples:
                 pdf_gen = PDFGenerator()
                 output_path = pdf_gen.generate_schedule_html(result, f"Schedule - {args.algorithm.upper()}")
                 print(f"\n✅ Basic HTML schedule generated: {output_path}")
+            elif hasattr(args, 'academic_pdf') and args.academic_pdf:
+                # Academic PDF generation
+                batch_code = args.batch if args.batch else "BCSE24"
+                pdf_gen = AcademicPDFGenerator()
+                output_path = pdf_gen.generate_academic_schedule(result, batch_code, args.section, args.semester)
+                print(f"\n✅ Academic PDF generated: {output_path}")
             else:
                 # Enhanced section routine (default)
                 batch_code = args.batch if args.batch else "BCSE24"

@@ -1,0 +1,530 @@
+{
+  "metadata": {
+    "university": "Bangladesh University of Professionals (BUP)",
+    "department": "Computer Science & Engineering",
+    "semester": "Spring 2025",
+    "academic_year": "2024-2025",
+    "last_updated": "2025-06-28"
+  },
+  "schedule_config": {
+    "days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
+    "start_time": "08:30",
+    "end_time": "17:30",
+    "break_time": {
+      "start": "13:30",
+      "end": "14:00"
+    },
+    "slot_duration": 90,
+    "break_duration": 15,
+    "theory_slots": 1,
+    "lab_slots": 2
+  },
+  "time_slots": [
+    {"id": 1, "start": "08:30", "end": "10:00", "minutes_start": 510, "minutes_end": 600},
+    {"id": 2, "start": "10:15", "end": "11:45", "minutes_start": 615, "minutes_end": 705},
+    {"id": 3, "start": "12:00", "end": "13:30", "minutes_start": 720, "minutes_end": 810},
+    {"id": 4, "start": "14:00", "end": "15:30", "minutes_start": 840, "minutes_end": 930},
+    {"id": 5, "start": "15:45", "end": "17:15", "minutes_start": 945, "minutes_end": 1035}
+  ],
+  "faculty": [
+    {"id": 1, "name": "Dr. Mohammad Rahman", "designation": "Professor", "department": "CSE"},
+    {"id": 2, "name": "Prof. Fatema Khatun", "designation": "Associate Professor", "department": "CSE"},
+    {"id": 3, "name": "Dr. Ahmed Ali", "designation": "Assistant Professor", "department": "CSE"},
+    {"id": 4, "name": "Ms. Rashida Begum", "designation": "Lecturer", "department": "CSE"},
+    {"id": 5, "name": "Mr. Karim Hassan", "designation": "Lecturer", "department": "CSE"},
+    {"id": 6, "name": "Dr. Nasir Uddin", "designation": "Associate Professor", "department": "CSE"},
+    {"id": 7, "name": "Ms. Salma Akter", "designation": "Assistant Professor", "department": "CSE"},
+    {"id": 8, "name": "Mr. Rafiqul Islam", "designation": "Lecturer", "department": "CSE"},
+    {"id": 9, "name": "Dr. Shahida Sultana", "designation": "Professor", "department": "CSE"},
+    {"id": 10, "name": "Mr. Abdur Rahman", "designation": "Assistant Professor", "department": "CSE"}
+  ],
+  "rooms": [
+    {"id": "CSE-301", "type": "theory", "capacity": 60},
+    {"id": "CSE-302", "type": "theory", "capacity": 60},
+    {"id": "CSE-303", "type": "theory", "capacity": 50},
+    {"id": "CSE-304", "type": "theory", "capacity": 50},
+    {"id": "CSE-LAB1", "type": "lab", "capacity": 30},
+    {"id": "CSE-LAB2", "type": "lab", "capacity": 30},
+    {"id": "CSE-LAB3", "type": "lab", "capacity": 25}
+  ],
+  "batches": [
+    {
+      "code": "BCSE22",
+      "name": "Computer Science & Engineering 2022",
+      "sections": ["A", "B"],
+      "year": 4,
+      "semester": 8
+    },
+    {
+      "code": "BCSE23", 
+      "name": "Computer Science & Engineering 2023",
+      "sections": ["A", "B"],
+      "year": 3,
+      "semester": 6
+    },
+    {
+      "code": "BCSE24",
+      "name": "Computer Science & Engineering 2024", 
+      "sections": ["A", "B"],
+      "year": 2,
+      "semester": 4
+    },
+    {
+      "code": "BCSE25",
+      "name": "Computer Science & Engineering 2025",
+      "sections": ["A", "B"], 
+      "year": 1,
+      "semester": 2
+    }
+  ],
+  "courses": [
+    {
+      "batch": "BCSE22",
+      "section": "A",
+      "courses": [
+        {
+          "id": "CSE401",
+          "name": "Software Engineering",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 1,
+          "room": "CSE-301",
+          "day": "Sunday",
+          "time_slot": 1
+        },
+        {
+          "id": "CSE402",
+          "name": "Software Engineering Lab",
+          "type": "lab", 
+          "credits": 1,
+          "faculty_id": 1,
+          "room": "CSE-LAB1",
+          "day": "Sunday",
+          "time_slot": 4
+        },
+        {
+          "id": "CSE403",
+          "name": "Computer Networks",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 2,
+          "room": "CSE-302",
+          "day": "Monday",
+          "time_slot": 1
+        },
+        {
+          "id": "CSE404",
+          "name": "Network Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 2,
+          "room": "CSE-LAB2",
+          "day": "Monday",
+          "time_slot": 4
+        },
+        {
+          "id": "CSE405",
+          "name": "Database Management Systems",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 3,
+          "room": "CSE-303",
+          "day": "Tuesday",
+          "time_slot": 1
+        },
+        {
+          "id": "CSE406",
+          "name": "Database Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 3,
+          "room": "CSE-LAB1",
+          "day": "Tuesday",
+          "time_slot": 4
+        }
+      ]
+    },
+    {
+      "batch": "BCSE22",
+      "section": "B", 
+      "courses": [
+        {
+          "id": "CSE401",
+          "name": "Software Engineering",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 1,
+          "room": "CSE-302",
+          "day": "Sunday",
+          "time_slot": 2
+        },
+        {
+          "id": "CSE402",
+          "name": "Software Engineering Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 1,
+          "room": "CSE-LAB2",
+          "day": "Sunday",
+          "time_slot": 4
+        },
+        {
+          "id": "CSE403",
+          "name": "Computer Networks",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 2,
+          "room": "CSE-301",
+          "day": "Monday",
+          "time_slot": 2
+        },
+        {
+          "id": "CSE404",
+          "name": "Network Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 2,
+          "room": "CSE-LAB3",
+          "day": "Monday",
+          "time_slot": 4
+        },
+        {
+          "id": "CSE405",
+          "name": "Database Management Systems",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 3,
+          "room": "CSE-304",
+          "day": "Tuesday",
+          "time_slot": 2
+        },
+        {
+          "id": "CSE406",
+          "name": "Database Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 3,
+          "room": "CSE-LAB2",
+          "day": "Tuesday",
+          "time_slot": 5
+        }
+      ]
+    },
+    {
+      "batch": "BCSE23",
+      "section": "A",
+      "courses": [
+        {
+          "id": "CSE301",
+          "name": "Data Structures and Algorithms",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 4,
+          "room": "CSE-301",
+          "day": "Wednesday",
+          "time_slot": 1
+        },
+        {
+          "id": "CSE302",
+          "name": "Data Structures Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 4,
+          "room": "CSE-LAB1",
+          "day": "Wednesday",
+          "time_slot": 4
+        },
+        {
+          "id": "CSE303",
+          "name": "Operating Systems",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 5,
+          "room": "CSE-302",
+          "day": "Thursday",
+          "time_slot": 1
+        },
+        {
+          "id": "CSE304",
+          "name": "Operating Systems Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 5,
+          "room": "CSE-LAB2",
+          "day": "Thursday",
+          "time_slot": 4
+        },
+        {
+          "id": "CSE305",
+          "name": "Computer Organization",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 6,
+          "room": "CSE-303",
+          "day": "Sunday",
+          "time_slot": 3
+        }
+      ]
+    },
+    {
+      "batch": "BCSE23",
+      "section": "B",
+      "courses": [
+        {
+          "id": "CSE301",
+          "name": "Data Structures and Algorithms",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 4,
+          "room": "CSE-302",
+          "day": "Wednesday",
+          "time_slot": 2
+        },
+        {
+          "id": "CSE302",
+          "name": "Data Structures Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 4,
+          "room": "CSE-LAB2",
+          "day": "Wednesday",
+          "time_slot": 5
+        },
+        {
+          "id": "CSE303",
+          "name": "Operating Systems",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 5,
+          "room": "CSE-301",
+          "day": "Thursday",
+          "time_slot": 2
+        },
+        {
+          "id": "CSE304",
+          "name": "Operating Systems Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 5,
+          "room": "CSE-LAB3",
+          "day": "Thursday",
+          "time_slot": 5
+        },
+        {
+          "id": "CSE305",
+          "name": "Computer Organization",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 6,
+          "room": "CSE-304",
+          "day": "Sunday",
+          "time_slot": 4
+        }
+      ]
+    },
+    {
+      "batch": "BCSE24",
+      "section": "A",
+      "courses": [
+        {
+          "id": "CSE201",
+          "name": "Object Oriented Programming",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 7,
+          "room": "CSE-301",
+          "day": "Monday",
+          "time_slot": 3
+        },
+        {
+          "id": "CSE202",
+          "name": "OOP Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 7,
+          "room": "CSE-LAB1",
+          "day": "Monday",
+          "time_slot": 5
+        },
+        {
+          "id": "CSE203",
+          "name": "Discrete Mathematics",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 8,
+          "room": "CSE-302",
+          "day": "Tuesday",
+          "time_slot": 3
+        },
+        {
+          "id": "CSE204",
+          "name": "Digital Logic Design",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 9,
+          "room": "CSE-303",
+          "day": "Wednesday",
+          "time_slot": 3
+        },
+        {
+          "id": "CSE205",
+          "name": "Digital Logic Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 9,
+          "room": "CSE-LAB3",
+          "day": "Wednesday",
+          "time_slot": 5
+        }
+      ]
+    },
+    {
+      "batch": "BCSE24",
+      "section": "B",
+      "courses": [
+        {
+          "id": "CSE201",
+          "name": "Object Oriented Programming",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 7,
+          "room": "CSE-302",
+          "day": "Monday",
+          "time_slot": 4
+        },
+        {
+          "id": "CSE202",
+          "name": "OOP Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 7,
+          "room": "CSE-LAB2",
+          "day": "Tuesday",
+          "time_slot": 1
+        },
+        {
+          "id": "CSE203",
+          "name": "Discrete Mathematics",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 8,
+          "room": "CSE-301",
+          "day": "Tuesday",
+          "time_slot": 4
+        },
+        {
+          "id": "CSE204",
+          "name": "Digital Logic Design",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 9,
+          "room": "CSE-304",
+          "day": "Wednesday",
+          "time_slot": 4
+        },
+        {
+          "id": "CSE205",
+          "name": "Digital Logic Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 9,
+          "room": "CSE-LAB1",
+          "day": "Thursday",
+          "time_slot": 3
+        }
+      ]
+    },
+    {
+      "batch": "BCSE25",
+      "section": "A",
+      "courses": [
+        {
+          "id": "CSE101",
+          "name": "Programming Fundamentals",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 10,
+          "room": "CSE-303",
+          "day": "Sunday",
+          "time_slot": 5
+        },
+        {
+          "id": "CSE102",
+          "name": "Programming Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 10,
+          "room": "CSE-LAB1",
+          "day": "Thursday",
+          "time_slot": 1
+        },
+        {
+          "id": "CSE103",
+          "name": "Mathematics I",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 1,
+          "room": "CSE-304",
+          "day": "Monday",
+          "time_slot": 5
+        },
+        {
+          "id": "CSE104",
+          "name": "Physics I",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 2,
+          "room": "CSE-301",
+          "day": "Thursday",
+          "time_slot": 5
+        }
+      ]
+    },
+    {
+      "batch": "BCSE25",
+      "section": "B",
+      "courses": [
+        {
+          "id": "CSE101",
+          "name": "Programming Fundamentals",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 10,
+          "room": "CSE-304",
+          "day": "Sunday",
+          "time_slot": 1
+        },
+        {
+          "id": "CSE102",
+          "name": "Programming Lab",
+          "type": "lab",
+          "credits": 1,
+          "faculty_id": 10,
+          "room": "CSE-LAB3",
+          "day": "Thursday",
+          "time_slot": 2
+        },
+        {
+          "id": "CSE103",
+          "name": "Mathematics I",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 1,
+          "room": "CSE-303",
+          "day": "Monday",
+          "time_slot": 4
+        },
+        {
+          "id": "CSE104",
+          "name": "Physics I",
+          "type": "theory",
+          "credits": 3,
+          "faculty_id": 2,
+          "room": "CSE-302",
+          "day": "Thursday",
+          "time_slot": 3
+        }
+      ]
+    }
+  ]
+}
