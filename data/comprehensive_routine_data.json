@@ -27,25 +27,35 @@
     {"id": 5, "start": "15:45", "end": "17:15", "minutes_start": 945, "minutes_end": 1035}
   ],
   "faculty": [
-    {"id": 1, "name": "Dr. Mohammad Rahman", "designation": "Professor", "department": "CSE"},
-    {"id": 2, "name": "Prof. Fatema Khatun", "designation": "Associate Professor", "department": "CSE"},
-    {"id": 3, "name": "Dr. Ahmed Ali", "designation": "Assistant Professor", "department": "CSE"},
-    {"id": 4, "name": "Ms. Rashida Begum", "designation": "Lecturer", "department": "CSE"},
-    {"id": 5, "name": "Mr. Karim Hassan", "designation": "Lecturer", "department": "CSE"},
-    {"id": 6, "name": "Dr. Nasir Uddin", "designation": "Associate Professor", "department": "CSE"},
-    {"id": 7, "name": "Ms. Salma Akter", "designation": "Assistant Professor", "department": "CSE"},
-    {"id": 8, "name": "Mr. Rafiqul Islam", "designation": "Lecturer", "department": "CSE"},
-    {"id": 9, "name": "Dr. Shahida Sultana", "designation": "Professor", "department": "CSE"},
-    {"id": 10, "name": "Mr. Abdur Rahman", "designation": "Assistant Professor", "department": "CSE"}
+    {"id": 1, "name": "Prof. Dr. Md. Golam Kader", "designation": "Professor", "department": "CSE", "short_name": "MGK"},
+    {"id": 2, "name": "Prof. Dr. Kazi Sakib", "designation": "Professor", "department": "CSE", "short_name": "KS"},
+    {"id": 3, "name": "Dr. A.K.M. Bahalul Haque", "designation": "Associate Professor", "department": "CSE", "short_name": "AKM"},
+    {"id": 4, "name": "Dr. Dip Nandi", "designation": "Associate Professor", "department": "CSE", "short_name": "DN"},
+    {"id": 5, "name": "Dr. Mahmuda Naznin", "designation": "Associate Professor", "department": "CSE", "short_name": "MN"},
+    {"id": 6, "name": "Dr. Md. Abdur Rahman", "designation": "Associate Professor", "department": "CSE", "short_name": "MAR"},
+    {"id": 7, "name": "Mr. Md. Ashraful Islam", "designation": "Assistant Professor", "department": "CSE", "short_name": "MAI"},
+    {"id": 8, "name": "Ms. Rashida Nasrin Sumi", "designation": "Assistant Professor", "department": "CSE", "short_name": "RNS"},
+    {"id": 9, "name": "Mr. Md. Kamrul Hasan", "designation": "Assistant Professor", "department": "CSE", "short_name": "MKH"},
+    {"id": 10, "name": "Ms. Fatema Tuz Zohra", "designation": "Lecturer", "department": "CSE", "short_name": "FTZ"},
+    {"id": 11, "name": "Mr. Md. Rakibul Hasan", "designation": "Lecturer", "department": "CSE", "short_name": "MRH"},
+    {"id": 12, "name": "Ms. Nazmin Aktar", "designation": "Lecturer", "department": "CSE", "short_name": "NA"},
+    {"id": 13, "name": "Mr. Aminul Islam", "designation": "Lecturer", "department": "CSE", "short_name": "AI"},
+    {"id": 14, "name": "Ms. Sharmin Jahan", "designation": "Lecturer", "department": "CSE", "short_name": "SJ"},
+    {"id": 15, "name": "Mr. Abdullah Al Mamun", "designation": "Lecturer", "department": "CSE", "short_name": "AAM"}
   ],
   "rooms": [
-    {"id": "CSE-301", "type": "theory", "capacity": 60},
-    {"id": "CSE-302", "type": "theory", "capacity": 60},
-    {"id": "CSE-303", "type": "theory", "capacity": 50},
-    {"id": "CSE-304", "type": "theory", "capacity": 50},
+    {"id": "AB-701", "type": "theory", "capacity": 60},
+    {"id": "AB-702", "type": "theory", "capacity": 60},
+    {"id": "AB-703", "type": "theory", "capacity": 50},
+    {"id": "AB-704", "type": "theory", "capacity": 50},
+    {"id": "AB-705", "type": "theory", "capacity": 40},
+    {"id": "AB-706", "type": "theory", "capacity": 40},
+    {"id": "AB-801", "type": "theory", "capacity": 80},
+    {"id": "AB-802", "type": "theory", "capacity": 80},
     {"id": "CSE-LAB1", "type": "lab", "capacity": 30},
     {"id": "CSE-LAB2", "type": "lab", "capacity": 30},
-    {"id": "CSE-LAB3", "type": "lab", "capacity": 25}
+    {"id": "CSE-LAB3", "type": "lab", "capacity": 25},
+    {"id": "CSE-LAB4", "type": "lab", "capacity": 25}
   ],
   "batches": [
     {

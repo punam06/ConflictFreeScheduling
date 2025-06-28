@@ -69,6 +69,13 @@ class ComprehensiveRoutineGenerator:
         """Get faculty name by ID"""
         for faculty in faculty_list:
             if faculty['id'] == faculty_id:
+                return faculty.get('short_name', faculty['name'])
+        return "TBA"
+
+    def get_faculty_full_name(self, faculty_id: int, faculty_list: List[Dict]) -> str:
+        """Get full faculty name by ID"""
+        for faculty in faculty_list:
+            if faculty['id'] == faculty_id:
                 return faculty['name']
         return "TBA"
 
@@ -97,8 +104,11 @@ class ComprehensiveRoutineGenerator:
                 course_found = None
                 for course in batch_data['courses']:
                     if course['day'] == day and course['time_slot'] == slot['id']:
-                        faculty_name = self.get_faculty_name(course['faculty_id'], faculty_list)
-                        course_info = f"{course['id']}\n{course['name']}\n{faculty_name}\n{course['room']}"
+                        faculty_short = self.get_faculty_name(course['faculty_id'], faculty_list)
+                        if course['type'] == 'lab':
+                            course_info = f"{course['id']}\n{faculty_short}\n{course['room']}"
+                        else:
+                            course_info = f"{course['id']}\n{faculty_short}\n{course['room']}"
                         course_found = course_info
                         break
                 
@@ -344,76 +354,86 @@ class ComprehensiveRoutineGenerator:
         .schedule-table {{
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9em;
+            font-size: 0.95em;
+            margin: 10px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }}
         
         .schedule-table th {{
-            background: linear-gradient(135deg, #4834d4 0%, #686de0 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
-            padding: 12px 8px;
+            padding: 15px 8px;
             text-align: center;
             font-weight: bold;
-            border: 1px solid #ddd;
+            border: 2px solid #34495e;
+            font-size: 1em;
         }}
         
         .schedule-table td {{
-            padding: 10px 8px;
+            padding: 12px 6px;
             text-align: center;
-            border: 1px solid #ddd;
+            border: 1px solid #bdc3c7;
             vertical-align: middle;
-            height: 80px;
+            height: 85px;
+            position: relative;
         }}
         
         .time-slot {{
-            background: linear-gradient(135deg, #3742fa 0%, #2f3542 100%);
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
             color: white;
             font-weight: bold;
-            font-size: 0.95em;
+            font-size: 1em;
+            width: 120px;
         }}
         
         .course-cell {{
-            background: #f8f9fa;
+            background: #ffffff;
             transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
         }}
         
         .course-cell:hover {{
-            background: #e3f2fd;
+            background: #ecf0f1;
             transform: scale(1.02);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10;
         }}
         
         .course-code {{
             font-weight: bold;
-            color: #1e3c72;
-            font-size: 0.9em;
-        }}
-        
-        .course-name {{
-            color: #333;
-            font-size: 0.8em;
-            margin: 2px 0;
+            color: #2c3e50;
+            font-size: 1em;
+            display: block;
+            margin-bottom: 4px;
         }}
         
         .faculty-name {{
-            color: #666;
-            font-size: 0.75em;
-            font-style: italic;
+            color: #e74c3c;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 3px;
         }}
         
         .room-info {{
-            color: #e74c3c;
-            font-size: 0.7em;
+            color: #8e44ad;
+            font-size: 0.8em;
             font-weight: bold;
-            margin-top: 2px;
+            display: block;
         }}
         
         .empty-cell {{
-            background: #fafafa;
-            color: #999;
+            background: #f8f9fa;
+            color: #95a5a6;
+            font-style: italic;
         }}
         
-        .schedule-table tr:nth-child(even) .course-cell {{
+        .schedule-table tr:nth-child(odd) td:not(.time-slot) {{
+            background: #f8f9fa;
+        }}
+        
+        .schedule-table tr:nth-child(even) td:not(.time-slot) {{
             background: #ffffff;
         }}
         
@@ -427,6 +447,43 @@ class ComprehensiveRoutineGenerator:
         .footer p {{
             margin: 5px 0;
             color: #666;
+        }}
+        
+        .faculty-legend {{
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }}
+        
+        .faculty-legend h3 {{
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }}
+        
+        .faculty-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+        }}
+        
+        .faculty-item {{
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #e74c3c;
+            font-size: 0.9em;
+        }}
+        
+        .faculty-item strong {{
+            color: #e74c3c;
+        }}
+        
+        .faculty-item small {{
+            color: #7f8c8d;
         }}
         
         .schedule-info {{
@@ -548,10 +605,9 @@ class ComprehensiveRoutineGenerator:
                         if course_found:
                             html += f"""
                             <td class="course-cell">
-                                <div class="course-code">{course_found['id']}</div>
-                                <div class="course-name">{course_found['name']}</div>
-                                <div class="faculty-name">{faculty_name}</div>
-                                <div class="room-info">{course_found['room']}</div>
+                                <span class="course-code">{course_found['id']}</span>
+                                <span class="faculty-name">{faculty_name}</span>
+                                <span class="room-info">{course_found['room']}</span>
                             </td>
 """
                         else:
@@ -579,8 +635,26 @@ class ComprehensiveRoutineGenerator:
         html += f"""
         </div>
         
+        <div class="faculty-legend">
+            <h3>Faculty Information</h3>
+            <div class="faculty-grid">
+"""
+        
+        # Add faculty legend
+        for faculty in data['faculty']:
+            html += f"""
+                <div class="faculty-item">
+                    <strong>{faculty.get('short_name', faculty['name'][:10])}</strong>: {faculty['name']}<br>
+                    <small>{faculty['designation']}</small>
+                </div>
+"""
+        
+        html += """
+            </div>
+        </div>
+        
         <div class="footer">
-            <p><strong>Generated on:</strong> {datetime.now().strftime('%B %d, %Y at %I:%M %p')}</p>
+            <p><strong>Generated on:</strong> """ + datetime.now().strftime('%B %d, %Y at %I:%M %p') + f"""</p>
             <p><strong>Total Batches:</strong> {len(batches_data)} | <strong>Days:</strong> {', '.join(data['schedule_config']['days'])}</p>
             <p><em>This is an automatically generated academic routine. For any changes, please contact the academic office.</em></p>
         </div>

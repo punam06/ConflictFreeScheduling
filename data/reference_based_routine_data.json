@@ -1,0 +1,150 @@
+{
+  "metadata": {
+    "university": "Bangladesh University of Professionals (BUP)",
+    "department": "Computer Science & Engineering",
+    "semester": "Spring 2025",
+    "academic_year": "2024-2025",
+    "last_updated": "2025-01-28"
+  },
+  "schedule_config": {
+    "days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
+    "time_slots": [
+      {"slot": "08:30 - 10:00", "start": "08:30", "end": "10:00"},
+      {"slot": "10:15 - 11:45", "start": "10:15", "end": "11:45"},
+      {"slot": "12:00 - 13:30", "start": "12:00", "end": "13:30"},
+      {"slot": "14:00 - 15:30", "start": "14:00", "end": "15:30"},
+      {"slot": "15:45 - 17:15", "start": "15:45", "end": "17:15"}
+    ]
+  },
+  "rooms": ["302", "303", "304", "504", "1003"],
+  "faculty": [
+    {"name": "Prof. Dr. Md. Golam Kader", "short": "MGK"},
+    {"name": "Prof. Dr. Kazi Sakib", "short": "KS"},
+    {"name": "Dr. A.K.M. Bahalul Haque", "short": "AKM"},
+    {"name": "Dr. Dip Nandi", "short": "DN"},
+    {"name": "Dr. Mahmuda Naznin", "short": "MN"},
+    {"name": "Dr. Md. Abdur Rahman", "short": "MAR"},
+    {"name": "Mr. Md. Ashraful Islam", "short": "MAI"},
+    {"name": "Ms. Rashida Nasrin Sumi", "short": "RNS"},
+    {"name": "Mr. Md. Kamrul Hasan", "short": "MKH"},
+    {"name": "Ms. Fatema Tuz Zohra", "short": "FTZ"},
+    {"name": "Mr. Md. Rakibul Hasan", "short": "MRH"},
+    {"name": "Ms. Nazmin Aktar", "short": "NA"},
+    {"name": "Mr. Aminul Islam", "short": "AI"},
+    {"name": "Ms. Sharmin Jahan", "short": "SJ"},
+    {"name": "Mr. Abdullah Al Mamun", "short": "AAM"}
+  ],
+  "routine": {
+    "BCSE24-A": {
+      "Sunday": {
+        "08:30 - 10:00": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "302", "type": "Theory"},
+        "10:15 - 11:45": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "303", "type": "Theory"},
+        "12:00 - 13:30": {"course": "MATH 243", "name": "Statistics & Probability", "faculty": "Prof. Dr. Kazi Sakib", "room": "304", "type": "Theory"},
+        "14:00 - 15:30": {"course": "CSE 242", "name": "Data Structures Lab", "faculty": "Ms. Fatema Tuz Zohra", "room": "504", "type": "Lab"},
+        "15:45 - 17:15": {"course": "CSE 242", "name": "Data Structures Lab", "faculty": "Ms. Fatema Tuz Zohra", "room": "504", "type": "Lab"}
+      },
+      "Monday": {
+        "08:30 - 10:00": {"course": "ENG 242", "name": "English II", "faculty": "Ms. Sharmin Jahan", "room": "302", "type": "Theory"},
+        "10:15 - 11:45": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "303", "type": "Theory"},
+        "12:00 - 13:30": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "304", "type": "Theory"},
+        "14:00 - 15:30": {"course": "CSE 244", "name": "Digital Logic Design Lab", "faculty": "Mr. Md. Rakibul Hasan", "room": "1003", "type": "Lab"},
+        "15:45 - 17:15": {"course": "CSE 244", "name": "Digital Logic Design Lab", "faculty": "Mr. Md. Rakibul Hasan", "room": "1003", "type": "Lab"}
+      },
+      "Tuesday": {
+        "08:30 - 10:00": {"course": "MATH 243", "name": "Statistics & Probability", "faculty": "Prof. Dr. Kazi Sakib", "room": "302", "type": "Theory"},
+        "10:15 - 11:45": {"course": "ENG 242", "name": "English II", "faculty": "Ms. Sharmin Jahan", "room": "303", "type": "Theory"},
+        "12:00 - 13:30": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "304", "type": "Theory"},
+        "14:00 - 15:30": {"course": "PHYS 242", "name": "Physics II Lab", "faculty": "Dr. Md. Abdur Rahman", "room": "504", "type": "Lab"},
+        "15:45 - 17:15": {"course": "PHYS 242", "name": "Physics II Lab", "faculty": "Dr. Md. Abdur Rahman", "room": "504", "type": "Lab"}
+      },
+      "Wednesday": {
+        "08:30 - 10:00": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "302", "type": "Theory"},
+        "10:15 - 11:45": {"course": "MATH 243", "name": "Statistics & Probability", "faculty": "Prof. Dr. Kazi Sakib", "room": "303", "type": "Theory"},
+        "12:00 - 13:30": {"course": "PHYS 241", "name": "Physics II", "faculty": "Dr. Md. Abdur Rahman", "room": "304", "type": "Theory"},
+        "14:00 - 15:30": {"course": "ENG 243", "name": "English II Lab", "faculty": "Mr. Abdullah Al Mamun", "room": "1003", "type": "Lab"},
+        "15:45 - 17:15": {"course": "ENG 243", "name": "English II Lab", "faculty": "Mr. Abdullah Al Mamun", "room": "1003", "type": "Lab"}
+      },
+      "Thursday": {
+        "08:30 - 10:00": {"course": "PHYS 241", "name": "Physics II", "faculty": "Dr. Md. Abdur Rahman", "room": "302", "type": "Theory"},
+        "10:15 - 11:45": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "303", "type": "Theory"},
+        "12:00 - 13:30": {"course": "ENG 242", "name": "English II", "faculty": "Ms. Sharmin Jahan", "room": "304", "type": "Theory"},
+        "14:00 - 15:30": {"course": "CSE 242", "name": "Data Structures Lab", "faculty": "Ms. Fatema Tuz Zohra", "room": "504", "type": "Lab"},
+        "15:45 - 17:15": {"course": "CSE 242", "name": "Data Structures Lab", "faculty": "Ms. Fatema Tuz Zohra", "room": "504", "type": "Lab"}
+      }
+    },
+    "BCSE24-B": {
+      "Sunday": {
+        "08:30 - 10:00": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "504", "type": "Theory"},
+        "10:15 - 11:45": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "1003", "type": "Theory"},
+        "12:00 - 13:30": {"course": "ENG 242", "name": "English II", "faculty": "Ms. Sharmin Jahan", "room": "302", "type": "Theory"},
+        "14:00 - 15:30": {"course": "CSE 244", "name": "Digital Logic Design Lab", "faculty": "Mr. Md. Rakibul Hasan", "room": "303", "type": "Lab"},
+        "15:45 - 17:15": {"course": "CSE 244", "name": "Digital Logic Design Lab", "faculty": "Mr. Md. Rakibul Hasan", "room": "303", "type": "Lab"}
+      },
+      "Monday": {
+        "08:30 - 10:00": {"course": "MATH 243", "name": "Statistics & Probability", "faculty": "Prof. Dr. Kazi Sakib", "room": "504", "type": "Theory"},
+        "10:15 - 11:45": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "1003", "type": "Theory"},
+        "12:00 - 13:30": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "302", "type": "Theory"},
+        "14:00 - 15:30": {"course": "CSE 242", "name": "Data Structures Lab", "faculty": "Ms. Fatema Tuz Zohra", "room": "303", "type": "Lab"},
+        "15:45 - 17:15": {"course": "CSE 242", "name": "Data Structures Lab", "faculty": "Ms. Fatema Tuz Zohra", "room": "303", "type": "Lab"}
+      },
+      "Tuesday": {
+        "08:30 - 10:00": {"course": "ENG 242", "name": "English II", "faculty": "Ms. Sharmin Jahan", "room": "504", "type": "Theory"},
+        "10:15 - 11:45": {"course": "MATH 243", "name": "Statistics & Probability", "faculty": "Prof. Dr. Kazi Sakib", "room": "1003", "type": "Theory"},
+        "12:00 - 13:30": {"course": "PHYS 241", "name": "Physics II", "faculty": "Dr. Md. Abdur Rahman", "room": "302", "type": "Theory"},
+        "14:00 - 15:30": {"course": "PHYS 242", "name": "Physics II Lab", "faculty": "Dr. Md. Abdur Rahman", "room": "303", "type": "Lab"},
+        "15:45 - 17:15": {"course": "PHYS 242", "name": "Physics II Lab", "faculty": "Dr. Md. Abdur Rahman", "room": "303", "type": "Lab"}
+      },
+      "Wednesday": {
+        "08:30 - 10:00": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "504", "type": "Theory"},
+        "10:15 - 11:45": {"course": "ENG 242", "name": "English II", "faculty": "Ms. Sharmin Jahan", "room": "1003", "type": "Theory"},
+        "12:00 - 13:30": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "302", "type": "Theory"},
+        "14:00 - 15:30": {"course": "ENG 243", "name": "English II Lab", "faculty": "Mr. Abdullah Al Mamun", "room": "303", "type": "Lab"},
+        "15:45 - 17:15": {"course": "ENG 243", "name": "English II Lab", "faculty": "Mr. Abdullah Al Mamun", "room": "303", "type": "Lab"}
+      },
+      "Thursday": {
+        "08:30 - 10:00": {"course": "PHYS 241", "name": "Physics II", "faculty": "Dr. Md. Abdur Rahman", "room": "504", "type": "Theory"},
+        "10:15 - 11:45": {"course": "MATH 243", "name": "Statistics & Probability", "faculty": "Prof. Dr. Kazi Sakib", "room": "1003", "type": "Theory"},
+        "12:00 - 13:30": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "302", "type": "Theory"},
+        "14:00 - 15:30": {"course": "CSE 244", "name": "Digital Logic Design Lab", "faculty": "Mr. Md. Rakibul Hasan", "room": "303", "type": "Lab"},
+        "15:45 - 17:15": {"course": "CSE 244", "name": "Digital Logic Design Lab", "faculty": "Mr. Md. Rakibul Hasan", "room": "303", "type": "Lab"}
+      }
+    },
+    "BCSE23-A": {
+      "Sunday": {
+        "08:30 - 10:00": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "302", "type": "Theory"},
+        "10:15 - 11:45": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "303", "type": "Theory"},
+        "12:00 - 13:30": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "304", "type": "Theory"},
+        "14:00 - 15:30": {"course": "CSE 322", "name": "Computer Networks Lab", "faculty": "Ms. Nazmin Aktar", "room": "504", "type": "Lab"},
+        "15:45 - 17:15": {"course": "CSE 322", "name": "Computer Networks Lab", "faculty": "Ms. Nazmin Aktar", "room": "504", "type": "Lab"}
+      },
+      "Monday": {
+        "08:30 - 10:00": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "302", "type": "Theory"},
+        "10:15 - 11:45": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "303", "type": "Theory"},
+        "12:00 - 13:30": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "304", "type": "Theory"},
+        "14:00 - 15:30": {"course": "CSE 324", "name": "Operating Systems Lab", "faculty": "Mr. Aminul Islam", "room": "1003", "type": "Lab"},
+        "15:45 - 17:15": {"course": "CSE 324", "name": "Operating Systems Lab", "faculty": "Mr. Aminul Islam", "room": "1003", "type": "Lab"}
+      },
+      "Tuesday": {
+        "08:30 - 10:00": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "302", "type": "Theory"},
+        "10:15 - 11:45": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "303", "type": "Theory"},
+        "12:00 - 13:30": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "304", "type": "Theory"},
+        "14:00 - 15:30": {"course": "CSE 326", "name": "Database Management Systems Lab", "faculty": "Ms. Rashida Nasrin Sumi", "room": "504", "type": "Lab"},
+        "15:45 - 17:15": {"course": "CSE 326", "name": "Database Management Systems Lab", "faculty": "Ms. Rashida Nasrin Sumi", "room": "504", "type": "Lab"}
+      },
+      "Wednesday": {
+        "08:30 - 10:00": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "302", "type": "Theory"},
+        "10:15 - 11:45": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "303", "type": "Theory"},
+        "12:00 - 13:30": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "304", "type": "Theory"},
+        "14:00 - 15:30": {"course": "CSE 327", "name": "Web Development Lab", "faculty": "Mr. Md. Kamrul Hasan", "room": "1003", "type": "Lab"},
+        "15:45 - 17:15": {"course": "CSE 327", "name": "Web Development Lab", "faculty": "Mr. Md. Kamrul Hasan", "room": "1003", "type": "Lab"}
+      },
+      "Thursday": {
+        "08:30 - 10:00": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "302", "type": "Theory"},
+        "10:15 - 11:45": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "303", "type": "Theory"},
+        "12:00 - 13:30": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "304", "type": "Theory"},
+        "14:00 - 15:30": {"course": "CSE 322", "name": "Computer Networks Lab", "faculty": "Ms. Nazmin Aktar", "room": "504", "type": "Lab"},
+        "15:45 - 17:15": {"course": "CSE 322", "name": "Computer Networks Lab", "faculty": "Ms. Nazmin Aktar", "room": "504", "type": "Lab"}
+      }
+    }
+  }
+}

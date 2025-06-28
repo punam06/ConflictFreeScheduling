@@ -1,6 +1,6 @@
 # Enhanced Conflict-Free Scheduling System
 
-A comprehensive academic scheduling system that automatically generates conflict-free course schedules using multiple optimization algorithms with proper time slots and modern UI.
+A comprehensive academic scheduling system that automatically generates conflict-free course schedules using multiple optimization algorithms with faculty preferences, optimal room allocation, and modern UI design.
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -9,24 +9,38 @@ A comprehensive academic scheduling system that automatically generates conflict
 ## 🎯 Features
 
 - **Multiple Algorithms**: Graph Coloring, Dynamic Programming, Backtracking, Genetic Algorithm
-- **Academic Routine Generator**: Comprehensive routine with proper time slots (8:30 AM - 5:30 PM)
-- **Enhanced PDF Generation**: Modern, eye-catching schedules with faculty and room information
+- **Faculty Preference Scheduling**: Respects faculty preferred time slots and course assignments
+- **Smart Room Management**: Uses only available rooms (302, 303, 304, 504, 1003) with conflict-free allocation
+- **Optimal Time Scheduling**: Minimizes gaps between classes for students
+- **Enhanced PDF/HTML Generation**: Modern, responsive UI with professional layouts
 - **Database Integration**: MySQL support with realistic CSE department data
 - **Interactive Faculty System**: Faculty input with automatic room allocation
-- **Flexible Routine Types**: Section-wise, batch-wise, comprehensive, and academic routines
+- **Multiple Routine Types**: Section-wise, batch-wise, comprehensive, reference-based, and sample-based routines
 - **Realistic Data**: Authentic faculty names, department rooms, and university time slots
-- **Modern UI**: Attractive table format with gradient backgrounds and responsive design
+- **Modern UI**: Attractive designs with gradient backgrounds, color-coding, and print-friendly formats
 
-## ✨ New Academic Routine Features
+## ✨ New Enhanced Features
 
-- **📅 Schedule**: Sunday to Thursday, 8:30 AM - 5:30 PM
-- **⏰ Time Slots**: 1.5-hour slots with 15-minute breaks
-- **🍽️ Break Time**: 1:30 PM - 2:00 PM (lunch break)
-- **🎓 All Batches**: BCSE22, BCSE23, BCSE24, BCSE25 
-- **📚 All Sections**: A & B for each batch
-- **👨‍🏫 Real Faculty**: 10 faculty members with proper designations
-- **🏢 Proper Rooms**: Theory and lab room assignments
-- **📱 Responsive UI**: Modern table format with attractive styling
+### 🎨 Sample-Based Routine Generator
+- **Faculty Preferences**: Each faculty has preferred time slots and assigned courses
+- **Minimal Class Gaps**: Students don't wait hours between classes
+- **Enhanced UI**: Modern, responsive design with animations and hover effects
+- **Professional Styling**: Color-coded course information and beautiful table layouts
+
+### 📋 Reference-Based Routine Generator  
+- **Exact Format**: Matches provided reference PDF structure
+- **Days-First Layout**: Days as first column, time slots as headers
+- **Complete Information**: Course codes, names, faculty, and room numbers
+- **Available Rooms Only**: Uses only rooms 302, 303, 304, 504, 1003
+
+### ⏰ Schedule Details
+- **📅 Schedule**: Sunday to Thursday, 8:30 AM - 5:15 PM
+- **⏰ Time Slots**: 1.5-hour sessions (8:30-10:00, 10:15-11:45, 12:00-13:30, 14:00-15:30, 15:45-17:15)
+- **🍽️ Break Time**: 13:30 - 14:00 (lunch break)
+- **🎓 Coverage**: BCSE22, BCSE23, BCSE24, BCSE25 (all batches)
+- **📚 Sections**: A & B for each batch
+- **👨‍🏫 Faculty**: 15 faculty members with proper designations and expertise
+- **🏢 Rooms**: Theory and lab room smart allocation
 
 ## 🚀 Quick Start
 
@@ -43,10 +57,16 @@ A comprehensive academic scheduling system that automatically generates conflict
    pip install -r requirements.txt
    ```
 
-2. **Run the system**
+2. **Generate Enhanced Routines**
    ```bash
    # Interactive mode (recommended)
    python main.py
+   # Select option 6 for Sample-based routine (best UI)
+   # Select option 5 for Reference-based routine
+   
+   # Direct generators
+   python src/utils/sample_routine_generator.py
+   python src/utils/reference_pdf_generator.py
    
    # Direct command line
    python main.py --preserve-schedule --use-database

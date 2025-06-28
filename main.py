@@ -34,7 +34,9 @@ from utils.file_parser import FileParser
 from utils.pdf_generator import PDFGenerator, AcademicPDFGenerator
 from utils.enhanced_pdf_generator import EnhancedPDFGenerator
 from utils.comprehensive_routine_generator import ComprehensiveRoutineGenerator
+from utils.reference_pdf_generator import ReferencePDFRoutineGenerator
 from utils.faculty_input import FacultyInputSystem
+from utils.sample_routine_generator import SampleRoutineGenerator
 # Database import is conditional - only when needed
 
 # Import algorithms directly for the run-all feature
@@ -185,14 +187,18 @@ def get_user_input() -> Dict:
     print("2. Batch-wise routine (all sections of a batch)")
     print("3. Comprehensive routine (all batches and sections)")
     print("4. Faculty input routine (custom faculty scheduling)")
+    print("5. Reference-based routine (matches reference PDF format)")
+    print("6. Sample-based routine (enhanced UI with faculty preferences)")
     
-    routine_choice = input("\nEnter your choice (1-4) [1]: ").strip() or "1"
+    routine_choice = input("\nEnter your choice (1-6) [1]: ").strip() or "1"
     
     routine_types = {
         "1": "section",
         "2": "batch", 
         "3": "comprehensive",
-        "4": "faculty"
+        "4": "faculty",
+        "5": "reference",
+        "6": "sample"
     }
     
     routine_type = routine_types.get(routine_choice, "section")
@@ -250,8 +256,11 @@ def get_user_input() -> Dict:
     pdf_type = input("\nSelect PDF type (academic/basic) [academic]: ").lower().strip() or "academic"
     use_basic_pdf = pdf_type == "basic"
     
-    # Use database (auto-enable for comprehensive and faculty modes)
-    if routine_type in ["comprehensive", "faculty"]:
+    # Use database (auto-enable for comprehensive and faculty modes, skip for reference and sample)
+    if routine_type in ["reference", "sample"]:
+        use_database = False
+        print(f"\n📋 {routine_type.title()} mode uses predefined data - database skipped")
+    elif routine_type in ["comprehensive", "faculty"]:
         use_database = True
         print(f"\n🔄 Database mode automatically enabled for {routine_type} routine")
     else:
@@ -545,6 +554,84 @@ def handle_section_routine(activities: List[Activity], batch_code: str, section:
     return pdf_gen.generate_section_routine(activities, batch_code, section)
 
 
+def handle_reference_based_routine() -> str:
+    """
+    Handle reference-based routine generation using predefined data
+    that matches the reference PDF format exactly
+    
+    Returns:
+        Path to generated routine
+    """
+    print("\n🔄 Generating reference-based comprehensive routine...")
+    print("📋 Using predefined course data with available rooms: 302, 303, 304, 504, 1003")
+    
+    generator = ReferencePDFRoutineGenerator()
+    
+    # Get project root and data file path
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_file = os.path.join(script_dir, "data", "reference_based_routine_data.json")
+    output_dir = os.path.join(script_dir, "output")
+    
+    # Ensure output directory exists
+    os.makedirs(output_dir, exist_ok=True)
+    
+    base_output = os.path.join(output_dir, "reference_based_comprehensive_routine")
+    
+    try:
+        html_file, pdf_file = generator.generate_all_formats(data_file, base_output)
+        
+        if html_file and pdf_file:
+            print(f"✅ Reference-based routine generated successfully!")
+            print(f"🌐 HTML: {html_file}")
+            print(f"📄 PDF: {pdf_file}")
+            return pdf_file
+        else:
+            print("❌ Failed to generate reference-based routine")
+            return ""
+    except Exception as e:
+        print(f"❌ Error generating reference-based routine: {e}")
+        return ""
+
+
+def handle_sample_based_routine() -> str:
+    """
+    Handle sample-based routine generation using enhanced UI and faculty preferences
+    
+    Returns:
+        Path to generated routine
+    """
+    print("\n🔄 Generating sample-based comprehensive routine...")
+    print("📋 Using enhanced UI design with faculty preferences and optimized scheduling")
+    print("🎯 Ensuring minimal gaps between classes for students")
+    
+    generator = SampleRoutineGenerator()
+    
+    # Get project root and data file path
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_file = os.path.join(script_dir, "data", "sample_routine_data.json")
+    output_dir = os.path.join(script_dir, "output")
+    
+    # Ensure output directory exists
+    os.makedirs(output_dir, exist_ok=True)
+    
+    base_output = os.path.join(output_dir, "enhanced_sample_routine")
+    
+    try:
+        html_file, pdf_file = generator.generate_all_formats(data_file, base_output)
+        
+        if html_file and pdf_file:
+            print(f"✅ Sample-based routine generated successfully!")
+            print(f"🌐 HTML: {html_file}")
+            print(f"📄 PDF: {pdf_file}")
+            return pdf_file
+        else:
+            print("❌ Failed to generate sample-based routine")
+            return ""
+    except Exception as e:
+        print(f"❌ Error generating sample-based routine: {e}")
+        return ""
+
+
 def process_enhanced_routine(user_input: Dict, activities: List[Activity]) -> str:
     """
     Process enhanced routine generation based on user input
@@ -575,6 +662,10 @@ def process_enhanced_routine(user_input: Dict, activities: List[Activity]) -> st
         return handle_batch_routine(activities, batch)
     elif routine_type == "section":
         return handle_section_routine(activities, batch, section)
+    elif routine_type == "reference":
+        return handle_reference_based_routine()
+    elif routine_type == "sample":
+        return handle_sample_based_routine()
     else:
         print(f"❌ Unknown routine type: {routine_type}")
         return None
@@ -769,6 +860,27 @@ Examples:
             print("❌ Failed to generate academic routine")
             return 1
 
+    # Handle reference and sample modes early (before activity loading)
+    if hasattr(args, 'routine_type'):
+        if args.routine_type == "reference":
+            print("\n📋 Reference-based routine generation selected...")
+            result = handle_reference_based_routine()
+            if result:
+                print(f"\n✅ Reference-based routine generation complete!")
+                return 0
+            else:
+                print("❌ Failed to generate reference-based routine")
+                return 1
+        elif args.routine_type == "sample":
+            print("\n🎨 Sample-based routine generation selected...")
+            result = handle_sample_based_routine()
+            if result:
+                print(f"\n✅ Sample-based routine generation complete!")
+                return 0
+            else:
+                print("❌ Failed to generate sample-based routine")
+                return 1
+    
     # Load activities
     print("\n📂 Loading activities...")
     activities = load_activities(args)
