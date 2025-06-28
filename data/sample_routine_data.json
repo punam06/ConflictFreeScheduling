@@ -18,291 +18,1384 @@
     "break_time": "13:30 - 14:00"
   },
   "available_rooms": ["302", "303", "304", "504", "1003"],
+ 
+
   "faculty": [
-    {"name": "Prof. Dr. Md. Golam Kader", "short": "MGK", "designation": "Professor"},
-    {"name": "Prof. Dr. Kazi Sakib", "short": "KS", "designation": "Professor"},
-    {"name": "Dr. A.K.M. Bahalul Haque", "short": "AKM", "designation": "Associate Professor"},
-    {"name": "Dr. Dip Nandi", "short": "DN", "designation": "Associate Professor"},
-    {"name": "Dr. Mahmuda Naznin", "short": "MN", "designation": "Associate Professor"},
-    {"name": "Dr. Md. Abdur Rahman", "short": "MAR", "designation": "Associate Professor"},
-    {"name": "Mr. Md. Ashraful Islam", "short": "MAI", "designation": "Assistant Professor"},
-    {"name": "Ms. Rashida Nasrin Sumi", "short": "RNS", "designation": "Assistant Professor"},
-    {"name": "Mr. Md. Kamrul Hasan", "short": "MKH", "designation": "Assistant Professor"},
-    {"name": "Ms. Fatema Tuz Zohra", "short": "FTZ", "designation": "Lecturer"},
-    {"name": "Mr. Md. Rakibul Hasan", "short": "MRH", "designation": "Lecturer"},
-    {"name": "Ms. Nazmin Aktar", "short": "NA", "designation": "Lecturer"},
-    {"name": "Mr. Aminul Islam", "short": "AI", "designation": "Lecturer"},
-    {"name": "Ms. Sharmin Jahan", "short": "SJ", "designation": "Lecturer"},
-    {"name": "Mr. Abdullah Al Mamun", "short": "AAM", "designation": "Lecturer"}
-  ],
-  "courses": {
-    "BCSE24": {
-      "semester": 4,
-      "year": 2,
-      "courses": [
-        {"code": "CSE 241", "name": "Data Structures", "credits": 3, "type": "Theory"},
-        {"code": "CSE 242", "name": "Data Structures Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE 243", "name": "Digital Logic Design", "credits": 3, "type": "Theory"},
-        {"code": "CSE 244", "name": "Digital Logic Design Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "MATH 243", "name": "Statistics & Probability", "credits": 3, "type": "Theory"},
-        {"code": "ENG 242", "name": "English II", "credits": 3, "type": "Theory"},
-        {"code": "ENG 243", "name": "English II Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "PHYS 241", "name": "Physics II", "credits": 3, "type": "Theory"},
-        {"code": "PHYS 242", "name": "Physics II Lab", "credits": 1.5, "type": "Lab"}
-      ]
+    {
+      "name": "S M Salim Reza, PhD",
+      "short": "SMR",
+      "designation": "Assistant professor"
     },
+    {
+      "name": "A. A. M. Shah Sadman",
+      "short": "AAMS",
+      "designation": "Assistant Professor"
+    },
+    {
+      "name": "Md. Abdus Sattar",
+      "short": "MAS",
+      "designation": "Associate Professor"
+    },
+    {
+      "name": "Lec Anika Ashraf",
+      "short": "LAA",
+      "designation": "Lecturer"
+    },
+    {
+      "name": "Dr. Md. Humayun Kabir",
+      "short": "MHK",
+      "designation": "Professor"
+    },
+    {
+      "name": "Md Musfique Anwar, PhD",
+      "short": "MMA",
+      "designation": "Professor"
+    },
+    {
+      "name": "Lec Rumana Yasmin",
+      "short": "LRY",
+      "designation": "Lecturer"
+    },
+    {
+      "name": "Aditya Rajbongshi",
+      "short": "AR",
+      "designation": "Lecturer (ICT)"
+    },
+    {
+      "name": "Lec Rubel Sheikh",
+      "short": "LRS",
+      "designation": "Lecturer"
+    },
+    {
+      "name": "Saeed Mahmud Ullah, PhD",
+      "short": "SMU",
+      "designation": "Professor"
+    },
+    {
+      "name": "Abdul Kadir Ibne Kamal, Ph.D",
+      "short": "AKIK",
+      "designation": "Professor"
+    },
+    {
+      "name": "Lec Iyolita Islam",
+      "short": "LI",
+      "designation": "Lecturer"
+    },
+    {
+      "name": "Lec Sayma Alam Suha",
+      "short": "LSAS",
+      "designation": "Lecturer"
+    },
+    {
+      "name": "Colonel S M Saiful Islam, SUP, psc",
+      "short": "SMSI",
+      "designation": "Chairman, dept of CSE, BUP."
+    },
+    {
+      "name": "Abul Kalam Azad, PhD",
+      "short": "AKA",
+      "designation": "Professor"
+    },
+    {
+      "name": "Md. Manirul Alam Sarker, PhD",
+      "short": "MMAS",
+      "designation": "Professor"
+    },
+    {
+      "name": "Lec Sobhana Jahan",
+      "short": "LSJ",
+      "designation": "Lecturer"
+    },
+    {
+      "name": "Dr. Abu Sayed Md. Mostafizur Rahaman",
+      "short": "ASMMR",
+      "designation": "Professor"
+    },
+    {
+      "name": "S. M. Mahfuz Alam, PhD",
+      "short": "SMMA",
+      "designation": "Professor"
+    },
+    {
+      "name": "Lecturer, Ridwana Islam Ruhama",
+      "short": "LRIR",
+      "designation": "Lecturer"
+    },
+    {
+      "name": "Lec Nazneen",
+      "short": "LN",
+      "designation": "Lecturer"
+    },
+    {
+      "name": "Dr. K.M. ARIFUL KABIR",
+      "short": "KMAK",
+      "designation": "Associate Professor"
+    },
+    {
+      "name": "Prof. Shahed Rana, PhD",
+      "short": "PSR",
+      "designation": "Professor"
+    },
+    {
+      "name": "Md. Mahmudur Rahman, PhD",
+      "short": "MMR",
+      "designation": "Professor"
+    },
+    {
+      "name": "Md. Mahadi Hasan",
+      "short": "MMH",
+      "designation": "Lecturer"
+    },
+    {
+      "name": "Lec Nazneen Akhter",
+      "short": "LNA",
+      "designation": "Lecturer"
+    },
+    {
+      "name": "Dr. A. K. M. Shahnawaz",
+      "short": "AKMS",
+      "designation": "Professor"
+    },
+    {
+      "name": "Col Eare Md Morshed Alam, PhD",
+      "short": "CMMA",
+      "designation": "Colonel"
+    },
+    {
+      "name": "Professor Dr. Md. Ziaul Ahsan",
+      "short": "MDZA",
+      "designation": "Professor"
+    },
+    {
+      "name": "Dr. Mohammad Ferdows",
+      "short": "DMF",
+      "designation": "Professor & Chairman"
+    }
+  ],
+
+  "courses": [
+    {
+      "code": "CSE-3201",
+      "name": "Computer Network",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "CSE-3202",
+      "name": "Computer Network Laboratory",
+      "credits": 1.50,
+      "type": "Lab"
+    },
+    {
+      "code": "CSE-3203",
+      "name": "Digital System Design",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "CSE-3204",
+      "name": "Digital System Design Laboratory",
+      "credits": 0.75,
+      "type": "Lab"
+    },
+    {
+      "code": "CSE-3205",
+      "name": "Software Engineering",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "CSE-3206",
+      "name": "Software Engineering Laboratory",
+      "credits": 0.75,
+      "type": "Lab"
+    },
+    {
+      "code": "CSE-3208",
+      "name": "Software Development Project-I",
+      "credits": 1.50,
+      "type": "Project"
+    },
+    {
+      "code": "GERM-3209",
+      "name": "Fundamentals of Research Methodology",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "GEESL-3211",
+      "name": "Environment, Sustainability and Law",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "CSE-3200",
+      "name": "Industrial Training",
+      "credits": 1.00,
+      "type": "Training"
+    },
+    {
+      "code": "CSE-2202",
+      "name": "Engineering Drawing and CAD Laboratory",
+      "credits": 1.50,
+      "type": "Lab"
+    },
+    {
+      "code": "CSE-2203",
+      "name": "Computer Architecture",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "CSE-2205",
+      "name": "Data Structures and Algorithms-II",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "CSE-2206",
+      "name": "Data Structures and Algorithms-II Laboratory",
+      "credits": 1.50,
+      "type": "Lab"
+    },
+    {
+      "code": "GEEM-2207",
+      "name": "Engineering Ethics and Moral Philosophy",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "CSE-2208",
+      "name": "Object Oriented Programming Laboratory-II",
+      "credits": 0.75,
+      "type": "Lab"
+    },
+    {
+      "code": "ICE-2209",
+      "name": "Digital Electronics and Pulse Technique",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "ICE-2210",
+      "name": "Digital Electronics and Pulse Technique Laboratory",
+      "credits": 0.75,
+      "type": "Lab"
+    },
+    {
+      "code": "MATH-2211",
+      "name": "Statistics",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "CSE-2101",
+      "name": "Data Structures and Algorithms-1",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "CSE-2102",
+      "name": "Data Structures and Algorithms- I Laboratory",
+      "credits": 1.50,
+      "type": "Lab"
+    },
+    {
+      "code": "CSE-2103",
+      "name": "Object Oriented Programming Language",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "CSE-2104",
+      "name": "Object Oriented Programming Language Laboratory-I",
+      "credits": 1.50,
+      "type": "Lab"
+    },
+    {
+      "code": "CSE-2105",
+      "name": "Theory of Computation",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "ICE-2107",
+      "name": "Electrical Drives and Instrumentation",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "ICE-2108",
+      "name": "Electrical Drives and Instrumentation Laboratory",
+      "credits": 0.75,
+      "type": "Lab"
+    },
+    {
+      "code": "ENG-2110",
+      "name": "Presentation Skill Development",
+      "credits": 1.50,
+      "type": "Theory"
+    },
+    {
+      "code": "MATH-2111",
+      "name": "Differential Equations, Laplace Transform and Fourier Transform",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "ENG-1102",
+      "name": "Communicative English-I",
+      "credits": 1.50,
+      "type": "Theory"
+    },
+    {
+      "code": "CHEM-1103",
+      "name": "Fundamentals of Chemistry",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "ICE-1105",
+      "name": "Electrical Circuits Analysis",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "ICE-1106",
+      "name": "Electrical Circuits Analysis Laboratory",
+      "credits": 0.75,
+      "type": "Lab"
+    },
+    {
+      "code": "GED-1119",
+      "name": "Bangladesh Studies",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "MATH-1109",
+      "name": "Differential and Integral Calculus",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "PHY-1115",
+      "name": "Physics",
+      "credits": 3.00,
+      "type": "Theory"
+    },
+    {
+      "code": "PHY-1116",
+      "name": "Physics Laboratory",
+      "credits": 0.75,
+      "type": "Lab"
+    },
+    {
+      "code": "MATH-1113",
+      "name": "Discrete Math",
+      "credits": 3.00,
+      "type": "Theory"
+    }
+  ],
+
+  "sections": {
     "BCSE23": {
       "semester": 6,
       "year": 3,
       "courses": [
-        {"code": "CSE 321", "name": "Computer Networks", "credits": 3, "type": "Theory"},
-        {"code": "CSE 322", "name": "Computer Networks Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE 323", "name": "Operating Systems", "credits": 3, "type": "Theory"},
-        {"code": "CSE 324", "name": "Operating Systems Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE 325", "name": "Database Management Systems", "credits": 3, "type": "Theory"},
-        {"code": "CSE 326", "name": "Database Management Systems Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE 327", "name": "Web Development Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "MATH 321", "name": "Discrete Mathematics", "credits": 3, "type": "Theory"}
+        {"code": "CSE3321", "name": "Computer Networks", "credits": 3, "type": "Theory"},
+        {"code": "CSE3322", "name": "Computer Networks Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "CSE3323", "name": "Operating Systems", "credits": 3, "type": "Theory"},
+        {"code": "CSE3324", "name": "Operating Systems Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "CSE3325", "name": "Database Management Systems", "credits": 3, "type": "Theory"},
+        {"code": "CSE3326", "name": "Database Management Systems Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "CSE3327", "name": "Web Development Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "MATH3321", "name": "Discrete Mathematics", "credits": 3, "type": "Theory"}
       ]
     },
     "BCSE22": {
       "semester": 8,
       "year": 4,
       "courses": [
-        {"code": "CSE 401", "name": "Software Engineering", "credits": 3, "type": "Theory"},
-        {"code": "CSE 402", "name": "Software Engineering Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE 403", "name": "Machine Learning", "credits": 3, "type": "Theory"},
-        {"code": "CSE 404", "name": "Machine Learning Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE 405", "name": "Computer Graphics", "credits": 3, "type": "Theory"},
-        {"code": "CSE 406", "name": "Computer Graphics Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE 407", "name": "Thesis/Project", "credits": 3, "type": "Project"}
+        {"code": "CSE4401", "name": "Software Engineering", "credits": 3, "type": "Theory"},
+        {"code": "CSE4402", "name": "Software Engineering Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "CSE4403", "name": "Machine Learning", "credits": 3, "type": "Theory"},
+        {"code": "CSE4404", "name": "Machine Learning Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "CSE4405", "name": "Computer Graphics", "credits": 3, "type": "Theory"},
+        {"code": "CSE4406", "name": "Computer Graphics Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "CSE4407", "name": "Thesis/Project", "credits": 3, "type": "Project"}
       ]
     },
     "BCSE25": {
       "semester": 2,
       "year": 1,
       "courses": [
-        {"code": "CSE 121", "name": "Programming Fundamentals", "credits": 3, "type": "Theory"},
-        {"code": "CSE 122", "name": "Programming Fundamentals Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "CSE 123", "name": "Computer Fundamentals", "credits": 3, "type": "Theory"},
-        {"code": "MATH 121", "name": "Calculus I", "credits": 3, "type": "Theory"},
-        {"code": "MATH 122", "name": "Linear Algebra", "credits": 3, "type": "Theory"},
-        {"code": "ENG 121", "name": "English I", "credits": 3, "type": "Theory"},
-        {"code": "ENG 122", "name": "English I Lab", "credits": 1.5, "type": "Lab"},
-        {"code": "PHYS 121", "name": "Physics I", "credits": 3, "type": "Theory"}
+        {"code": "CSE1121", "name": "Programming Fundamentals", "credits": 3, "type": "Theory"},
+        {"code": "CSE1122", "name": "Programming Fundamentals Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "CSE1123", "name": "Computer Fundamentals", "credits": 3, "type": "Theory"},
+        {"code": "MATH1121", "name": "Calculus I", "credits": 3, "type": "Theory"},
+        {"code": "MATH1122", "name": "Linear Algebra", "credits": 3, "type": "Theory"},
+        {"code": "ENG1121", "name": "English I", "credits": 3, "type": "Theory"},
+        {"code": "ENG1122", "name": "English I Lab", "credits": 1.5, "type": "Lab"},
+        {"code": "PHYS1121", "name": "Physics I", "credits": 3, "type": "Theory"}
       ]
     }
   },
+ 
+
   "faculty_preferences": {
-    "Prof. Dr. Md. Golam Kader": {
-      "preferred_times": ["08:30 - 10:00", "10:15 - 11:45", "12:00 - 13:30"],
-      "courses": ["CSE 321", "CSE 401", "CSE 403"]
+    "Prof. Abul Kamal Azad": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "10:15 - 11:45",
+        "14:30 - 17:30"
+      ],
+      "courses": [
+        "ICE 2209-A",
+        "ICE 2209-B",
+        "ICE2210"
+      ]
     },
-    "Prof. Dr. Kazi Sakib": {
-      "preferred_times": ["10:15 - 11:45", "12:00 - 13:30", "14:00 - 15:30"],
-      "courses": ["MATH 243", "MATH 321", "CSE 405"]
+    "Suha": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "10:15 - 11:45",
+        "12:00 - 13:30",
+        "11:45 - 14:45",
+        "14:45 - 17:45",
+        "12:00 - 15:00",
+        "14:45 - 17:45"
+      ],
+      "courses": [
+        "CSE 2205-B",
+        "CSE 2205-A",
+        "CSE 2206-B",
+        "CSE 2208",
+        "CSE 2206-A",
+        "ICE 2108"
+      ]
     },
-    "Dr. A.K.M. Bahalul Haque": {
-      "preferred_times": ["08:30 - 10:00", "10:15 - 11:45", "15:45 - 17:15"],
-      "courses": ["CSE 323", "CSE 325"]
+    "Prof. Mohammad Ferdows": {
+      "preferred_times": [
+        "14:00 - 15:30",
+        "15:45 - 17:15"
+      ],
+      "courses": [
+        "MATH 1113-B",
+        "MATH 1113-A"
+      ]
     },
-    "Dr. Dip Nandi": {
-      "preferred_times": ["08:30 - 10:00", "12:00 - 13:30", "14:00 - 15:30"],
-      "courses": ["CSE 241", "CSE 121"]
+    "Prof. Mahamudur Rahman": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "10:15 - 11:45"
+      ],
+      "courses": [
+        "ICE 1105-A",
+        "ICE 1105-B"
+      ]
     },
-    "Dr. Mahmuda Naznin": {
-      "preferred_times": ["10:15 - 11:45", "12:00 - 13:30", "15:45 - 17:15"],
-      "courses": ["CSE 243", "CSE 123"]
+    "Prof.A.K.M Shahnawaz": {
+      "preferred_times": [
+        "14:00 - 15:30",
+        "15:45 - 17:15"
+      ],
+      "courses": [
+        "GED-1119-B",
+        "GED-1119-A"
+      ]
     },
-    "Dr. Md. Abdur Rahman": {
-      "preferred_times": ["08:30 - 10:00", "14:00 - 15:30", "15:45 - 17:15"],
-      "courses": ["PHYS 241", "PHYS 121"]
+    "Prof Mahfuz Alam": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "10:15 - 11:45"
+      ],
+      "courses": [
+        "ICE 2107-B",
+        "ICE 2107-A"
+      ]
     },
-    "Mr. Md. Ashraful Islam": {
-      "preferred_times": ["10:15 - 11:45", "12:00 - 13:30", "14:00 - 15:30"],
-      "courses": ["CSE 325", "CSE 401"]
+    "Lec Rumana": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "10:15 - 11:45",
+        "08:30 - 11:30",
+        "11:45 - 14:45",
+        "14:45 - 17:45",
+        "08:15 - 11:15",
+        "11:30 - 14:30",
+        "14:30 - 16:00",
+        "16:00 - 17:30"
+      ],
+      "courses": [
+        "CSE 2101-A",
+        "CSE 2101-B",
+        "CSE 2104-A",
+        "CSE 2104-B",
+        "CSE 3206-A",
+        "CSE 3206-B",
+        "CSE 2102-B",
+        "CSE 2102-A"
+      ]
     },
-    "Ms. Rashida Nasrin Sumi": {
-      "preferred_times": ["14:00 - 15:30", "15:45 - 17:15"],
-      "courses": ["CSE 326", "CSE 402"]
+    "Lec Sobhana": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "10:15 - 11:45",
+        "08:30 - 11:30",
+        "11:45 - 14:45",
+        "14:30 - 17:30",
+        "08:15 - 11:15",
+        "11:30 - 14:30",
+        "14:30 - 17:30"
+      ],
+      "courses": [
+        "CSE 2103-B",
+        "CSE 2103-A",
+        "CSE 2104-A",
+        "CSE 2104-B",
+        "ENG 1102",
+        "CSE 2102-B",
+        "CSE 2102-A"
+      ]
     },
-    "Mr. Md. Kamrul Hasan": {
-      "preferred_times": ["14:00 - 15:30", "15:45 - 17:15"],
-      "courses": ["CSE 327", "CSE 406"]
+    "Asst Prof SM Salim Reza": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "08:30 - 11:30"
+      ],
+      "courses": [
+        "CSE 3201-A",
+        "CSE 3201-B",
+        "CSE 3202-A",
+        "CSE 3202-B"
+      ]
     },
-    "Ms. Fatema Tuz Zohra": {
-      "preferred_times": ["14:00 - 15:30", "15:45 - 17:15"],
-      "courses": ["CSE 242", "CSE 122"]
+    "Prof Md.Seed Mahmud Ullah": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "10:15 - 11:45"
+      ],
+      "courses": [
+        "GERM-3209-B",
+        "GERM-3209-A"
+      ]
     },
-    "Mr. Md. Rakibul Hasan": {
-      "preferred_times": ["14:00 - 15:30", "15:45 - 17:15"],
-      "courses": ["CSE 244", "CSE 324"]
+    "Assoc. Prof .Md.Abdus Sattar": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "15:45 - 17:15",
+        "14:00 - 15:30"
+      ],
+      "courses": [
+        "CSE 3203-A",
+        "CSE 3203-B",
+        "CSE 3204-A",
+        "CSE 3204-B"
+      ]
     },
-    "Ms. Nazmin Aktar": {
-      "preferred_times": ["14:00 - 15:30", "15:45 - 17:15"],
-      "courses": ["CSE 322", "CSE 404"]
+    "Col Eare Morshed": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "10:15 - 11:45"
+      ],
+      "courses": [
+        "MATH 1109-B",
+        "MATH 1109-A"
+      ]
     },
-    "Mr. Aminul Islam": {
-      "preferred_times": ["14:00 - 15:30", "15:45 - 17:15"],
-      "courses": ["CSE 324", "ENG 121"]
+    "Prof. Shahed Rana": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "10:15 - 11:45"
+      ],
+      "courses": [
+        "CHEM 1103-A",
+        "CHEM 1103-B"
+      ]
     },
-    "Ms. Sharmin Jahan": {
-      "preferred_times": ["08:30 - 10:00", "10:15 - 11:45", "12:00 - 13:30"],
-      "courses": ["ENG 242", "ENG 121"]
+    "Lec Shah Sadman": {
+      "preferred_times": [
+        "08:30 - 11:30",
+        "14:30 - 17:30"
+      ],
+      "courses": [
+        "CSE 3202-A",
+        "ICE2210",
+        "CSE 3202-B"
+      ]
     },
-    "Mr. Abdullah Al Mamun": {
-      "preferred_times": ["14:00 - 15:30", "15:45 - 17:15"],
-      "courses": ["ENG 243", "ENG 122"]
+    "Lec Nazneen": {
+      "preferred_times": [
+        "14:45 - 17:45",
+        "14:30 - 17:30",
+        "11:45 - 14:45"
+      ],
+      "courses": [
+        "ENG 2110-A",
+        "MIST Phy 1106A/B",
+        "ICE 1106",
+        "ENG 2110-B"
+      ]
+    },
+    "Lec Ridwana Islam Ruhama": {
+      "preferred_times": [
+        "14:45 - 17:45",
+        "14:30 - 17:30",
+        "11:45 - 14:45"
+      ],
+      "courses": [
+        "ENG 2110-A",
+        "ENG 1102",
+        "ENG 2110-B"
+      ]
+    },
+    "Prof Md. Musfique Anwar": {
+      "preferred_times": [
+        "14:00 - 15:30"
+      ],
+      "courses": [
+        "CSE 3206-B",
+        "CSE 3206-A"
+      ]
+    },
+    "Lec Adittya": {
+      "preferred_times": [
+        "14:45 - 17:45"
+      ],
+      "courses": [
+        "CSE 2208"
+      ]
+    },
+    "Prof. Abdul Kadir": {
+      "preferred_times": [
+        "15:45 - 17:15",
+        "14:30 - 17:30"
+      ],
+      "courses": [
+        "GEESL 3211-B",
+        "GEES-3211-A",
+        "GEESL 3211-A",
+        "GEESL 3211-B"
+      ]
+    },
+    "Lec Anika": {
+      "preferred_times": [
+        "15:45 - 17:15"
+      ],
+      "courses": [
+        "CSE 3204-A",
+        "CSE 3204-B"
+      ]
+    },
+    "Lec Iyolita": {
+      "preferred_times": [
+        "08:30 - 11:30",
+        "11:45 - 14:45",
+        "08:30 - 10:00",
+        "10:15 - 11:45",
+        "12:00 - 15:00",
+        "14:00 - 15:30"
+      ],
+      "courses": [
+        "CSE 2202-A",
+        "CSE 2206-B",
+        "CSE 2203-A",
+        "CSE 2203-B",
+        "CSE 2202-B",
+        "CSE 2206-A",
+        "CSE 3208-A"
+      ]
+    },
+    "Col S M Saiful Islam": {
+      "preferred_times": [
+        "12:00 - 13:30"
+      ],
+      "courses": [
+        "GEEM 2207-A",
+        "GEEM 2207-B",
+        "GEEM-A-2207",
+        "GEEM-B 2207"
+      ]
+    },
+    "Prof. Manirul Alam": {
+      "preferred_times": [
+        "12:00 - 13:30",
+        "08:30 - 10:00"
+      ],
+      "courses": [
+        "Math-2211-A",
+        "Math-2211-B"
+      ]
+    },
+    "Prof Ariful Kabir": {
+      "preferred_times": [
+        "12:00 - 13:30",
+        "10:15 - 11:45"
+      ],
+      "courses": [
+        "MATH 2111-A",
+        "MATH 2111-B"
+      ]
+    },
+    "Prof. Mostafizur Rahaman": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "10:15 - 11:45"
+      ],
+      "courses": [
+        "ICE 2105-B",
+        "ICE 2105-A"
+      ]
+    },
+    "Prof..Ziaul Ahsan": {
+      "preferred_times": [
+        "08:30 - 10:00",
+        "10:15 - 11:45"
+      ],
+      "courses": [
+        "PHY 1115-A",
+        "PHY 1115-B"
+      ]
+    },
+    "Prof Md. Humayun Kabir": {
+      "preferred_times": [
+        "12:00 - 13:30",
+        "14:00 - 15:30"
+      ],
+      "courses": [
+        "CSE 3205-B",
+        "CSE 3205-A"
+      ]
+    },
+    "Lec Adittay Rajbongshi": {
+      "preferred_times": [
+        "08:30 - 11:30",
+        "12:00 - 15:00"
+      ],
+      "courses": [
+        "CSE 3208-A",
+        "CSE 3208-B"
+      ]
+    },
+    "Lec Rubel Sheikh": {
+      "preferred_times": [
+        "08:30 - 11:30",
+        "12:00 - 15:00"
+      ],
+      "courses": [
+        "CSE 3208-A",
+        "CSE 3208-B"
+      ]
+    },
+    "Md. Mahadi Hasan": {
+      "preferred_times": [
+        "14:30 - 17:30"
+      ],
+      "courses": [
+        "ICE 1106"
+      ]
     }
   },
   "routine": {
-    "BCSE24-A": {
+    "BCSE22-A": {
       "Sunday": {
-        "08:30 - 10:00": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "302", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "303", "type": "Theory"},
-        "12:00 - 13:30": {"course": "MATH 243", "name": "Statistics & Probability", "faculty": "Prof. Dr. Kazi Sakib", "room": "304", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 242", "name": "Data Structures Lab", "faculty": "Ms. Fatema Tuz Zohra", "room": "504", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 242", "name": "Data Structures Lab", "faculty": "Ms. Fatema Tuz Zohra", "room": "504", "type": "Lab"}
+        "08:30 - 10:00": {
+          "course": "CSE 3201-A",
+          "name": "Computer Network",
+          "faculty": "Asst Prof S M Salim Reza",
+          "room": "CR-304 (FBS Tower)",
+          "type": "Theory"
+        },
+        "10:15 - 11:45": {
+          "course": "GERM-3209-A",
+          "name": "Fundamentals of Research Methodology",
+          "faculty": "Prof Md.Seed Mahmud Ullah",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Theory"
+        },
+        "14:00 - 15:30": {
+          "course": "CSE 3206-A",
+          "name": "Software Engineering Lab",
+          "faculty": "Prof Md. Musfique Anwar- Lec Rumana",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Lab"
+        }
       },
       "Monday": {
-        "08:30 - 10:00": {"course": "ENG 242", "name": "English II", "faculty": "Ms. Sharmin Jahan", "room": "302", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "303", "type": "Theory"},
-        "12:00 - 13:30": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "304", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 244", "name": "Digital Logic Design Lab", "faculty": "Mr. Md. Rakibul Hasan", "room": "1003", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 244", "name": "Digital Logic Design Lab", "faculty": "Mr. Md. Rakibul Hasan", "room": "1003", "type": "Lab"}
-      },
-      "Tuesday": {
-        "08:30 - 10:00": {"course": "PHYS 241", "name": "Physics II", "faculty": "Dr. Md. Abdur Rahman", "room": "302", "type": "Theory"},
-        "10:15 - 11:45": {"course": "ENG 242", "name": "English II", "faculty": "Ms. Sharmin Jahan", "room": "303", "type": "Theory"},
-        "12:00 - 13:30": {"course": "MATH 243", "name": "Statistics & Probability", "faculty": "Prof. Dr. Kazi Sakib", "room": "304", "type": "Theory"},
-        "14:00 - 15:30": {"course": "PHYS 242", "name": "Physics II Lab", "faculty": "Dr. Md. Abdur Rahman", "room": "504", "type": "Lab"},
-        "15:45 - 17:15": {"course": "PHYS 242", "name": "Physics II Lab", "faculty": "Dr. Md. Abdur Rahman", "room": "504", "type": "Lab"}
+        "08:30 - 11:30": {
+          "course": "CSE 3202-A",
+          "name": "Computer Network Lab",
+          "faculty": "Asst Prof SM Salim Reza-Lec Shah Sadman",
+          "room": "Computer Lab- 1003 (Gen Belal Tower)",
+          "type": "Lab"
+        },
+        "14:00 - 15:30": {
+          "course": "CSE 3204-A",
+          "name": "Digital System Design Lab",
+          "faculty": "Assoc. Prof Md.Abdus Sattar- Lec Anika",
+          "room": "Computer Lab- 1003 (Gen Belal Tower)",
+          "type": "Lab"
+        }
       },
       "Wednesday": {
-        "08:30 - 10:00": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "302", "type": "Theory"},
-        "10:15 - 11:45": {"course": "MATH 243", "name": "Statistics & Probability", "faculty": "Prof. Dr. Kazi Sakib", "room": "303", "type": "Theory"},
-        "12:00 - 13:30": {"course": "PHYS 241", "name": "Physics II", "faculty": "Dr. Md. Abdur Rahman", "room": "304", "type": "Theory"},
-        "14:00 - 15:30": {"course": "ENG 243", "name": "English II Lab", "faculty": "Mr. Abdullah Al Mamun", "room": "1003", "type": "Lab"},
-        "15:45 - 17:15": {"course": "ENG 243", "name": "English II Lab", "faculty": "Mr. Abdullah Al Mamun", "room": "1003", "type": "Lab"}
+        "08:30 - 10:00": {
+          "course": "CSE 3201-A",
+          "name": "Computer Network",
+          "faculty": "Asst Prof S M Salim Reza",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "10:15 - 11:45": {
+          "course": "CSE 3205-A",
+          "name": "Software Engineering",
+          "faculty": "Prof Md. Humayun Kabir",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        }
       },
       "Thursday": {
-        "08:30 - 10:00": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "302", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "303", "type": "Theory"},
-        "12:00 - 13:30": {"course": "ENG 242", "name": "English II", "faculty": "Ms. Sharmin Jahan", "room": "304", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 242", "name": "Data Structures Lab", "faculty": "Ms. Fatema Tuz Zohra", "room": "504", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 242", "name": "Data Structures Lab", "faculty": "Ms. Fatema Tuz Zohra", "room": "504", "type": "Lab"}
+        "08:30 - 11:30": {
+          "course": "CSE 3208-A",
+          "name": "Software Development Project-I",
+          "faculty": "Lec Adittay Rajbongshi- Lec Rubel Sheikh",
+          "room": "Computer Lab-1003 (Gen Belal Tower)",
+          "type": "Lab"
+        },
+        "12:00 - 13:30": {
+          "course": "CSE 3208-A",
+          "name": "Software Development Project-I",
+          "faculty": "Lec lyolita",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Lab"
+        }
       }
     },
-    "BCSE24-B": {
+    "BCSE22-B": {
       "Sunday": {
-        "08:30 - 10:00": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "504", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "1003", "type": "Theory"},
-        "12:00 - 13:30": {"course": "ENG 242", "name": "English II", "faculty": "Ms. Sharmin Jahan", "room": "302", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 244", "name": "Digital Logic Design Lab", "faculty": "Mr. Md. Rakibul Hasan", "room": "303", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 244", "name": "Digital Logic Design Lab", "faculty": "Mr. Md. Rakibul Hasan", "room": "303", "type": "Lab"}
+        "10:15 - 11:45": {
+          "course": "CSE 3201-B",
+          "name": "Computer Network",
+          "faculty": "Asst Prof S M Salim Reza",
+          "room": "CR-304 (FBS Tower)",
+          "type": "Theory"
+        },
+        "15:45 - 17:15": {
+          "course": "CSE 3206-B",
+          "name": "Software Engineering Lab",
+          "faculty": "Prof Md. Musfique Anwar- Lec Rumana",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Lab"
+        }
       },
       "Monday": {
-        "08:30 - 10:00": {"course": "MATH 243", "name": "Statistics & Probability", "faculty": "Prof. Dr. Kazi Sakib", "room": "504", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "1003", "type": "Theory"},
-        "12:00 - 13:30": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "302", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 242", "name": "Data Structures Lab", "faculty": "Ms. Fatema Tuz Zohra", "room": "303", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 242", "name": "Data Structures Lab", "faculty": "Ms. Fatema Tuz Zohra", "room": "303", "type": "Lab"}
-      },
-      "Tuesday": {
-        "08:30 - 10:00": {"course": "ENG 242", "name": "English II", "faculty": "Ms. Sharmin Jahan", "room": "504", "type": "Theory"},
-        "10:15 - 11:45": {"course": "MATH 243", "name": "Statistics & Probability", "faculty": "Prof. Dr. Kazi Sakib", "room": "1003", "type": "Theory"},
-        "12:00 - 13:30": {"course": "PHYS 241", "name": "Physics II", "faculty": "Dr. Md. Abdur Rahman", "room": "302", "type": "Theory"},
-        "14:00 - 15:30": {"course": "PHYS 242", "name": "Physics II Lab", "faculty": "Dr. Md. Abdur Rahman", "room": "303", "type": "Lab"},
-        "15:45 - 17:15": {"course": "PHYS 242", "name": "Physics II Lab", "faculty": "Dr. Md. Abdur Rahman", "room": "303", "type": "Lab"}
+        "08:30 - 10:00": {
+          "course": "CSE 3203-B",
+          "name": "Digital System Design",
+          "faculty": "Assoc. Prof Md.Abdus Sattar",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "15:45 - 17:15": {
+          "course": "CSE 3204-B",
+          "name": "Digital System Design Lab",
+          "faculty": "Assoc. Prof Md. Abdus Sattar- Lec Anika",
+          "room": "Computer Lab- 1003 (Gen Belal Tower)",
+          "type": "Lab"
+        }
       },
       "Wednesday": {
-        "08:30 - 10:00": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "504", "type": "Theory"},
-        "10:15 - 11:45": {"course": "ENG 242", "name": "English II", "faculty": "Ms. Sharmin Jahan", "room": "1003", "type": "Theory"},
-        "12:00 - 13:30": {"course": "CSE 243", "name": "Digital Logic Design", "faculty": "Dr. Mahmuda Naznin", "room": "302", "type": "Theory"},
-        "14:00 - 15:30": {"course": "ENG 243", "name": "English II Lab", "faculty": "Mr. Abdullah Al Mamun", "room": "303", "type": "Lab"},
-        "15:45 - 17:15": {"course": "ENG 243", "name": "English II Lab", "faculty": "Mr. Abdullah Al Mamun", "room": "303", "type": "Lab"}
+        "08:30 - 10:00": {
+          "course": "GERM-3209-B",
+          "name": "Fundamentals of Research Methodology",
+          "faculty": "Prof Md.Seed Mahmud Ullah",
+          "room": "CR-303 (FBS Tower)",
+          "type": "Theory"
+        },
+        "10:15 - 11:45": {
+          "course": "CSE 3205-B",
+          "name": "Software Engineering",
+          "faculty": "Prof Md. Humayun Kabir",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        }
       },
       "Thursday": {
-        "08:30 - 10:00": {"course": "PHYS 241", "name": "Physics II", "faculty": "Dr. Md. Abdur Rahman", "room": "504", "type": "Theory"},
-        "10:15 - 11:45": {"course": "MATH 243", "name": "Statistics & Probability", "faculty": "Prof. Dr. Kazi Sakib", "room": "1003", "type": "Theory"},
-        "12:00 - 13:30": {"course": "CSE 241", "name": "Data Structures", "faculty": "Dr. Dip Nandi", "room": "302", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 244", "name": "Digital Logic Design Lab", "faculty": "Mr. Md. Rakibul Hasan", "room": "303", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 244", "name": "Digital Logic Design Lab", "faculty": "Mr. Md. Rakibul Hasan", "room": "303", "type": "Lab"}
+        "08:30 - 11:30": {
+          "course": "CSE 3202-B",
+          "name": "Computer Network Lab",
+          "faculty": "Asst Prof SM Salim Reza -Lec Shah Sadman",
+          "room": "Computer Lab- 1003 ( Gen Belal Tower)",
+          "type": "Lab"
+        },
+        "12:00 - 15:00": {
+          "course": "CSE 3208-B",
+          "name": "Software Development Project-I",
+          "faculty": "Lec Adittay Rajbongshi- Lec Rubel Sheikh",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Lab"
+        }
       }
     },
     "BCSE23-A": {
       "Sunday": {
-        "08:30 - 10:00": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "302", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "303", "type": "Theory"},
-        "12:00 - 13:30": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "304", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 322", "name": "Computer Networks Lab", "faculty": "Ms. Nazmin Aktar", "room": "504", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 322", "name": "Computer Networks Lab", "faculty": "Ms. Nazmin Aktar", "room": "504", "type": "Lab"}
+        "08:30 - 10:00": {
+          "course": "ICE 2209-A",
+          "name": "Digital Electronics & Pulse Technique",
+          "faculty": "Prof. Abul Kamal Azad",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "12:00 - 13:30": {
+          "course": "CSE 2205-A",
+          "name": "Data Structures & Algorithms-II",
+          "faculty": "Lec Suha",
+          "room": "CR-303 (FBS Tower)",
+          "type": "Theory"
+        },
+        "14:00 - 15:30": {
+          "course": "CSE 2208",
+          "name": "Object Oriented Programming Lab-II",
+          "faculty": "Lec Suha- Lec Adittya",
+          "room": "CR-304 (FBS Tower)",
+          "type": "Lab"
+        }
       },
       "Monday": {
-        "08:30 - 10:00": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "302", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "303", "type": "Theory"},
-        "12:00 - 13:30": {"course": "MATH 321", "name": "Discrete Mathematics", "faculty": "Prof. Dr. Kazi Sakib", "room": "304", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 324", "name": "Operating Systems Lab", "faculty": "Mr. Aminul Islam", "room": "1003", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 324", "name": "Operating Systems Lab", "faculty": "Mr. Aminul Islam", "room": "1003", "type": "Lab"}
+        "08:30 - 11:30": {
+          "course": "CSE 2202-A",
+          "name": "Engineering Drawing & CAD Lab",
+          "faculty": "Lec Iyolita",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Lab"
+        }
       },
       "Tuesday": {
-        "08:30 - 10:00": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "302", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "303", "type": "Theory"},
-        "12:00 - 13:30": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "304", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 326", "name": "Database Management Systems Lab", "faculty": "Ms. Rashida Nasrin Sumi", "room": "504", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 326", "name": "Database Management Systems Lab", "faculty": "Ms. Rashida Nasrin Sumi", "room": "504", "type": "Lab"}
-      },
-      "Wednesday": {
-        "08:30 - 10:00": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "302", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "303", "type": "Theory"},
-        "12:00 - 13:30": {"course": "MATH 321", "name": "Discrete Mathematics", "faculty": "Prof. Dr. Kazi Sakib", "room": "304", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 327", "name": "Web Development Lab", "faculty": "Mr. Md. Kamrul Hasan", "room": "1003", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 327", "name": "Web Development Lab", "faculty": "Mr. Md. Kamrul Hasan", "room": "1003", "type": "Lab"}
+        "10:15 - 11:45": {
+          "course": "CSE 2203-A",
+          "name": "Computer Architecture",
+          "faculty": "Lec Iyolita",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "14:00 - 15:30": {
+          "course": "GEEM 2207-A",
+          "name": "Engineering Ethics & Moral Philosophy",
+          "faculty": "Col S M Saiful Islam",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "15:45 - 17:15": {
+          "course": "Math-2211-A",
+          "name": "Statistics",
+          "faculty": "Prof Manirul Alam",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        }
       },
       "Thursday": {
-        "08:30 - 10:00": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "302", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "303", "type": "Theory"},
-        "12:00 - 13:30": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "304", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 322", "name": "Computer Networks Lab", "faculty": "Ms. Nazmin Aktar", "room": "504", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 322", "name": "Computer Networks Lab", "faculty": "Ms. Nazmin Aktar", "room": "504", "type": "Lab"}
+        "12:00 - 15:00": {
+          "course": "CSE 2206-A",
+          "name": "Data Structures & Algorithms-II Lab",
+          "faculty": "Lec Suha-Lec Iyolita",
+          "room": "Computer Lab- 1003 (Gen Belal Tower)",
+          "type": "Lab"
+        }
       }
     },
     "BCSE23-B": {
       "Sunday": {
-        "08:30 - 10:00": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "504", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "1003", "type": "Theory"},
-        "12:00 - 13:30": {"course": "MATH 321", "name": "Discrete Mathematics", "faculty": "Prof. Dr. Kazi Sakib", "room": "302", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 324", "name": "Operating Systems Lab", "faculty": "Mr. Aminul Islam", "room": "303", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 324", "name": "Operating Systems Lab", "faculty": "Mr. Aminul Islam", "room": "303", "type": "Lab"}
+        "10:15 - 11:45": {
+          "course": "CSE 2205-B",
+          "name": "Data Structures & Algorithms-II",
+          "faculty": "Lec Suha",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "12:00 - 13:30": {
+          "course": "ICE 2209-B",
+          "name": "Digital Electronics & Pulse Technique",
+          "faculty": "Prof. Abul Kamal Azad",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "14:00 - 15:30": {
+          "course": "CSE 2208",
+          "name": "Object Oriented Programming Lab-II",
+          "faculty": "Lec Suha- Lec Adittya",
+          "room": "CR-304 (FBS Tower)",
+          "type": "Lab"
+        }
       },
       "Monday": {
-        "08:30 - 10:00": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "504", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "1003", "type": "Theory"},
-        "12:00 - 13:30": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "302", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 326", "name": "Database Management Systems Lab", "faculty": "Ms. Rashida Nasrin Sumi", "room": "303", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 326", "name": "Database Management Systems Lab", "faculty": "Ms. Rashida Nasrin Sumi", "room": "303", "type": "Lab"}
+        "11:45 - 14:45": {
+          "course": "CSE 2206-B",
+          "name": "Data Structures & Algorithms-II Lab",
+          "faculty": "Lec Suha-Lec lyolita",
+          "room": "Computer Lab- 1003 (Gen Belal Tower)",
+          "type": "Lab"
+        }
       },
       "Tuesday": {
-        "08:30 - 10:00": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "504", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "1003", "type": "Theory"},
-        "12:00 - 13:30": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "302", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 322", "name": "Computer Networks Lab", "faculty": "Ms. Nazmin Aktar", "room": "303", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 322", "name": "Computer Networks Lab", "faculty": "Ms. Nazmin Aktar", "room": "303", "type": "Lab"}
-      },
-      "Wednesday": {
-        "08:30 - 10:00": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "504", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 321", "name": "Computer Networks", "faculty": "Prof. Dr. Md. Golam Kader", "room": "1003", "type": "Theory"},
-        "12:00 - 13:30": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "302", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 327", "name": "Web Development Lab", "faculty": "Mr. Md. Kamrul Hasan", "room": "303", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 327", "name": "Web Development Lab", "faculty": "Mr. Md. Kamrul Hasan", "room": "303", "type": "Lab"}
+        "14:00 - 15:30": {
+          "course": "GEEM 2207-B",
+          "name": "Engineering Ethics & Moral Philosophy",
+          "faculty": "Col S M Saiful Islam",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "15:45 - 17:15": {
+          "course": "Math-2211-B",
+          "name": "Statistics",
+          "faculty": "Prof. Manirul Alam",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        }
       },
       "Thursday": {
-        "08:30 - 10:00": {"course": "MATH 321", "name": "Discrete Mathematics", "faculty": "Prof. Dr. Kazi Sakib", "room": "504", "type": "Theory"},
-        "10:15 - 11:45": {"course": "CSE 323", "name": "Operating Systems", "faculty": "Dr. A.K.M. Bahalul Haque", "room": "1003", "type": "Theory"},
-        "12:00 - 13:30": {"course": "CSE 325", "name": "Database Management Systems", "faculty": "Mr. Md. Ashraful Islam", "room": "302", "type": "Theory"},
-        "14:00 - 15:30": {"course": "CSE 324", "name": "Operating Systems Lab", "faculty": "Mr. Aminul Islam", "room": "303", "type": "Lab"},
-        "15:45 - 17:15": {"course": "CSE 324", "name": "Operating Systems Lab", "faculty": "Mr. Aminul Islam", "room": "303", "type": "Lab"}
+        "08:30 - 10:00": {
+          "course": "CSE 2203-B",
+          "name": "Computer Architecture",
+          "faculty": "Lec Iyolita",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "08:30 - 11:30": {
+          "course": "CSE 2202-B",
+          "name": "Engineering Drawing & CAD Lab",
+          "faculty": "Lec Iyolita",
+          "room": "Computer Lab-1003 (Gen Belal Tower)",
+          "type": "Lab"
+        }
+      }
+    },
+    "BCSE24-A": {
+      "Sunday": {
+        "08:30 - 10:00": {
+          "course": "CSE 2101-A",
+          "name": "Data Structures & Algorithms-I",
+          "faculty": "Lec Rumana",
+          "room": "CR-304 (FBS Tower)",
+          "type": "Theory"
+        },
+        "10:15 - 11:45": {
+          "course": "ICE 2107-A",
+          "name": "Electrical Drives & Instrumentation",
+          "faculty": "Prof Mahfuz Alam",
+          "room": "CR-303 (FBS Tower)",
+          "type": "Theory"
+        },
+        "12:00 - 13:30": {
+          "course": "CSE 2103-A",
+          "name": "Object Oriented Programming Language",
+          "faculty": "Lec Sobhana",
+          "room": "CR-304 (FBS Tower)",
+          "type": "Theory"
+        },
+        "14:45 - 17:45": {
+          "course": "ENG 2110-A",
+          "name": "Presentation Skill Development",
+          "faculty": "Lec Nazneen- Lec Ridwana Islam Ruhama",
+          "room": "CR-304 (FBS Tower)",
+          "type": "Lab"
+        }
+      },
+      "Monday": {
+        "08:30 - 11:30": {
+          "course": "CSE 2104-A",
+          "name": "Object Oriented Programming Language Lab-I",
+          "faculty": "Lec Sobhana-Lec Rumana",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Lab"
+        }
+      },
+      "Tuesday": {
+        "08:30 - 10:00": {
+          "course": "ICE 2107-A",
+          "name": "Electrical Drives & Instrumentation",
+          "faculty": "Prof Mahfuz Alam",
+          "room": "304",
+          "type": "Theory"
+        },
+        "15:45 - 17:15": {
+          "course": "MATH 2111-A",
+          "name": "Differential Equations & Transforms",
+          "faculty": "Prof Ariful Kabir",
+          "room": "304",
+          "type": "Theory"
+        }
+      },
+      "Wednesday": {
+        "08:30 - 10:00": {
+          "course": "CSE 2103 A",
+          "name": "Object Oriented Programming Language",
+          "faculty": "Lec Sobhana",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Theory"
+        },
+        "10:15 - 11:45": {
+          "course": "ICE 2105-A",
+          "name": "Theory of Computation",
+          "faculty": "Prof. Mostafizur Rahaman",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Theory"
+        },
+        "11:30 - 14:30": {
+          "course": "CSE 2102-A",
+          "name": "Data Structures & Algorithms-I Lab",
+          "faculty": "Lec Rumana Lec Sobhana",
+          "room": "Computer Lab- 1003 (Gen Belal Tower)",
+          "type": "Lab"
+        },
+        "16:00 - 17:30": {
+          "course": "CS CSE 2101-A",
+          "name": "Data Structures & Algorithms-I",
+          "faculty": "Lec Rumana",
+          "room": "Computer Lab- 1003 (Gen Belal Tower)",
+          "type": "Theory"
+        }
+      }
+    },
+    "BCSE24-B": {
+      "Sunday": {
+        "08:30 - 10:00": {
+          "course": "ICE 2107-B",
+          "name": "Electrical Drives & Instrumentation",
+          "faculty": "Prof Mahfuz Alam",
+          "room": "CR-303 (FBS Tower)",
+          "type": "Theory"
+        },
+        "10:15 - 11:45": {
+          "course": "CSE 2103-B",
+          "name": "Object Oriented Programming Language",
+          "faculty": "Lec Sobhana",
+          "room": "CR-304 (FBS Tower)",
+          "type": "Theory"
+        },
+        "12:00 - 13:30": {
+          "course": "CSE 2101-B",
+          "name": "Data Structures & Algorithms-I",
+          "faculty": "Lec Rumana",
+          "room": "CR-303 (FBS Tower)",
+          "type": "Theory"
+        }
+      },
+      "Monday": {
+        "11:45 - 14:45": {
+          "course": "CSE 2104-B",
+          "name": "Object Oriented Programming Language Lab-I",
+          "faculty": "Lec Rumana Lec Sobhana",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Lab"
+        }
+      },
+      "Tuesday": {
+        "08:30 - 10:00": {
+          "course": "ICE 2107-B",
+          "name": "Electrical Drives & Instrumentation",
+          "faculty": "Prof Mahfuz Alam",
+          "room": "304",
+          "type": "Theory"
+        },
+        "12:00 - 13:30": {
+          "course": "CSE 2103-B",
+          "name": "Object Oriented Programming Language",
+          "faculty": "Lec Sobhana",
+          "room": "304",
+          "type": "Theory"
+        },
+        "14:00 - 15:30": {
+          "course": "MATH 2111-B",
+          "name": "Differential Equations & Transforms",
+          "faculty": "Prof Ariful Kabir",
+          "room": "304",
+          "type": "Theory"
+        }
+      },
+      "Wednesday": {
+        "08:15 - 11:15": {
+          "course": "CSE 2102-B",
+          "name": "Data Structures & Algorithms-I Lab",
+          "faculty": "Sobhana-Lec Rumana",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Lab"
+        },
+        "08:30 - 10:00": {
+          "course": "ICE 2105-B",
+          "name": "Theory of Computation",
+          "faculty": "Prof. Mostafizur Rahaman",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Theory"
+        },
+        "14:30 - 16:00": {
+          "course": "CSE 2101-B",
+          "name": "Data Structures & Algorithms-I",
+          "faculty": "Lec Rumana",
+          "room": "Computer Lab- 1003 (Gen Belal Tower)",
+          "type": "Theory"
+        }
+      }
+    },
+    "BCSE25-A": {
+      "Sunday": {
+        "08:30 - 10:00": {
+          "course": "ICE 1105-A",
+          "name": "Electrical Circuits Analysis",
+          "faculty": "Prof. Mahamudur Rahman",
+          "room": "CR-303 (FBS Tower)",
+          "type": "Theory"
+        },
+        "14:00 - 15:30": {
+          "course": "GED-1119-A",
+          "name": "Bangladesh Studies",
+          "faculty": "Prof.A.K.M Shahnawaz",
+          "room": "CR-303 (FBS Tower)",
+          "type": "Theory"
+        },
+        "15:45 - 17:15": {
+          "course": "MATH 1113-A",
+          "name": "Discrete Math",
+          "faculty": "Prof. Mohammad Ferdows",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        }
+      },
+      "Monday": {
+        "08:30 - 10:00": {
+          "course": "CHEM 1103-A",
+          "name": "Fundamentals of Chemistry",
+          "faculty": "Prof. Shahed Rana",
+          "room": "CR-304 (FBS Tower)",
+          "type": "Theory"
+        },
+        "10:15 - 11:45": {
+          "course": "MATH 1109-A",
+          "name": "Differential & Integral Calculus",
+          "faculty": "Col Eare Morshed",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "14:30 - 17:30": {
+          "course": "ENG 1102",
+          "name": "Communicative English-I",
+          "faculty": "Lec Sobhana-Lec Ridwana Islam Ruhama",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Lab"
+        }
+      },
+      "Tuesday": {
+        "08:30 - 10:00": {
+          "course": "ICE 1105-A",
+          "name": "Electrical Circuits Analysis",
+          "faculty": "Prof. Mahamudur Rahman",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "12:00 - 13:30": {
+          "course": "MATH 1113-A",
+          "name": "Discrete Math",
+          "faculty": "Prof. Mohammad Ferdows",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        }
+      },
+      "Wednesday": {
+        "08:30 - 10:00": {
+          "course": "PHY 1115-A",
+          "name": "Physics",
+          "faculty": "Prof. Ziaul Ahsan",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "14:00 - 15:30": {
+          "course": "MATH 1109-A",
+          "name": "Differential & Integral Calculus",
+          "faculty": "Col Eare Morshed",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Theory"
+        }
+      }
+    },
+    "BCSE25-B": {
+      "Sunday": {
+        "10:15 - 11:45": {
+          "course": "ICE 1105-B",
+          "name": "Electrical Circuits Analysis",
+          "faculty": "Prof. Mahamudur Rahman",
+          "room": "CR-303 (FBS Tower)",
+          "type": "Theory"
+        },
+        "14:00 - 15:30": {
+          "course": "MATH 1113-B",
+          "name": "Discrete Math",
+          "faculty": "Prof. Mohammad Ferdows",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "15:45 - 17:15": {
+          "course": "GED-1119-B",
+          "name": "Bangladesh Studies",
+          "faculty": "Prof.A.K.M Shahnawaz",
+          "room": "CR-303 (FBS Tower)",
+          "type": "Theory"
+        }
+      },
+      "Monday": {
+        "08:30 - 10:00": {
+          "course": "MATH 1109-B",
+          "name": "Differential & Integral Calculus",
+          "faculty": "Col Eare Morshed",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "10:15 - 11:45": {
+          "course": "CHEM 1103-B",
+          "name": "Fundamentals of Chemistry",
+          "faculty": "Prof. Shahed Rana",
+          "room": "CR-304 (FBS Tower)",
+          "type": "Theory"
+        },
+        "14:30 - 17:30": {
+          "course": "ENG 1102",
+          "name": "Communicative English-I",
+          "faculty": "Lec Sobhana-Lec Ridwana Islam Ruhama",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Lab"
+        }
+      },
+      "Tuesday": {
+        "10:15 - 11:45": {
+          "course": "ICE 1105-B",
+          "name": "Electrical Circuits Analysis",
+          "faculty": "Prof. Mahamudur Rahman",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        }
+      },
+      "Wednesday": {
+        "10:15 - 11:45": {
+          "course": "PHY 1115-B",
+          "name": "Physics",
+          "faculty": "Prof. Ziaul Ahsan",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "12:00 - 13:30": {
+          "course": "MATH 1113-B",
+          "name": "Discrete Math",
+          "faculty": "Prof. Mohammad Ferdows",
+          "room": "CR-302 (FBS Tower)",
+          "type": "Theory"
+        },
+        "15:45 - 17:15": {
+          "course": "MATH 1109-B",
+          "name": "Differential & Integral Calculus",
+          "faculty": "Col Eare Morshed",
+          "room": "CR-504 (computer lab, FBS Tower)",
+          "type": "Theory"
+        }
       }
     }
   }
 }
+

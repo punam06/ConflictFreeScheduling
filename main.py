@@ -751,7 +751,7 @@ def main():
             epilog="""
 Examples:
   python main.py                              (Interactive mode - enhanced features)
-  python main.py --algorithm graph_color
+  python main.py --algorithm graph-coloring
   python main.py --run-all --enhanced
   python main.py --init-db
   python main.py --comprehensive --enhanced  (Generate comprehensive routine)
