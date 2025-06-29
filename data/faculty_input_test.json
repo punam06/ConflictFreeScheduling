@@ -2,87 +2,83 @@
   "faculties": [
     {
       "name": "Dr. Ahmed Rahman",
-      "email": "ahmed.rahman@bup.edu.bd",
+      "email": "ahmed.rahman@example.com",
       "department": "CSE",
-      "available_times": [[0, 4], [8, 12], [16, 20]],
-      "preferred_courses": ["CSE4401", "CSE4403"],
-      "max_hours_per_week": 18,
-      "room_preferences": ["302", "303"]
+      "available_times": [
+        [480, 660],
+        [720, 900]
+      ],
+      "preferred_courses": ["CSE4401", "CSE3401"],
+      "max_hours_per_week": 15
     },
     {
-      "name": "Prof. Fatema Khatun", 
-      "email": "fatema.khatun@bup.edu.bd",
+      "name": "Prof. Fatema Khatun",
+      "email": "fatema.k@example.com",
       "department": "CSE",
-      "available_times": [[2, 6], [10, 14], [18, 22]],
-      "preferred_courses": ["CSE3321", "CSE3323"],
-      "max_hours_per_week": 16,
-      "room_preferences": ["304", "504"]
+      "available_times": [
+        [480, 600],
+        [720, 840]
+      ],
+      "preferred_courses": ["CSE3301", "CSE3201"],
+      "max_hours_per_week": 18
     },
     {
       "name": "Dr. Mohammad Ali",
-      "email": "mohammad.ali@bup.edu.bd", 
+      "email": "m.ali@example.com",
       "department": "CSE",
-      "available_times": [[4, 8], [12, 16]],
-      "preferred_courses": ["CSE2221", "CSE2223"],
-      "max_hours_per_week": 20,
-      "room_preferences": ["1003"]
+      "available_times": [
+        [540, 720],
+        [780, 960]
+      ],
+      "preferred_courses": ["CSE4501", "CSE4601"],
+      "max_hours_per_week": 12
     }
   ],
   "courses": [
     {
-      "course_code": "CSE4401",
       "course_name": "Software Engineering",
-      "faculty_name": "Dr. Ahmed Rahman",
+      "course_code": "CSE4401",
       "credits": 3.0,
-      "duration": 90,
-      "start_time": 0,
-      "end_time": 3,
-      "room": "302",
-      "department": "CSE"
+      "faculty_name": "Dr. Ahmed Rahman",
+      "start_time": 480,
+      "end_time": 570,
+      "room": "302"
     },
     {
-      "course_code": "CSE4403", 
-      "course_name": "Machine Learning",
-      "faculty_name": "Dr. Ahmed Rahman",
+      "course_name": "Database Systems",
+      "course_code": "CSE3401",
       "credits": 3.0,
-      "duration": 90,
-      "start_time": 8,
-      "end_time": 11,
-      "room": "303",
-      "department": "CSE"
+      "faculty_name": "Dr. Ahmed Rahman",
+      "start_time": 590,
+      "end_time": 680,
+      "room": "303"
     },
     {
-      "course_code": "CSE3321",
       "course_name": "Computer Networks",
-      "faculty_name": "Prof. Fatema Khatun",
+      "course_code": "CSE3301",
       "credits": 3.0,
-      "duration": 90,
-      "start_time": 2,
-      "end_time": 5,
-      "room": "304",
-      "department": "CSE"
+      "faculty_name": "Prof. Fatema Khatun",
+      "start_time": 700,
+      "end_time": 790,
+      "room": "304"
     },
     {
-      "course_code": "CSE3323",
-      "course_name": "Operating Systems", 
-      "faculty_name": "Prof. Fatema Khatun",
+      "course_name": "Operating Systems",
+      "course_code": "CSE3201",
       "credits": 3.0,
-      "duration": 90,
-      "start_time": 10,
-      "end_time": 13,
-      "room": "504",
-      "department": "CSE"
+      "faculty_name": "Prof. Fatema Khatun",
+      "start_time": 840,
+      "end_time": 930,
+      "room": "504"
     },
     {
-      "course_code": "CSE2221",
-      "course_name": "Data Structures",
+      "course_name": "Machine Learning",
+      "course_code": "CSE4501",
+      "credits": 3.0,
       "faculty_name": "Dr. Mohammad Ali",
-      "credits": 3.0,
-      "duration": 90,
-      "start_time": 4,
-      "end_time": 7,
-      "room": "1003",
-      "department": "CSE"
+      "start_time": 950,
+      "end_time": 1040,
+      "room": "1003"
     }
   ]
 }

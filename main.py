@@ -22,9 +22,10 @@ Version: 2.0 (Enhanced)
 
 import sys
 import os
-import json
 import argparse
 import time
+import json
+from datetime import datetime
 from typing import List, Dict, Optional
 
 # Add src to Python path
@@ -420,7 +421,7 @@ def preserve_realistic_schedule(activities: List[Activity]) -> List[Activity]:
 
 def handle_faculty_input_routine() -> List[Activity]:
     """
-    Handle faculty input routine generation
+    Handle faculty input routine generation with both interactive and non-interactive modes
     
     Returns:
         List of activities generated from faculty input
@@ -431,63 +432,70 @@ def handle_faculty_input_routine() -> List[Activity]:
     
     faculty_system = FacultyInputSystem()
     
-    # Check if existing faculty data exists and has content
-    if os.path.exists("data/faculty_data.json"):
+    # Check if existing faculty data exists
+    faculty_data_path = "data/faculty_data.json"
+    faculty_test_path = "data/faculty_input_test.json"
+    
+    # Try to load existing faculty data
+    data_loaded = False
+    
+    if os.path.exists(faculty_data_path):
         try:
-            with open("data/faculty_data.json", "r") as f:
-                data = json.load(f)
-                has_data = len(data.get("courses", [])) > 0
-        except:
-            has_data = False
+            with open(faculty_data_path, 'r') as f:
+                content = f.read().strip()
+                if content and content != "{}":  # Check if file has meaningful content
+                    if faculty_system.load_faculty_data():
+                        print("✅ Existing faculty data loaded from faculty_data.json")
+                        data_loaded = True
+                    else:
+                        print("⚠️ Failed to load faculty_data.json")
+        except Exception as e:
+            print(f"⚠️ Error reading faculty_data.json: {e}")
+    
+    # If no valid data found, try test data
+    if not data_loaded and os.path.exists(faculty_test_path):
+        try:
+            if faculty_system.load_faculty_data(faculty_test_path):
+                print("✅ Loaded test faculty data from faculty_input_test.json")
+                data_loaded = True
+        except Exception as e:
+            print(f"⚠️ Error reading faculty_input_test.json: {e}")
+    
+    # If still no data, check if we should run interactively
+    if not data_loaded:
+        print("\n� No existing faculty data found.")
+        
+        # Check if we're in a truly interactive environment
+        try:
+            import sys
+            if sys.stdin.isatty():
+                # Interactive mode - ask user
+                use_interactive = input("Would you like to input faculty data interactively? (y/n) [n]: ").lower().strip() == 'y'
+                if use_interactive:
+                    return handle_interactive_faculty_input(faculty_system)
             
-        if has_data:
-            # Auto-load existing data if it has courses
-            if faculty_system.load_faculty_data():
-                print("✅ Existing faculty data loaded automatically")
-                print(f"📊 Found {len(faculty_system.courses)} courses")
-                
-                # Skip interactive menu if we have data and just generate routine
-                print("� Generating routine from existing faculty data...")
-            else:
-                print("⚠️ Failed to load faculty data, starting interactive mode")
-                return faculty_input_interactive_mode(faculty_system)
-        else:
-            # File exists but empty - start interactive mode
-            try:
-                load_existing = input("\n📁 Empty faculty data file found. Start interactive input? (y/n) [y]: ").lower().strip() != "n"
-                if load_existing:
-                    return faculty_input_interactive_mode(faculty_system)
-                else:
-                    print("❌ No faculty data available")
-                    return []
-            except EOFError:
-                # Non-interactive mode - use test data
-                print("🔄 Non-interactive mode detected. Using test data...")
-                if os.path.exists("data/faculty_input_test.json"):
-                    faculty_system.load_faculty_data("data/faculty_input_test.json")
-                    print("✅ Test faculty data loaded")
-                else:
-                    print("❌ No test data available")
-                    return []
-    else:
-        # No file exists - start interactive mode
-        try:
-            start_input = input("\n📝 No faculty data found. Start interactive input? (y/n) [y]: ").lower().strip() != "n"
-            if start_input:
-                return faculty_input_interactive_mode(faculty_system)
-            else:
-                print("❌ No faculty data available")
-                return []
-        except EOFError:
-            # Non-interactive mode - use test data
-            print("🔄 Non-interactive mode detected. Using test data...")
-            if os.path.exists("data/faculty_input_test.json"):
-                faculty_system.load_faculty_data("data/faculty_input_test.json")
-                print("✅ Test faculty data loaded")
-            else:
-                print("❌ No test data available")
-                return []
-
+            # Non-interactive or user chose not to use interactive mode
+            print("🔄 Using default faculty schedule generation...")
+            return create_default_faculty_schedule()
+            
+        except (EOFError, KeyboardInterrupt):
+            print("\n🔄 Non-interactive mode detected. Using default faculty schedule...")
+            return create_default_faculty_schedule()
+    
+    # Data was loaded successfully
+    print(f"📊 Loaded {len(faculty_system.faculties)} faculty members and {len(faculty_system.courses)} courses")
+    
+    # Check if we should run interactive mode for modifications
+    try:
+        import sys
+        if sys.stdin.isatty() and len(faculty_system.courses) == 0:
+            # Interactive mode and no courses assigned
+            modify_data = input("\nNo courses assigned. Would you like to add courses interactively? (y/n) [n]: ").lower().strip() == 'y'
+            if modify_data:
+                return handle_interactive_faculty_input(faculty_system)
+    except (EOFError, KeyboardInterrupt):
+        pass
+    
     # Convert faculty courses to Activity objects
     activities = []
     for course in faculty_system.courses:
@@ -504,18 +512,19 @@ def handle_faculty_input_routine() -> List[Activity]:
         activity.course_code = course['course_code']
         activities.append(activity)
     
+    print(f"✅ Generated {len(activities)} activities from faculty input system")
     return activities
 
 
-def faculty_input_interactive_mode(faculty_system) -> List[Activity]:
+def handle_interactive_faculty_input(faculty_system: 'FacultyInputSystem') -> List[Activity]:
     """
-    Handle interactive faculty input mode
+    Handle interactive faculty input
     
     Args:
         faculty_system: FacultyInputSystem instance
         
     Returns:
-        List of activities generated from faculty input
+        List of activities from interactive input
     """
     # Main faculty input loop
     while True:
@@ -527,23 +536,28 @@ def faculty_input_interactive_mode(faculty_system) -> List[Activity]:
         print("4. Generate Routine")
         print("5. Save and Exit")
         
-        choice = input("\nSelect option (1-5): ").strip()
-        
-        if choice == "1":
-            faculty_system.add_faculty_interactive()
-        elif choice == "2":
-            faculty_system.interactive_course_assignment()
-        elif choice == "3":
-            faculty_system.print_schedule_summary()
-        elif choice == "4":
+        try:
+            choice = input("\nSelect option (1-5): ").strip()
+            
+            if choice == "1":
+                faculty_system.add_faculty_interactive()
+            elif choice == "2":
+                faculty_system.interactive_course_assignment()
+            elif choice == "3":
+                faculty_system.print_schedule_summary()
+            elif choice == "4":
+                break
+            elif choice == "5":
+                faculty_system.save_faculty_data()
+                print("👋 Faculty data saved. Generating routine...")
+                break
+            else:
+                print("❌ Invalid choice. Please select 1-5.")
+                
+        except (EOFError, KeyboardInterrupt):
+            print("\n🔄 Interactive mode interrupted. Using current data...")
             break
-        elif choice == "5":
-            faculty_system.save_faculty_data()
-            print("👋 Faculty data saved. Generating routine...")
-            break
-        else:
-            print("❌ Invalid choice. Please select 1-5.")
-
+    
     # Convert faculty courses to Activity objects
     activities = []
     for course in faculty_system.courses:
@@ -563,9 +577,39 @@ def faculty_input_interactive_mode(faculty_system) -> List[Activity]:
     return activities
 
 
+def create_default_faculty_schedule() -> List[Activity]:
+    """
+    Create a default faculty schedule when no input data is available
+    
+    Returns:
+        List of default activities
+    """
+    print("📋 Creating default faculty schedule...")
+    
+    # Create some sample faculty schedule
+    default_activities = [
+        Activity(1, 480, 570, 3.0, "Software Engineering", "302"),      # 08:00-09:30
+        Activity(2, 590, 680, 3.0, "Database Systems", "303"),          # 09:50-11:20
+        Activity(3, 700, 790, 3.0, "Computer Networks", "304"),         # 11:40-13:10
+        Activity(4, 840, 930, 3.0, "Operating Systems", "504"),         # 14:00-15:30
+        Activity(5, 950, 1040, 3.0, "Machine Learning", "1003"),        # 15:50-17:20
+    ]
+    
+    # Add faculty and course code information
+    faculties = ["Dr. Ahmed Rahman", "Prof. Fatema Khatun", "Dr. Mohammad Ali", "Ms. Rashida Begum", "Mr. Karim Hassan"]
+    course_codes = ["CSE4401", "CSE3401", "CSE3301", "CSE3201", "CSE4501"]
+    
+    for i, activity in enumerate(default_activities):
+        activity.faculty = faculties[i % len(faculties)]
+        activity.course_code = course_codes[i % len(course_codes)]
+    
+    print(f"✅ Generated {len(default_activities)} default activities")
+    return default_activities
+
+
 def handle_comprehensive_routine(activities: List[Activity]) -> str:
     """
-    Handle comprehensive routine generation for all batches
+    Handle comprehensive routine generation for all batches with conflict-free scheduling
     
     Args:
         activities: List of all activities
@@ -573,20 +617,116 @@ def handle_comprehensive_routine(activities: List[Activity]) -> str:
     Returns:
         Path to generated routine
     """
-    print("\n🔄 Generating comprehensive routine for all batches...")
+    print("\n🔄 Generating comprehensive conflict-free routine for all batches...")
     
-    # Group activities by batch/section (simulate multiple batches)
-    batches = {
-        "BCSE24 Section A": activities[:len(activities)//3] if len(activities) >= 3 else activities,
-        "BCSE24 Section B": activities[len(activities)//3:2*len(activities)//3] if len(activities) >= 6 else [],
-        "BCSE23 Section A": activities[2*len(activities)//3:] if len(activities) >= 9 else []
-    }
-    
-    # Remove empty batches
-    batches = {k: v for k, v in batches.items() if v}
-    
-    pdf_gen = EnhancedPDFGenerator()
-    return pdf_gen.generate_comprehensive_routine(batches)
+    try:
+        # Load sample routine data from JSON (all batches and sections)
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        data_file = os.path.join(script_dir, "data", "sample_routine_data.json")
+        
+        if not os.path.exists(data_file):
+            print(f"❌ Data file not found: {data_file}")
+            return None
+            
+        with open(data_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        
+        # Use the SampleRoutineGenerator for comprehensive routine
+        # This ensures the table format matches the sample routine exactly:
+        # - Rows organized by days and rooms
+        # - Columns organized by time slots
+        # - Each cell containing batch, section, course code, and faculty information
+        print("🌟 Using sample routine template for departmental-wide schedule")
+        
+        try:
+            # Import and use SampleRoutineGenerator
+            from src.utils.sample_routine_generator import SampleRoutineGenerator
+            sample_generator = SampleRoutineGenerator()
+            
+            # Generate comprehensive routine using the loaded data
+            output_dir = os.path.join(script_dir, "output")
+            os.makedirs(output_dir, exist_ok=True)
+            
+            # Create timestamp for unique output file
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            base_output = os.path.join(output_dir, f"comprehensive_departmental_routine_{timestamp}")
+            
+            # Generate both PDF and HTML formats in sample routine style
+            # This will create a table with batch, section, course code, faculty name in a single cell
+            html_file = sample_generator.create_enhanced_html_routine(data_file, f"{base_output}.html")
+            pdf_file = sample_generator.generate_enhanced_pdf(data_file, f"{base_output}.pdf")
+            
+            if pdf_file or html_file:
+                if pdf_file:
+                    print(f"✅ Comprehensive departmental routine generated (PDF): {pdf_file}")
+                if html_file:
+                    print(f"🌐 Comprehensive departmental routine generated (HTML): {html_file}")
+                
+                # Open the HTML file in the browser for the user to see
+                print("\n🌐 Opening comprehensive routine in browser...")
+                if html_file and os.path.exists(html_file):
+                    try:
+                        import webbrowser
+                        webbrowser.open(f"file://{os.path.abspath(html_file)}")
+                    except Exception as e:
+                        print(f"⚠️ Could not open browser automatically: {e}")
+                
+                return html_file or pdf_file
+        
+        except (ImportError, AttributeError) as e:
+            print(f"⚠️ Could not use SampleRoutineGenerator: {e}")
+            
+        # Fall back to Sample Routine Helper
+        try:
+            print("🔄 Trying alternative sample routine generator...")
+            from src.utils.sample_routine_generator import SampleRoutineGenerator
+            sample_generator = SampleRoutineGenerator()
+            
+            output_dir = os.path.join(script_dir, "output")
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            base_output = os.path.join(output_dir, f"comprehensive_departmental_routine_{timestamp}")
+            
+            html_file, pdf_file = sample_generator.generate_all_formats(data_file, base_output)
+            
+            if pdf_file or html_file:
+                print(f"✅ Comprehensive departmental routine generated successfully!")
+                return html_file or pdf_file
+        except Exception as e:
+            print(f"⚠️ Alternative generator also failed: {e}")
+        
+        # Last resort: Use the ComprehensiveRoutineGenerator with specific modifications
+        # to match the sample routine format
+        print("🔄 Using fallback comprehensive routine generator with sample format...")
+        generator = ComprehensiveRoutineGenerator()
+        
+        # Override the template to match the sample routine format
+        generator.use_sample_format = True  # This flag should be checked in the generator class
+        
+        output_file_base = os.path.join(output_dir, "comprehensive_routine_spring_2025")
+        
+        # Generate both formats (PDF first, then HTML)
+        pdf_file = generator.generate_comprehensive_routine_pdf(data_file, f"{output_file_base}.pdf")
+        html_file = generator.generate_html_routine(data_file, f"{output_file_base}.html")
+        
+        if pdf_file or html_file:
+            print(f"✅ Comprehensive departmental routine generated (fallback): {pdf_file or html_file}")
+            return pdf_file or html_file
+        else:
+            print("❌ Failed to generate comprehensive routine with all methods")
+            return None
+    except Exception as e:
+        print(f"❌ Error generating comprehensive routine: {str(e)}")
+        return None
+            
+    except Exception as e:
+        print(f"❌ Error generating comprehensive routine: {e}")
+        # Fallback to simple comprehensive routine
+        print("🔄 Falling back to enhanced comprehensive routine...")
+        
+        pdf_gen = EnhancedPDFGenerator()
+        return pdf_gen.generate_comprehensive_routine({
+            "All Departments": activities
+        })
 
 
 def handle_batch_routine(activities: List[Activity], batch_code: str) -> str:
@@ -727,15 +867,56 @@ def process_enhanced_routine(user_input: Dict, activities: List[Activity]) -> st
     section = user_input.get("section", "A")
     
     if routine_type == "faculty":
+        # Import the updated faculty handler
+        try:
+            from src.utils.routine_handler import handle_faculty_input_routine
+        except ImportError:
+            # Fallback to local implementation if import fails
+            pass
+            
         # Faculty input mode - get activities from faculty system
-        activities = handle_faculty_input_routine()
-        if not activities:
+        faculty_activities = handle_faculty_input_routine()
+        
+        if not faculty_activities:
             print("❌ No courses assigned through faculty input system")
             return None
-        routine_type = "section"  # Continue with section routine after faculty input
+            
+        # Create an enhanced PDF with faculty-specific schedule
+        print("\n🎓 Generating faculty-specific routine...")
+        
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        output_dir = os.path.join(script_dir, "output")
+        os.makedirs(output_dir, exist_ok=True)
+        
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_file = os.path.join(output_dir, f"faculty_routine_{timestamp}")
+        
+        # Use enhanced PDF generator for faculty routine
+        pdf_gen = EnhancedPDFGenerator()
+        # Set custom output directory for faculty schedule
+        pdf_gen.output_dir = os.path.dirname(output_file)
+        result = pdf_gen.generate_section_routine(
+            faculty_activities,
+            "Faculty",
+            "Input",
+            semester="Spring 2025"
+        )
+        
+        if result:
+            print(f"✅ Faculty input routine generated successfully: {result}")
+            return result
+        else:
+            print("❌ Failed to generate faculty input routine")
+            return None
     
-    # Generate routine based on type
+    # Handle comprehensive routine with improved implementation
     if routine_type == "comprehensive":
+        # Import the updated comprehensive handler
+        try:
+            from src.utils.routine_handler import handle_comprehensive_routine
+        except ImportError:
+            # Fallback to local implementation if import fails
+            pass
         return handle_comprehensive_routine(activities)
     elif routine_type == "batch":
         return handle_batch_routine(activities, batch)
