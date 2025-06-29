@@ -1,52 +1,63 @@
-# Enhanced Conflict-Free Scheduling System
+# Enhanced Conflict-Free Class Scheduling System
 
-A comprehensive academic scheduling system that automatically generates conflict-free course schedules using multiple optimization algorithms with faculty preferences, optimal room allocation, and modern UI design.
+A comprehensive academic scheduling solution designed for universities and educational institutions. This system intelligently generates conflict-free class schedules using multiple optimization algorithms, supports faculty preferences, and provides professional-quality output formats.
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Complete-brightgreen.svg)](#features)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](#features)
 
-## 🎯 Features
+## 🎯 Core Features
 
-- **Multiple Algorithms**: Graph Coloring, Dynamic Programming, Backtracking, Genetic Algorithm
-- **Faculty Preference Scheduling**: Respects faculty preferred time slots and course assignments
-- **Smart Room Management**: Uses only available rooms (302, 303, 304, 504, 1003) with conflict-free allocation
-- **Optimal Time Scheduling**: Minimizes gaps between classes for students
-- **Enhanced PDF/HTML Generation**: Modern, responsive UI with professional layouts
-- **Database Integration**: MySQL support with realistic CSE department data
-- **Interactive Faculty System**: Faculty input with automatic room allocation
-- **Multiple Routine Types**: Section-wise, batch-wise, comprehensive, reference-based, and sample-based routines
-- **Realistic Data**: Authentic faculty names, department rooms, and university time slots
-- **Modern UI**: Attractive designs with gradient backgrounds, color-coding, and print-friendly formats
+### 🔬 Four Advanced Scheduling Algorithms
+- **Graph Coloring Algorithm** - Models conflicts as graph edges, assigns time slots as colors
+- **Dynamic Programming** - Optimal weighted activity selection with memoization
+- **Backtracking Algorithm** - Exhaustive search with intelligent pruning
+- **Genetic Algorithm** - Population-based evolutionary optimization
 
-## ✨ New Enhanced Features
+### 📊 Multiple Routine Generation Modes
+- **Comprehensive Routine** - Single table showing all batches and sections
+- **Batch-wise Routine** - Individual schedules for specific batches (e.g., BCSE24)
+- **Section-wise Routine** - Targeted schedules for specific sections (e.g., BCSE24-A)
+- **Faculty Input System** - Interactive preference-based scheduling with availability analysis
 
-### 🎨 Sample-Based Routine Generator
-- **Faculty Preferences**: Each faculty has preferred time slots and assigned courses
-- **Minimal Class Gaps**: Students don't wait hours between classes
-- **Enhanced UI**: Modern, responsive design with animations and hover effects
-- **Professional Styling**: Color-coded course information and beautiful table layouts
+### 🎨 Professional Output Formats
+- **Enhanced HTML Reports** - Interactive, responsive web-based schedules
+- **Academic PDF Documents** - Professional printable format with university branding
+- **Visual Highlighting** - Color-coded time slots and conflict detection
+- **Preferred Time Analysis** - Faculty-specific availability visualization
 
-### 📋 Reference-Based Routine Generator  
-- **Exact Format**: Matches provided reference PDF structure
-- **Days-First Layout**: Days as first column, time slots as headers
-- **Complete Information**: Course codes, names, faculty, and room numbers
-- **Available Rooms Only**: Uses only rooms 302, 303, 304, 504, 1003
+## ✨ Enhanced Faculty Input System
 
-### ⏰ Schedule Details
-- **📅 Schedule**: Sunday to Thursday, 8:30 AM - 5:15 PM
-- **⏰ Time Slots**: 1.5-hour sessions (8:30-10:00, 10:15-11:45, 12:00-13:30, 14:00-15:30, 15:45-17:15)
-- **🍽️ Break Time**: 13:30 - 14:00 (lunch break)
-- **🎓 Coverage**: BCSE22, BCSE23, BCSE24, BCSE25 (all batches)
-- **📚 Sections**: A & B for each batch
-- **👨‍🏫 Faculty**: 15 faculty members with proper designations and expertise
-- **🏢 Rooms**: Theory and lab room smart allocation
+### � Interactive Faculty Scheduling
+The faculty input system provides a sophisticated interface for instructors to specify their teaching preferences:
+
+- **Faculty Profile Management** - Add faculty members with contact information and department details
+- **Course Assignment** - Assign courses to faculty with credit hours and batch/section information
+- **Preferred Time Slots** - Faculty can specify their preferred teaching windows
+- **Availability Analysis** - System shows available slots within preferred times
+- **Visual Schedule Output** - Color-coded schedules highlighting preferred time matches
+- **Conflict Resolution** - Automatic detection and resolution of scheduling conflicts
+- **Fallback Generation** - Smart defaults when specific preferences cannot be accommodated
+
+### 📋 Data-Driven Routine Generation
+- **Comprehensive Mode** - Single table format showing all batches and sections together
+- **Batch-wise Mode** - Individual schedules for specific batches (BCSE22, BCSE23, BCSE24, BCSE25)
+- **Section-wise Mode** - Targeted schedules for specific sections (A, B)
+- **Sample UI Format** - Modern, responsive design with professional styling
+
+### ⏰ Schedule Configuration
+- **📅 Schedule**: Monday to Friday, 8:00 AM - 6:00 PM
+- **⏰ Time Slots**: Flexible periods (8:00-9:30, 9:30-11:00, 11:30-1:00, 2:00-3:30, 4:00-5:30)
+- **🍽️ Break Times**: Configurable lunch and short breaks
+- **🎓 Coverage**: All CSE batches with multiple sections
+- **👨‍🏫 Faculty Management**: Complete faculty database with preferences
+- **🏢 Room Allocation**: Smart room assignment with conflict avoidance
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Python 3.8 or higher
-- MySQL (optional, for database features)
+- Required packages (automatically installed via requirements.txt)
 
 ### Installation
 
@@ -57,54 +68,113 @@ A comprehensive academic scheduling system that automatically generates conflict
    pip install -r requirements.txt
    ```
 
-2. **Generate Enhanced Routines**
+2. **Quick Start Commands**
    ```bash
-   # Interactive mode (recommended)
+   # Interactive mode (recommended for beginners)
    python main.py
-   # Select option 6 for Sample-based routine (best UI)
-   # Select option 5 for Reference-based routine
    
-   # Direct generators
-   python src/utils/sample_routine_generator.py
-   python src/utils/reference_pdf_generator.py
+   # Generate comprehensive routine
+   python main.py --comprehensive --no-database
    
-   # Direct command line
-   python main.py --preserve-schedule --use-database
+   # Faculty input system
+   python main.py --faculty-input --no-database
+   
+   # Algorithm comparison
+   python main.py --run-all --no-database
    ```
 
 ## 💻 Usage Examples
 
-### Basic Scheduling
+### Routine Generation Modes
 ```bash
-# Use realistic schedule without optimization
-python main.py --preserve-schedule --init-db
+# Comprehensive routine (all batches/sections in single table)
+python main.py --comprehensive --enhanced
 
-# Run graph coloring algorithm
-python main.py --algorithm graph-coloring --use-database
+# Batch-wise routine (specific batch)
+python main.py --batch-wise --batch BCSE24 --no-database
+
+# Section-wise routine (specific section)
+python main.py --batch-wise --section A --no-database
+
+# Faculty input with preference analysis
+python main.py --faculty-input --no-database
+```
+
+### Algorithm Selection
+```bash
+# Use specific algorithm
+python main.py --algorithm graph-coloring --input data/sample_activities.csv
 
 # Compare all algorithms
-python main.py --run-all --use-database
+python main.py --run-all --no-database
+
+# Preserve realistic schedule
+python main.py --preserve-schedule --use-database
 ```
 
-### Enhanced Routine Generation
+### Output Formats
 ```bash
-# Generate comprehensive academic routine (NEW!)
-python main.py --academic-routine
+# Enhanced PDF and HTML (default)
+python main.py --comprehensive --enhanced
 
-# Generate section-wise routine
-python main.py --enhanced --batch BCSE24 --section A
+# Academic PDF with university branding
+python main.py --academic-pdf --batch BCSE24
 
-# Generate academic PDF
-python main.py --input data/sample_courses.json --academic-pdf --batch BCSE24 --section A
-# Generate comprehensive routine for all batches
-python main.py --comprehensive --use-database
-
-# Generate batch-specific routine
-python main.py --batch-wise --batch BCSE24 --use-database
-
-# Interactive faculty input system
-python main.py --faculty-input
+# Basic PDF format
+python main.py --basic-pdf --input data/sample_courses.csv
 ```
+
+### Faculty Input System
+```bash
+# Interactive faculty input
+python main.py --faculty-input --no-database
+
+# The system will:
+# - Load existing faculty data from data/faculty_data.json
+# - Show available slots in preferred times
+# - Generate enhanced HTML with visual highlighting
+# - Create PDF output with professional formatting
+```
+
+## 🎓 Enhanced Faculty Input System
+
+### Key Features
+- **Interactive Faculty Management** - Add faculty with contact information and preferences
+- **Preferred Time Analysis** - Visual highlighting of available slots in preferred times
+- **Course Assignment** - Link courses to faculty with batch/section information
+- **Smart Fallback** - Default schedule generation when preferences cannot be met
+- **Professional Output** - Color-coded HTML and PDF generation
+
+### Faculty Data Format
+The system uses `data/faculty_data.json`:
+```json
+{
+  "faculties": [
+    {
+      "name": "Dr. Ahmed Rahman",
+      "email": "ahmed.rahman@university.edu", 
+      "department": "CSE",
+      "preferred_times": ["9:00 AM - 12:00 PM", "1:00 PM - 4:00 PM"]
+    }
+  ],
+  "courses": [
+    {
+      "course_code": "CSE101",
+      "course_name": "Introduction to Programming",
+      "faculty": "Dr. Ahmed Rahman",
+      "credits": 3,
+      "batch": "BCSE24",
+      "section": "A"
+    }
+  ]
+}
+```
+
+### Output Features
+- **Available Slot Count** - Shows number of free slots in preferred times
+- **Visual Highlighting** - Color-coded preferred time indicators
+- **Conflict Detection** - Automatic identification of scheduling issues
+- **Multiple Formats** - Both HTML (interactive) and PDF (printable) outputs
 
 ## 🧮 Algorithms
 

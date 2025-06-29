@@ -1,27 +1,49 @@
-# User Guide - Conflict-Free Scheduling System
+# Enhanced Conflict-Free Class Scheduling System - User Guide
 
-Welcome to the comprehensive user guide for the Conflict-Free Scheduling System. This guide will help you understand and effectively use all features of the system.
+Welcome to the comprehensive user guide for the Enhanced Conflict-Free Class Scheduling System. This advanced academic scheduling solution provides powerful tools for generating conflict-free schedules with faculty preferences and professional output formats.
 
 ## 📚 Table of Contents
 
 1. [Getting Started](#getting-started)
-2. [Command Line Interface](#command-line-interface)
-3. [Algorithm Selection](#algorithm-selection)
-4. [Input Data Formats](#input-data-formats)
-5. [Output Generation](#output-generation)
-6. [Database Integration](#database-integration)
-7. [Academic Features](#academic-features)
-8. [Troubleshooting](#troubleshooting)
-9. [Advanced Usage](#advanced-usage)
+2. [System Overview](#system-overview)
+3. [Installation and Setup](#installation-and-setup)
+4. [Usage Modes](#usage-modes)
+5. [Routine Generation Types](#routine-generation-types)
+6. [Faculty Input System](#faculty-input-system)
+7. [Algorithm Selection](#algorithm-selection)
+8. [Output Formats](#output-formats)
+9. [Command Line Interface](#command-line-interface)
+10. [Troubleshooting](#troubleshooting)
+11. [Advanced Features](#advanced-features)
 
 ## 🚀 Getting Started
 
-### System Requirements
-- **Operating System**: Windows 10+, macOS 10.14+, Linux (Ubuntu 18.04+)
-- **Python**: Version 3.8 or higher
-- **Memory**: Minimum 4GB RAM
-- **Storage**: 500MB free space
-- **Optional**: MySQL for database features
+### What is the Enhanced Conflict-Free Class Scheduling System?
+
+This system is a comprehensive academic scheduling solution that automatically generates conflict-free class schedules for universities and educational institutions. It uses advanced algorithms to optimize schedules while respecting faculty preferences, room availability, and institutional constraints.
+
+### Key Benefits
+- **Automated Scheduling** - No more manual schedule creation
+- **Conflict Detection** - Automatic identification and resolution of scheduling conflicts
+- **Faculty Preferences** - Respects instructor preferred teaching times
+- **Professional Output** - High-quality HTML and PDF reports
+- **Multiple Algorithms** - Choose the best optimization approach for your needs
+- **Flexible Input** - Support for CSV, JSON, and database sources
+
+## 🏗️ System Overview
+
+### Core Components
+1. **Scheduling Engine** - Core algorithm processing
+2. **Faculty Input System** - Interactive preference management
+3. **Output Generator** - Professional HTML/PDF creation
+4. **Database Manager** - Optional data persistence
+5. **CLI Interface** - Command-line interaction
+
+### Supported Routine Types
+- **Comprehensive** - All batches and sections in one table
+- **Batch-wise** - Individual schedules for specific batches
+- **Section-wise** - Targeted schedules for specific sections
+- **Faculty-based** - Generated from faculty preferences
 
 ### Installation Steps
 
@@ -529,7 +551,7 @@ file output/academic_schedule_BCSE24_A.pdf
 ```
 
 **Validate Data**:
-```bash
+```python
 python -c "
 from src.utils.file_parser import FileParser
 activities = FileParser.parse_csv('data/demo_activities.csv')
@@ -593,103 +615,4 @@ import json
 def schedule_api(activities_json):
     activities = json.loads(activities_json)
     scheduler = ConflictFreeScheduler()
-    result = scheduler.graph_coloring_schedule(activities)
-    return json.dumps([vars(a) for a in result])
-```
-
-#### Web Service Deployment
-```python
-from flask import Flask, request, jsonify
-from src.scheduler import ConflictFreeScheduler
-
-app = Flask(__name__)
-
-@app.route('/schedule', methods=['POST'])
-def create_schedule():
-    data = request.get_json()
-    # Process scheduling request
-    return jsonify(result)
-```
-
-### Performance Optimization
-
-#### Large Dataset Handling
-```bash
-# Use graph coloring for large datasets (fastest)
-python main.py --algorithm graph-coloring --input large_data.csv
-
-# Parallelize batch processing
-python scripts/parallel_scheduler.py --input-dir data/ --output-dir results/
-```
-
-#### Memory Management
-```python
-# Process in chunks for very large datasets
-def process_large_dataset(filename, chunk_size=1000):
-    activities = FileParser.parse_csv(filename)
-    for i in range(0, len(activities), chunk_size):
-        chunk = activities[i:i+chunk_size]
-        result = scheduler.graph_coloring_schedule(chunk)
-        # Process chunk result
-```
-
-### Custom Output Formats
-
-#### CSV Export
-```python
-from src.utils.file_parser import FileParser
-
-# Export scheduled activities to CSV
-FileParser.write_csv(scheduled_activities, 'output/schedule.csv')
-```
-
-#### JSON API Format
-```python
-def export_json_api(activities, filename):
-    data = {
-        'schedule': [vars(a) for a in activities],
-        'metadata': {
-            'total_activities': len(activities),
-            'total_credits': sum(a.weight for a in activities),
-            'generated_at': datetime.now().isoformat()
-        }
-    }
-    with open(filename, 'w') as f:
-        json.dump(data, f, indent=2)
-```
-
-## 📞 Support
-
-### Getting Help
-
-1. **Check Documentation**: This user guide and README.md
-2. **Run Debug Tools**: `python debug_test.py --comprehensive`
-3. **Check Issues**: [GitHub Issues](https://github.com/punam06/conflictFreeScheduling/issues)
-4. **Contact Developer**: Through GitHub or university email
-
-### Reporting Issues
-
-When reporting issues, include:
-- Python version (`python --version`)
-- Operating system
-- Complete error message
-- Input data sample (if applicable)
-- Steps to reproduce
-
-### Feature Requests
-
-Submit feature requests through GitHub Issues with:
-- Clear description of desired functionality
-- Use case explanation
-- Expected behavior
-- Any relevant academic requirements
-
----
-
-**📚 Need More Help?** 
-- 📖 Check the [README.md](README.md) for technical details
-- 🔧 Run `python debug_test.py --help` for debugging options
-- 💻 See `python main.py --help` for all CLI options
-- 🎓 Contact the CSE Department for academic-specific questions
-
-**✅ Happy Scheduling!** 🎯
+    result = scheduler.graph_color

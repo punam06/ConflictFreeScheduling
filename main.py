@@ -43,7 +43,7 @@ from utils.pdf_generator import PDFGenerator, AcademicPDFGenerator
 from utils.enhanced_pdf_generator import EnhancedPDFGenerator
 from utils.comprehensive_routine_generator import ComprehensiveRoutineGenerator
 from utils.reference_pdf_generator import ReferencePDFRoutineGenerator
-from utils.faculty_input import FacultyInputSystem
+from utils.faculty_input import EnhancedFacultyInputSystem, FacultyInputSystem
 from utils.sample_routine_generator import SampleRoutineGenerator
 # Database import is conditional - only when needed
 
@@ -427,11 +427,11 @@ def handle_faculty_input_routine() -> List[Activity]:
     Returns:
         List of activities generated from faculty input
     """
-    print("\n" + "="*60)
-    print("🎓 FACULTY INPUT SYSTEM")
-    print("="*60)
+    print("\n" + "="*70)
+    print("🎓 ENHANCED FACULTY INPUT SYSTEM")
+    print("="*70)
     
-    faculty_system = FacultyInputSystem()
+    faculty_system = EnhancedFacultyInputSystem()
     
     # Check if existing faculty data exists
     faculty_data_path = "data/faculty_data.json"
@@ -486,6 +486,24 @@ def handle_faculty_input_routine() -> List[Activity]:
     # Data was loaded successfully
     print(f"📊 Loaded {len(faculty_system.faculties)} faculty members and {len(faculty_system.courses)} courses")
     
+    # Generate enhanced faculty routine with preferred time analysis
+    try:
+        html_filepath = faculty_system.save_faculty_routine_html()
+        if html_filepath:
+            print(f"🎯 Enhanced faculty routine with preferred time analysis generated!")
+            print(f"   📄 HTML: {html_filepath}")
+            
+            # Also generate enhanced schedule data
+            enhanced_schedule = faculty_system.generate_enhanced_faculty_schedule()
+            print(f"   📊 Available slots in preferred times:")
+            for faculty_data in enhanced_schedule['faculties']:
+                available_count = faculty_data['statistics']['available_preferred_slots']
+                print(f"      👨‍🏫 {faculty_data['name']}: {available_count} available slots")
+        else:
+            print("⚠️ Failed to generate enhanced faculty routine")
+    except Exception as e:
+        print(f"❌ Error generating enhanced routine: {e}")
+    
     # If no courses are loaded, fall back to default schedule
     if len(faculty_system.courses) == 0:
         print("⚠️ No courses found in faculty data. Using default faculty schedule...")
@@ -511,7 +529,7 @@ def handle_faculty_input_routine() -> List[Activity]:
     return activities
 
 
-def handle_interactive_faculty_input(faculty_system: 'FacultyInputSystem') -> List[Activity]:
+def handle_interactive_faculty_input(faculty_system: 'EnhancedFacultyInputSystem') -> List[Activity]:
     """
     Handle interactive faculty input
     
@@ -521,33 +539,74 @@ def handle_interactive_faculty_input(faculty_system: 'FacultyInputSystem') -> Li
     Returns:
         List of activities from interactive input
     """
-    # Main faculty input loop
+    # Enhanced faculty input loop
     while True:
-        print("\n" + "-"*40)
-        print("Faculty Input Options:")
-        print("1. Add Faculty Member")
-        print("2. Assign Courses to Faculty")
-        print("3. View Current Schedule")
-        print("4. Generate Routine")
-        print("5. Save and Exit")
+        print("\n" + "-"*50)
+        print("📚 Enhanced Faculty Input Options:")
+        print("1. 👨‍🏫 Add Faculty Member")
+        print("2. 📖 Assign Courses to Faculty")
+        print("3. 📋 View Enhanced Schedule Summary")
+        print("4. 🔍 Detect Conflicts & Issues")
+        print("5. 📊 Generate Comprehensive Report")
+        print("6. 💾 Save and Generate Routine")
+        print("7. 🚪 Exit")
         
         try:
-            choice = input("\nSelect option (1-5): ").strip()
+            choice = input("\nSelect option (1-7): ").strip()
             
             if choice == "1":
                 faculty_system.add_faculty_interactive()
             elif choice == "2":
                 faculty_system.interactive_course_assignment()
             elif choice == "3":
-                faculty_system.print_schedule_summary()
+                faculty_system.print_enhanced_schedule_summary()
             elif choice == "4":
-                break
+                conflicts = faculty_system.conflict_detector.detect_faculty_conflicts(faculty_system.courses)
+                workload_issues = faculty_system.conflict_detector.detect_workload_issues(faculty_system.faculties, faculty_system.courses)
+                print(f"\n🔍 Analysis Results:")
+                print(f"   ⚠️ Schedule Conflicts: {len(conflicts)}")
+                print(f"   ⚡ Workload Issues: {len(workload_issues)}")
+                if conflicts:
+                    for conflict in conflicts:
+                        print(f"   ❌ {conflict['description']}")
+                if workload_issues:
+                    for issue in workload_issues:
+                        print(f"   ⚠️ {issue['description']}")
             elif choice == "5":
+                report = faculty_system.generate_comprehensive_report()
+                print(f"\n📊 Comprehensive Report:")
+                print(f"   👥 Faculties: {report['summary']['total_faculties']}")
+                print(f"   📚 Courses: {report['summary']['total_courses']}")
+                print(f"   🏠 Rooms Used: {report['summary']['total_rooms_used']}")
+                print(f"   ⚠️ Conflicts: {report['summary']['conflicts_detected']}")
+                print(f"   ⚡ Workload Issues: {report['summary']['workload_issues']}")
+            elif choice == "6":
                 faculty_system.save_faculty_data()
+                # Generate enhanced routine with preferred time analysis
+                try:
+                    html_filepath = faculty_system.save_faculty_routine_html()
+                    if html_filepath:
+                        print(f"✅ Enhanced faculty routine generated!")
+                        print(f"   📄 HTML with preferred time analysis: {html_filepath}")
+                        
+                        # Show available slots summary
+                        enhanced_schedule = faculty_system.generate_enhanced_faculty_schedule()
+                        print(f"   🎯 Available slots in preferred times:")
+                        for faculty_data in enhanced_schedule['faculties']:
+                            available_count = faculty_data['statistics']['available_preferred_slots']
+                            print(f"      👨‍🏫 {faculty_data['name']}: {available_count} available slots")
+                    else:
+                        print("⚠️ Failed to generate enhanced faculty routine")
+                except Exception as e:
+                    print(f"❌ Error generating enhanced routine: {e}")
+                
                 print("👋 Faculty data saved. Generating routine...")
                 break
+            elif choice == "7":
+                print("🚪 Exiting without saving...")
+                break
             else:
-                print("❌ Invalid choice. Please select 1-5.")
+                print("❌ Invalid choice. Please select 1-7.")
                 
         except (EOFError, KeyboardInterrupt):
             print("\n🔄 Interactive mode interrupted. Using current data...")

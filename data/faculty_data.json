@@ -1,4 +1,111 @@
 {
-  "faculties": [],
-  "courses": []
+  "version": "2.0",
+  "created_at": "2024-12-20T10:00:00",
+  "faculties": [
+    {
+      "name": "Dr. Ahmed Rahman",
+      "email": "ahmed.rahman@university.edu",
+      "department": "CSE",
+      "designation": "Professor",
+      "phone": "+880-1234-567890",
+      "specialization": ["Algorithms", "Data Structures", "Machine Learning"],
+      "available_times": [[2, 8], [10, 16]],
+      "preferred_courses": ["CSE101", "CSE201", "CSE301"],
+      "max_hours_per_week": 20,
+      "room_preferences": ["CSE-401", "CSE-402"],
+      "unavailable_days": ["Friday"]
+    },
+    {
+      "name": "Dr. Sarah Johnson",
+      "email": "sarah.johnson@university.edu",
+      "department": "CSE",
+      "designation": "Associate Professor",
+      "phone": "+880-1234-567891",
+      "specialization": ["Database Systems", "Web Development", "Software Engineering"],
+      "available_times": [[4, 10], [12, 18]],
+      "preferred_courses": ["CSE202", "CSE302", "CSE401"],
+      "max_hours_per_week": 18,
+      "room_preferences": ["CSE-403", "CSE-Lab1"],
+      "unavailable_days": ["Sunday"]
+    },
+    {
+      "name": "Mr. Karim Hassan",
+      "email": "karim.hassan@university.edu",
+      "department": "CSE",
+      "designation": "Lecturer",
+      "phone": "+880-1234-567892",
+      "specialization": ["Programming", "Object-Oriented Design"],
+      "available_times": [[6, 12], [14, 20]],
+      "preferred_courses": ["CSE102", "CSE103"],
+      "max_hours_per_week": 16,
+      "room_preferences": ["CSE-404", "CSE-Lab2"],
+      "unavailable_days": ["Saturday"]
+    }
+  ],
+  "courses": [
+    {
+      "course_code": "CSE101",
+      "course_name": "Introduction to Computer Science",
+      "faculty_name": "Dr. Ahmed Rahman",
+      "credits": 3.0,
+      "duration": 90,
+      "start_time": 2,
+      "end_time": 5,
+      "room": "CSE-401",
+      "department": "CSE",
+      "created_at": "2024-12-20T10:00:00"
+    },
+    {
+      "course_code": "CSE201",
+      "course_name": "Data Structures",
+      "faculty_name": "Dr. Ahmed Rahman",
+      "credits": 3.0,
+      "duration": 90,
+      "start_time": 10,
+      "end_time": 13,
+      "room": "CSE-402",
+      "department": "CSE",
+      "created_at": "2024-12-20T10:00:00"
+    },
+    {
+      "course_code": "CSE202",
+      "course_name": "Database Systems",
+      "faculty_name": "Dr. Sarah Johnson",
+      "credits": 3.0,
+      "duration": 90,
+      "start_time": 4,
+      "end_time": 7,
+      "room": "CSE-403",
+      "department": "CSE",
+      "created_at": "2024-12-20T10:00:00"
+    },
+    {
+      "course_code": "CSE102",
+      "course_name": "Programming Fundamentals",
+      "faculty_name": "Mr. Karim Hassan",
+      "credits": 3.0,
+      "duration": 90,
+      "start_time": 6,
+      "end_time": 9,
+      "room": "CSE-404",
+      "department": "CSE",
+      "created_at": "2024-12-20T10:00:00"
+    },
+    {
+      "course_code": "CSE302",
+      "course_name": "Web Development",
+      "faculty_name": "Dr. Sarah Johnson",
+      "credits": 3.0,
+      "duration": 90,
+      "start_time": 14,
+      "end_time": 17,
+      "room": "CSE-Lab1",
+      "department": "CSE",
+      "created_at": "2024-12-20T10:00:00"
+    }
+  ],
+  "summary": {
+    "total_faculties": 3,
+    "total_courses": 5
+  }
 }
