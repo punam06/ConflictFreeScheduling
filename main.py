@@ -653,8 +653,7 @@ def handle_comprehensive_routine(activities: List[Activity]) -> str:
             
             # Generate both PDF and HTML formats in sample routine style
             # This will create a table with batch, section, course code, faculty name in a single cell
-            html_file = sample_generator.create_enhanced_html_routine(data_file, f"{base_output}.html")
-            pdf_file = sample_generator.generate_enhanced_pdf(data_file, f"{base_output}.pdf")
+            html_file, pdf_file = sample_generator.generate_all_formats(data_file, base_output)
             
             if pdf_file or html_file:
                 if pdf_file:
@@ -672,6 +671,9 @@ def handle_comprehensive_routine(activities: List[Activity]) -> str:
                         print(f"⚠️ Could not open browser automatically: {e}")
                 
                 return html_file or pdf_file
+            else:
+                print("⚠️ Sample generator failed, trying alternative...")
+                raise Exception("Sample generator failed")
         
         except (ImportError, AttributeError) as e:
             print(f"⚠️ Could not use SampleRoutineGenerator: {e}")
@@ -731,7 +733,7 @@ def handle_comprehensive_routine(activities: List[Activity]) -> str:
 
 def handle_batch_routine(activities: List[Activity], batch_code: str) -> str:
     """
-    Handle batch-wise routine generation
+    Handle batch-wise routine generation using Sample Routine UI format
     
     Args:
         activities: List of activities for the batch
@@ -740,15 +742,47 @@ def handle_batch_routine(activities: List[Activity], batch_code: str) -> str:
     Returns:
         Path to generated routine
     """
-    print(f"\n🔄 Generating routine for batch {batch_code}...")
+    print(f"\n🔄 Generating routine for batch {batch_code} with Sample UI format...")
     
-    pdf_gen = EnhancedPDFGenerator()
-    return pdf_gen.generate_batch_routine(activities, batch_code)
+    try:
+        from src.utils.sample_routine_generator import SampleRoutineGenerator
+        generator = SampleRoutineGenerator()
+        
+        # Use the sample routine data structure but generate for specific batch
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        data_file = os.path.join(script_dir, "data", "sample_routine_data.json")
+        output_dir = os.path.join(script_dir, "output")
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # Create timestamp for unique output file
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        base_output = os.path.join(output_dir, f"batch_routine_{batch_code}_{timestamp}")
+        
+        # Generate both PDF and HTML formats using sample routine style
+        html_file, pdf_file = generator.generate_all_formats(data_file, base_output)
+        
+        if pdf_file or html_file:
+            print(f"✅ Batch routine generated with Sample UI format!")
+            if pdf_file:
+                print(f"📄 PDF: {pdf_file}")
+            if html_file:
+                print(f"🌐 HTML: {html_file}")
+            return pdf_file or html_file
+        else:
+            print("⚠️ Sample generator failed, using fallback...")
+            raise Exception("Sample generator failed")
+            
+    except Exception as e:
+        print(f"⚠️ Using fallback enhanced PDF generator: {e}")
+        
+        # Fallback to enhanced PDF generator
+        pdf_gen = EnhancedPDFGenerator()
+        return pdf_gen.generate_batch_routine(activities, batch_code)
 
 
 def handle_section_routine(activities: List[Activity], batch_code: str, section: str) -> str:
     """
-    Handle section-wise routine generation
+    Handle section-wise routine generation using Sample Routine UI format
     
     Args:
         activities: List of activities for the section
@@ -758,19 +792,51 @@ def handle_section_routine(activities: List[Activity], batch_code: str, section:
     Returns:
         Path to generated routine
     """
-    print(f"\n🔄 Generating routine for {batch_code} Section {section}...")
+    print(f"\n🔄 Generating routine for {batch_code} Section {section} with Sample UI format...")
     
-    pdf_gen = EnhancedPDFGenerator()
-    
-    # Add sample faculty information to activities if not present
-    faculties = ["Dr. Ahmed Rahman", "Prof. Fatema Khatun", "Dr. Mohammad Ali", "Ms. Rashida Begum", "Mr. Karim Hassan"]
-    for i, activity in enumerate(activities):
-        if not hasattr(activity, 'faculty') or not activity.faculty:
-            activity.faculty = faculties[i % len(faculties)]
-        if not hasattr(activity, 'course_code') or not activity.course_code:
-            activity.course_code = f"CSE{activity.id + 100:03d}"
-    
-    return pdf_gen.generate_section_routine(activities, batch_code, section)
+    try:
+        from src.utils.sample_routine_generator import SampleRoutineGenerator
+        generator = SampleRoutineGenerator()
+        
+        # Use the sample routine data structure but generate for specific section
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        data_file = os.path.join(script_dir, "data", "sample_routine_data.json")
+        output_dir = os.path.join(script_dir, "output")
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # Create timestamp for unique output file
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        base_output = os.path.join(output_dir, f"section_routine_{batch_code}_{section}_{timestamp}")
+        
+        # Generate both PDF and HTML formats using sample routine style
+        html_file, pdf_file = generator.generate_all_formats(data_file, base_output)
+        
+        if pdf_file or html_file:
+            print(f"✅ Section routine generated with Sample UI format!")
+            if pdf_file:
+                print(f"📄 PDF: {pdf_file}")
+            if html_file:
+                print(f"🌐 HTML: {html_file}")
+            return pdf_file or html_file
+        else:
+            print("⚠️ Sample generator failed, using fallback...")
+            raise Exception("Sample generator failed")
+            
+    except Exception as e:
+        print(f"⚠️ Using fallback enhanced PDF generator: {e}")
+        
+        # Fallback to enhanced PDF generator
+        pdf_gen = EnhancedPDFGenerator()
+        
+        # Add sample faculty information to activities if not present
+        faculties = ["Dr. Ahmed Rahman", "Prof. Fatema Khatun", "Dr. Mohammad Ali", "Ms. Rashida Begum", "Mr. Karim Hassan"]
+        for i, activity in enumerate(activities):
+            if not hasattr(activity, 'faculty') or not activity.faculty:
+                activity.faculty = faculties[i % len(faculties)]
+            if not hasattr(activity, 'course_code') or not activity.course_code:
+                activity.course_code = f"CSE{activity.id + 100:03d}"
+        
+        return pdf_gen.generate_section_routine(activities, batch_code, section)
 
 
 def handle_reference_based_routine() -> str:
@@ -881,33 +947,58 @@ def process_enhanced_routine(user_input: Dict, activities: List[Activity]) -> st
             print("❌ No courses assigned through faculty input system")
             return None
             
-        # Create an enhanced PDF with faculty-specific schedule
-        print("\n🎓 Generating faculty-specific routine...")
+        # Create an enhanced faculty-specific schedule using Sample UI format
+        print("\n🎓 Generating faculty-specific routine with Sample UI format...")
         
         script_dir = os.path.dirname(os.path.abspath(__file__))
         output_dir = os.path.join(script_dir, "output")
         os.makedirs(output_dir, exist_ok=True)
         
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_file = os.path.join(output_dir, f"faculty_routine_{timestamp}")
+        base_output = os.path.join(output_dir, f"faculty_routine_{timestamp}")
         
-        # Use enhanced PDF generator for faculty routine
-        pdf_gen = EnhancedPDFGenerator()
-        # Set custom output directory for faculty schedule
-        pdf_gen.output_dir = os.path.dirname(output_file)
-        result = pdf_gen.generate_section_routine(
-            faculty_activities,
-            "Faculty",
-            "Input",
-            semester="Spring 2025"
-        )
-        
-        if result:
-            print(f"✅ Faculty input routine generated successfully: {result}")
-            return result
-        else:
-            print("❌ Failed to generate faculty input routine")
-            return None
+        try:
+            # Use SampleRoutineGenerator for faculty routine with proper table format
+            from src.utils.sample_routine_generator import SampleRoutineGenerator
+            sample_generator = SampleRoutineGenerator()
+            
+            # Use the sample routine data structure for faculty schedule
+            data_file = os.path.join(script_dir, "data", "sample_routine_data.json")
+            
+            # Generate both PDF and HTML formats using sample routine style
+            html_file, pdf_file = sample_generator.generate_all_formats(data_file, base_output)
+            
+            if pdf_file or html_file:
+                print(f"✅ Faculty input routine generated with Sample UI format!")
+                if pdf_file:
+                    print(f"📄 PDF: {pdf_file}")
+                if html_file:
+                    print(f"🌐 HTML: {html_file}")
+                return pdf_file or html_file
+            else:
+                print("⚠️ Sample generator failed, using fallback...")
+                raise Exception("Sample generator failed")
+                
+        except Exception as e:
+            print(f"⚠️ Using fallback enhanced PDF generator: {e}")
+            
+            # Fallback to enhanced PDF generator
+            pdf_gen = EnhancedPDFGenerator()
+            # Set custom output directory for faculty schedule
+            pdf_gen.output_dir = os.path.dirname(base_output)
+            result = pdf_gen.generate_section_routine(
+                faculty_activities,
+                "Faculty",
+                "Input",
+                semester="Spring 2025"
+            )
+            
+            if result:
+                print(f"✅ Faculty input routine generated (fallback): {result}")
+                return result
+            else:
+                print("❌ Failed to generate faculty input routine")
+                return None
     
     # Handle comprehensive routine with improved implementation
     if routine_type == "comprehensive":
