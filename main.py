@@ -265,12 +265,9 @@ def get_user_input() -> Dict:
     use_basic_pdf = pdf_type == "basic"
     
     # Use database (auto-enable for comprehensive and faculty modes, skip for reference and sample)
-    if routine_type in ["reference", "sample"]:
+    if routine_type in ["reference", "sample", "comprehensive", "faculty"]:
         use_database = False
-        print(f"\n📋 {routine_type.title()} mode uses predefined data - database skipped")
-    elif routine_type in ["comprehensive", "faculty"]:
-        use_database = True
-        print(f"\n🔄 Database mode automatically enabled for {routine_type} routine")
+        print(f"\n📋 {routine_type.title()} mode uses predefined/sample data - database skipped")
     else:
         use_database = input("\nUse database for input? (y/n) [n]: ").lower().strip() == "y"
     
@@ -489,16 +486,10 @@ def handle_faculty_input_routine() -> List[Activity]:
     # Data was loaded successfully
     print(f"📊 Loaded {len(faculty_system.faculties)} faculty members and {len(faculty_system.courses)} courses")
     
-    # Check if we should run interactive mode for modifications
-    try:
-        import sys
-        if sys.stdin.isatty() and len(faculty_system.courses) == 0:
-            # Interactive mode and no courses assigned
-            modify_data = input("\nNo courses assigned. Would you like to add courses interactively? (y/n) [n]: ").lower().strip() == 'y'
-            if modify_data:
-                return handle_interactive_faculty_input(faculty_system)
-    except (EOFError, KeyboardInterrupt):
-        pass
+    # If no courses are loaded, fall back to default schedule
+    if len(faculty_system.courses) == 0:
+        print("⚠️ No courses found in faculty data. Using default faculty schedule...")
+        return create_default_faculty_schedule()
     
     # Convert faculty courses to Activity objects
     activities = []
@@ -1141,10 +1132,8 @@ Examples:
     
     # Handle special flags
     # Enhanced mode doesn't automatically require database - only specific routine types do
-    # Comprehensive routine uses predefined sample data, not database
-    if hasattr(args, 'routine_type') and args.routine_type in ["faculty"]:
-        args.use_database = True
-    
+    # All routine generation modes (comprehensive, batch, section, faculty) use sample data
+    # Database is only needed for algorithm-based scheduling modes
     if args.no_database:
         args.use_database = False
     
@@ -1223,6 +1212,16 @@ Examples:
                 return 0
             else:
                 print("❌ Failed to generate section-wise routine")
+                return 1
+        elif args.routine_type == "faculty":
+            print("\n🎓 Faculty input routine generation selected...")
+            # Handle faculty input routine directly using sample data
+            result = process_enhanced_routine({"routine_type": "faculty"}, [])
+            if result:
+                print(f"\n✅ Faculty input routine generation complete!")
+                return 0
+            else:
+                print("❌ Failed to generate faculty input routine")
                 return 1
     
     # Load activities (only for algorithm modes, not routine generation modes)
