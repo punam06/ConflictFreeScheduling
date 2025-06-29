@@ -583,8 +583,12 @@ class SampleRoutineGenerator:
                     </div>
         """
         
-        # Add routine tables for each section
+        # Add routine tables for each section (only process section-level data with dashes)
         for section_name, section_data in routine_data.items():
+            # Skip batch-level data that doesn't contain '-'
+            if '-' not in section_name:
+                continue
+                
             batch, section = section_name.split('-')
             html_content += f"""
                     <div class="section-container">
@@ -701,8 +705,12 @@ class SampleRoutineGenerator:
             story.append(subtitle)
             story.append(Spacer(1, 25))
             
-            # Add routine tables for each section
+            # Add routine tables for each section (only process section-level data with dashes)
             for section_name, section_data in routine_data.items():
+                # Skip batch-level data that doesn't contain '-'
+                if '-' not in section_name:
+                    continue
+                    
                 batch, section = section_name.split('-')
                 section_title = Paragraph(f"{batch} Section {section} - Class Routine", self.section_style)
                 story.append(section_title)
@@ -713,7 +721,8 @@ class SampleRoutineGenerator:
                 story.append(Spacer(1, 25))
                 
                 # Add page break except for the last section
-                sections = list(routine_data.keys())
+                section_only_data = {k: v for k, v in routine_data.items() if '-' in k}
+                sections = list(section_only_data.keys())
                 if section_name != sections[-1]:
                     story.append(PageBreak())
             

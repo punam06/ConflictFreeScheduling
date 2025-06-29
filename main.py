@@ -630,78 +630,76 @@ def handle_comprehensive_routine(activities: List[Activity]) -> str:
         
         if not os.path.exists(data_file):
             print(f"❌ Data file not found: {data_file}")
-            return None
-            
-        with open(data_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        
-        # Use the SampleRoutineGenerator for comprehensive routine
-        # This ensures the table format matches the sample routine exactly:
-        # - Rows organized by days and rooms
-        # - Columns organized by time slots
-        # - Each cell containing batch, section, course code, and faculty information
-        print("🌟 Using sample routine template for departmental-wide comprehensive schedule")
-        
-        try:
-            # Import and use SampleRoutineGenerator
-            from src.utils.sample_routine_generator import SampleRoutineGenerator
-            sample_generator = SampleRoutineGenerator()
-            
-            # Generate comprehensive routine using the loaded data
-            output_dir = os.path.join(script_dir, "output")
-            os.makedirs(output_dir, exist_ok=True)
-            
-            # Create timestamp for unique output file
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            base_output = os.path.join(output_dir, f"comprehensive_departmental_routine_{timestamp}")
-            
-            # Generate both PDF and HTML formats in sample routine style
-            # This will create a table with batch, section, course code, faculty name in a single cell
-            html_file, pdf_file = sample_generator.generate_all_formats(data_file, base_output)
-            
-            if pdf_file or html_file:
-                if pdf_file:
-                    print(f"✅ Comprehensive departmental routine generated (PDF): {pdf_file}")
-                if html_file:
-                    print(f"🌐 Comprehensive departmental routine generated (HTML): {html_file}")
-                
-                # Open the HTML file in the browser for the user to see
-                print("\n🌐 Opening comprehensive routine in browser...")
-                if html_file and os.path.exists(html_file):
-                    try:
-                        import webbrowser
-                        webbrowser.open(f"file://{os.path.abspath(html_file)}")
-                    except Exception as e:
-                        print(f"⚠️ Could not open browser automatically: {e}")
-                
-                return html_file or pdf_file
-            else:
-                print("⚠️ Sample generator failed, trying fallback...")
-                raise Exception("Sample generator failed")
-                
-        except Exception as e:
-            print(f"⚠️ Sample generator error: {e}")
-            
-        # Fallback to enhanced PDF generator
-        print("🔄 Using fallback enhanced comprehensive routine...")
-        pdf_gen = EnhancedPDFGenerator()
-        return pdf_gen.generate_comprehensive_routine({
-            "All Departments": activities
-        })
-        
-    except Exception as e:
-        print(f"❌ Error generating comprehensive routine: {str(e)}")
-        print("🔄 Using basic enhanced PDF generator as last resort...")
-        
-        # Last resort fallback
-        try:
+            print("🔄 Using fallback enhanced comprehensive routine...")
             pdf_gen = EnhancedPDFGenerator()
             return pdf_gen.generate_comprehensive_routine({
                 "All Departments": activities
             })
+        
+        # Use the SampleRoutineGenerator for comprehensive routine
+        print("🌟 Using sample routine template for departmental-wide comprehensive schedule")
+        
+        # Import and use SampleRoutineGenerator
+        from src.utils.sample_routine_generator import SampleRoutineGenerator
+        sample_generator = SampleRoutineGenerator()
+        
+        # Generate comprehensive routine using the loaded data
+        output_dir = os.path.join(script_dir, "output")
+        os.makedirs(output_dir, exist_ok=True)
+        
+        # Create timestamp for unique output file
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        base_output = os.path.join(output_dir, f"comprehensive_departmental_routine_{timestamp}")
+        
+        # Generate both PDF and HTML formats in sample routine style
+        print("📋 Generating comprehensive routine with sample table format...")
+        try:
+            html_file, pdf_file = sample_generator.generate_all_formats(data_file, base_output)
+        except Exception as e:
+            import traceback
+            print(f"🔍 Detailed error in generate_all_formats: {e}")
+            print("🔍 Traceback:")
+            traceback.print_exc()
+            raise e
+        
+        if pdf_file and html_file:
+            print(f"✅ Comprehensive departmental routine generated (PDF): {pdf_file}")
+            print(f"🌐 Comprehensive departmental routine generated (HTML): {html_file}")
+            
+            # Open the HTML file in the browser for the user to see
+            print("\n🌐 Opening comprehensive routine in browser...")
+            try:
+                import webbrowser
+                webbrowser.open(f"file://{os.path.abspath(html_file)}")
+            except Exception as e:
+                print(f"⚠️ Could not open browser automatically: {e}")
+            
+            return html_file  # Return the HTML file path
+        elif pdf_file or html_file:
+            # At least one file was generated
+            result = pdf_file or html_file
+            print(f"✅ Comprehensive departmental routine generated: {result}")
+            return result
+        else:
+            print("⚠️ Sample generator returned no files")
+            raise Exception("Sample generator returned no files")
+        
+    except Exception as e:
+        print(f"⚠️ Sample generator error: {e}")
+        print("🔄 Using fallback enhanced comprehensive routine...")
+        
+        try:
+            pdf_gen = EnhancedPDFGenerator()
+            result = pdf_gen.generate_comprehensive_routine({
+                "All Departments": activities
+            })
+            if result:
+                print(f"✅ Comprehensive routine generated (fallback): {result}")
+                return result
         except Exception as final_e:
             print(f"❌ Final fallback also failed: {final_e}")
-            return None
+        
+        return None
 
 
 def handle_batch_routine(activities: List[Activity], batch_code: str) -> str:
@@ -906,13 +904,7 @@ def process_enhanced_routine(user_input: Dict, activities: List[Activity]) -> st
     section = user_input.get("section", "A")
     
     if routine_type == "faculty":
-        # Import the updated faculty handler
-        try:
-            from src.utils.routine_handler import handle_faculty_input_routine
-        except ImportError:
-            # Fallback to local implementation if import fails
-            pass
-            
+        # Use local implementation to avoid import conflicts
         # Faculty input mode - get activities from faculty system
         faculty_activities = handle_faculty_input_routine()
         
@@ -975,12 +967,7 @@ def process_enhanced_routine(user_input: Dict, activities: List[Activity]) -> st
     
     # Handle comprehensive routine with improved implementation
     if routine_type == "comprehensive":
-        # Import the updated comprehensive handler
-        try:
-            from src.utils.routine_handler import handle_comprehensive_routine
-        except ImportError:
-            # Fallback to local implementation if import fails
-            pass
+        # Use the local implementation to avoid import conflicts
         return handle_comprehensive_routine(activities)
     elif routine_type == "batch":
         return handle_batch_routine(activities, batch)
