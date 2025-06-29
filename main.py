@@ -614,14 +614,15 @@ def create_default_faculty_schedule() -> List[Activity]:
 def handle_comprehensive_routine(activities: List[Activity]) -> str:
     """
     Handle comprehensive routine generation for all batches with conflict-free scheduling
+    Uses the ComprehensiveSingleTableGenerator to create a single table with all batches/sections
     
     Args:
-        activities: List of all activities
+        activities: List of all activities (not used, we use sample data)
         
     Returns:
         Path to generated routine
     """
-    print("\n🔄 Generating comprehensive conflict-free routine for all batches...")
+    print("\n🔄 Generating comprehensive routine (single table with all batches/sections)...")
     
     try:
         # Load sample routine data from JSON (all batches and sections)
@@ -636,12 +637,12 @@ def handle_comprehensive_routine(activities: List[Activity]) -> str:
                 "All Departments": activities
             })
         
-        # Use the SampleRoutineGenerator for comprehensive routine
-        print("🌟 Using sample routine template for departmental-wide comprehensive schedule")
+        # Use the ComprehensiveSingleTableGenerator for comprehensive routine
+        print("🌟 Using comprehensive single table generator for all batches/sections")
         
-        # Import and use SampleRoutineGenerator
-        from src.utils.sample_routine_generator import SampleRoutineGenerator
-        sample_generator = SampleRoutineGenerator()
+        # Import and use ComprehensiveSingleTableGenerator
+        from src.utils.comprehensive_single_table_generator import ComprehensiveSingleTableGenerator
+        comprehensive_generator = ComprehensiveSingleTableGenerator()
         
         # Generate comprehensive routine using the loaded data
         output_dir = os.path.join(script_dir, "output")
@@ -649,22 +650,22 @@ def handle_comprehensive_routine(activities: List[Activity]) -> str:
         
         # Create timestamp for unique output file
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        base_output = os.path.join(output_dir, f"comprehensive_departmental_routine_{timestamp}")
+        base_output = os.path.join(output_dir, f"comprehensive_single_table_routine_{timestamp}")
         
-        # Generate both PDF and HTML formats in sample routine style
-        print("📋 Generating comprehensive routine with sample table format...")
+        # Generate both PDF and HTML formats in comprehensive single table style
+        print("📋 Generating comprehensive routine as single table (all batches/sections)...")
         try:
-            html_file, pdf_file = sample_generator.generate_all_formats(data_file, base_output)
+            html_file, pdf_file = comprehensive_generator.generate_comprehensive_routine(data_file, base_output)
         except Exception as e:
             import traceback
-            print(f"🔍 Detailed error in generate_all_formats: {e}")
+            print(f"🔍 Detailed error in comprehensive routine generation: {e}")
             print("🔍 Traceback:")
             traceback.print_exc()
             raise e
         
         if pdf_file and html_file:
-            print(f"✅ Comprehensive departmental routine generated (PDF): {pdf_file}")
-            print(f"🌐 Comprehensive departmental routine generated (HTML): {html_file}")
+            print(f"✅ Comprehensive single table routine generated (PDF): {pdf_file}")
+            print(f"🌐 Comprehensive single table routine generated (HTML): {html_file}")
             
             # Open the HTML file in the browser for the user to see
             print("\n🌐 Opening comprehensive routine in browser...")
@@ -1140,6 +1141,7 @@ Examples:
     
     # Handle special flags
     # Enhanced mode doesn't automatically require database - only specific routine types do
+    # Comprehensive routine uses predefined sample data, not database
     if hasattr(args, 'routine_type') and args.routine_type in ["faculty"]:
         args.use_database = True
     
@@ -1171,7 +1173,8 @@ Examples:
             print("❌ Failed to generate academic routine")
             return 1
 
-    # Handle reference and sample modes early (before activity loading)
+    # Handle routine generation modes early (before activity loading)
+    # These modes use sample data from JSON files and don't need database activities
     if hasattr(args, 'routine_type'):
         if args.routine_type == "reference":
             print("\n📋 Reference-based routine generation selected...")
@@ -1191,8 +1194,38 @@ Examples:
             else:
                 print("❌ Failed to generate sample-based routine")
                 return 1
+        elif args.routine_type == "comprehensive":
+            print("\n🎯 Comprehensive routine generation selected...")
+            result = handle_comprehensive_routine([])  # Pass empty list since we use sample data
+            if result:
+                print(f"\n✅ Comprehensive routine generation complete!")
+                return 0
+            else:
+                print("❌ Failed to generate comprehensive routine")
+                return 1
+        elif args.routine_type == "batch":
+            print("\n📚 Batch-wise routine generation selected...")
+            batch_code = args.batch or "BCSE24"
+            result = handle_batch_routine([], batch_code)  # Pass empty list since we use sample data
+            if result:
+                print(f"\n✅ Batch-wise routine generation complete!")
+                return 0
+            else:
+                print("❌ Failed to generate batch-wise routine")
+                return 1
+        elif args.routine_type == "section":
+            print("\n🏫 Section-wise routine generation selected...")
+            batch_code = args.batch or "BCSE24"
+            section = args.section or "A"
+            result = handle_section_routine([], batch_code, section)  # Pass empty list since we use sample data
+            if result:
+                print(f"\n✅ Section-wise routine generation complete!")
+                return 0
+            else:
+                print("❌ Failed to generate section-wise routine")
+                return 1
     
-    # Load activities
+    # Load activities (only for algorithm modes, not routine generation modes)
     print("\n📂 Loading activities...")
     activities = load_activities(args)
     
