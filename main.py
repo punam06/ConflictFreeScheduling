@@ -28,6 +28,12 @@ import json
 from datetime import datetime
 from typing import List, Dict, Optional
 
+# Fix Windows console encoding issues
+if sys.platform.startswith('win'):
+    import codecs
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
+
 # Add src to Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
@@ -58,7 +64,7 @@ def print_banner():
 
 def print_algorithm_info():
     """Print information about the four core algorithms"""
-    print("\n🎓 4 Core Algorithms:")
+    print("\n[*] 4 Core Algorithms:")
     print("  1. Graph Coloring    - Models conflicts as graph edges, assigns time slots as colors")
     print("  2. Dynamic Programming - Optimal weighted activity selection with memoization")
     print("  3. Backtracking      - Exhaustive search with pruning for optimal solutions")
@@ -354,8 +360,6 @@ def load_activities(args) -> List[Activity]:
             
             if args.batch:
                 activities = db.get_realistic_activities_by_batch(args.batch)
-            elif hasattr(args, 'routine_type') and args.routine_type == "comprehensive":
-                activities = db.get_all_realistic_activities()
             elif hasattr(args, 'algorithm') and args.algorithm == "preserve":
                 # For preserve mode, always use realistic activities
                 activities = db.get_all_realistic_activities()
@@ -1089,7 +1093,7 @@ Examples:
     
     # Handle special flags
     # Enhanced mode doesn't automatically require database - only specific routine types do
-    if hasattr(args, 'routine_type') and args.routine_type in ["comprehensive", "faculty"]:
+    if hasattr(args, 'routine_type') and args.routine_type in ["faculty"]:
         args.use_database = True
     
     if args.no_database:

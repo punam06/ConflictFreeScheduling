@@ -818,9 +818,12 @@ class EnhancedPDFGenerator:
             print(f"✅ Enhanced PDF generated: {pdf_filepath}")
             return pdf_filepath
         except ImportError:
-            print("⚠️ WeasyPrint not available - trying ReportLab...")
+            print("ℹ️ WeasyPrint not available - using ReportLab for PDF generation...")
         except Exception as e:
-            print(f"⚠️ WeasyPrint PDF generation failed: {e} - trying ReportLab...")
+            if "libgobject" in str(e) or "GTK" in str(e):
+                print("ℹ️ WeasyPrint requires GTK libraries (complex on Windows) - using ReportLab instead...")
+            else:
+                print(f"⚠️ WeasyPrint PDF generation failed: {e} - using ReportLab...")
         
         # Try ReportLab as fallback
         if self._generate_pdf_with_reportlab(html_content, pdf_filepath):
@@ -831,17 +834,20 @@ class EnhancedPDFGenerator:
             return html_filepath
     
     def _generate_pdf_with_reportlab(self, html_content: str, pdf_filepath: str) -> bool:
-        """Generate PDF using ReportLab"""
+        """Generate PDF using ReportLab with comprehensive schedule content"""
         try:
             from reportlab.pdfgen import canvas
-            from reportlab.lib.pagesizes import A4
+            from reportlab.lib.pagesizes import A4, landscape
             from reportlab.lib.units import inch
             from reportlab.lib import colors
-            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+            from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
             from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+            from reportlab.lib.enums import TA_CENTER, TA_LEFT
+            import re
             
-            # Create PDF document
-            doc = SimpleDocTemplate(pdf_filepath, pagesize=A4)
+            # Create PDF document with landscape orientation for better table display
+            doc = SimpleDocTemplate(pdf_filepath, pagesize=landscape(A4), 
+                                   rightMargin=20, leftMargin=20, topMargin=30, bottomMargin=20)
             styles = getSampleStyleSheet()
             story = []
             
@@ -849,21 +855,111 @@ class EnhancedPDFGenerator:
             title_style = ParagraphStyle(
                 'CustomTitle',
                 parent=styles['Heading1'],
-                fontSize=18,
+                fontSize=24,
                 textColor=colors.darkblue,
-                alignment=1,
-                spaceAfter=30
+                alignment=TA_CENTER,
+                spaceAfter=20
             )
             
-            # Add title
-            story.append(Paragraph("Bangladesh University of Professionals", title_style))
-            story.append(Paragraph("Enhanced Academic Schedule", title_style))
-            story.append(Spacer(1, 30))
+            subtitle_style = ParagraphStyle(
+                'CustomSubtitle',
+                parent=styles['Heading2'],
+                fontSize=16,
+                textColor=colors.darkgreen,
+                alignment=TA_CENTER,
+                spaceAfter=15
+            )
             
-            # Add notice
+            section_style = ParagraphStyle(
+                'SectionStyle',
+                parent=styles['Heading3'],
+                fontSize=14,
+                textColor=colors.darkred,
+                alignment=TA_CENTER,
+                spaceAfter=10
+            )
+            
+            # Extract title from HTML
+            title_match = re.search(r'<title>(.*?)</title>', html_content)
+            title = title_match.group(1) if title_match else "Academic Schedule"
+            
+            # Add header
+            story.append(Paragraph("Bangladesh University of Professionals", title_style))
+            story.append(Paragraph("Department of Computer Science & Engineering", subtitle_style))
+            story.append(Paragraph(title, section_style))
+            story.append(Spacer(1, 20))
+            
+            # Add generation info
             story.append(Paragraph(f"Generated on: {datetime.now().strftime('%B %d, %Y at %I:%M %p')}", styles['Normal']))
             story.append(Spacer(1, 20))
-            story.append(Paragraph("This is an enhanced, eye-catching academic schedule with faculty information.", styles['Normal']))
+            
+            # Extract schedule tables from HTML and convert to ReportLab tables
+            # Look for table patterns in HTML
+            table_pattern = r'<table[^>]*>(.*?)</table>'
+            tables = re.findall(table_pattern, html_content, re.DOTALL | re.IGNORECASE)
+            
+            for i, table_html in enumerate(tables):
+                # Extract table title if present
+                title_pattern = r'<h[1-6][^>]*>(.*?)</h[1-6]>'
+                title_match = re.search(title_pattern, table_html, re.IGNORECASE)
+                if title_match:
+                    table_title = re.sub(r'<[^>]+>', '', title_match.group(1))
+                    story.append(Paragraph(table_title, section_style))
+                    story.append(Spacer(1, 10))
+                
+                # Extract table rows
+                row_pattern = r'<tr[^>]*>(.*?)</tr>'
+                rows = re.findall(row_pattern, table_html, re.DOTALL | re.IGNORECASE)
+                
+                if rows:
+                    table_data = []
+                    for row in rows:
+                        # Extract cells
+                        cell_pattern = r'<t[hd][^>]*>(.*?)</t[hd]>'
+                        cells = re.findall(cell_pattern, row, re.DOTALL | re.IGNORECASE)
+                        # Clean HTML tags from cells
+                        clean_cells = [re.sub(r'<[^>]+>', '', cell).strip() for cell in cells]
+                        if clean_cells:
+                            table_data.append(clean_cells)
+                    
+                    if table_data:
+                        # Create ReportLab table
+                        table = Table(table_data)
+                        
+                        # Apply table style
+                        table.setStyle(TableStyle([
+                            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                            ('FONTSIZE', (0, 0), (-1, 0), 12),
+                            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+                            ('FONTSIZE', (0, 1), (-1, -1), 10),
+                            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+                            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+                            ('LEFTPADDING', (0, 0), (-1, -1), 6),
+                            ('RIGHTPADDING', (0, 0), (-1, -1), 6),
+                        ]))
+                        
+                        story.append(table)
+                        story.append(Spacer(1, 20))
+                
+                # Add page break between major sections
+                if i < len(tables) - 1:
+                    story.append(PageBreak())
+            
+            # If no tables found, add a simple message
+            if not tables:
+                story.append(Paragraph("Schedule information processed and available.", styles['Normal']))
+                story.append(Spacer(1, 10))
+                story.append(Paragraph("For detailed view, please refer to the HTML version.", styles['Normal']))
+            
+            # Add footer
+            story.append(Spacer(1, 30))
+            story.append(Paragraph("This schedule is generated by the Enhanced Conflict-Free Scheduling System", 
+                                 styles['Italic']))
             
             # Build PDF
             doc.build(story)
