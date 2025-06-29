@@ -636,7 +636,7 @@ def handle_comprehensive_routine(activities: List[Activity]) -> str:
         # - Rows organized by days and rooms
         # - Columns organized by time slots
         # - Each cell containing batch, section, course code, and faculty information
-        print("🌟 Using sample routine template for departmental-wide schedule")
+        print("🌟 Using sample routine template for departmental-wide comprehensive schedule")
         
         try:
             # Import and use SampleRoutineGenerator
@@ -672,63 +672,32 @@ def handle_comprehensive_routine(activities: List[Activity]) -> str:
                 
                 return html_file or pdf_file
             else:
-                print("⚠️ Sample generator failed, trying alternative...")
+                print("⚠️ Sample generator failed, trying fallback...")
                 raise Exception("Sample generator failed")
-        
-        except (ImportError, AttributeError) as e:
-            print(f"⚠️ Could not use SampleRoutineGenerator: {e}")
-            
-        # Fall back to Sample Routine Helper
-        try:
-            print("🔄 Trying alternative sample routine generator...")
-            from src.utils.sample_routine_generator import SampleRoutineGenerator
-            sample_generator = SampleRoutineGenerator()
-            
-            output_dir = os.path.join(script_dir, "output")
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            base_output = os.path.join(output_dir, f"comprehensive_departmental_routine_{timestamp}")
-            
-            html_file, pdf_file = sample_generator.generate_all_formats(data_file, base_output)
-            
-            if pdf_file or html_file:
-                print(f"✅ Comprehensive departmental routine generated successfully!")
-                return html_file or pdf_file
+                
         except Exception as e:
-            print(f"⚠️ Alternative generator also failed: {e}")
-        
-        # Last resort: Use the ComprehensiveRoutineGenerator with specific modifications
-        # to match the sample routine format
-        print("🔄 Using fallback comprehensive routine generator with sample format...")
-        generator = ComprehensiveRoutineGenerator()
-        
-        # Override the template to match the sample routine format
-        generator.use_sample_format = True  # This flag should be checked in the generator class
-        
-        output_file_base = os.path.join(output_dir, "comprehensive_routine_spring_2025")
-        
-        # Generate both formats (PDF first, then HTML)
-        pdf_file = generator.generate_comprehensive_routine_pdf(data_file, f"{output_file_base}.pdf")
-        html_file = generator.generate_html_routine(data_file, f"{output_file_base}.html")
-        
-        if pdf_file or html_file:
-            print(f"✅ Comprehensive departmental routine generated (fallback): {pdf_file or html_file}")
-            return pdf_file or html_file
-        else:
-            print("❌ Failed to generate comprehensive routine with all methods")
-            return None
-    except Exception as e:
-        print(f"❌ Error generating comprehensive routine: {str(e)}")
-        return None
+            print(f"⚠️ Sample generator error: {e}")
             
-    except Exception as e:
-        print(f"❌ Error generating comprehensive routine: {e}")
-        # Fallback to simple comprehensive routine
-        print("🔄 Falling back to enhanced comprehensive routine...")
-        
+        # Fallback to enhanced PDF generator
+        print("🔄 Using fallback enhanced comprehensive routine...")
         pdf_gen = EnhancedPDFGenerator()
         return pdf_gen.generate_comprehensive_routine({
             "All Departments": activities
         })
+        
+    except Exception as e:
+        print(f"❌ Error generating comprehensive routine: {str(e)}")
+        print("🔄 Using basic enhanced PDF generator as last resort...")
+        
+        # Last resort fallback
+        try:
+            pdf_gen = EnhancedPDFGenerator()
+            return pdf_gen.generate_comprehensive_routine({
+                "All Departments": activities
+            })
+        except Exception as final_e:
+            print(f"❌ Final fallback also failed: {final_e}")
+            return None
 
 
 def handle_batch_routine(activities: List[Activity], batch_code: str) -> str:
